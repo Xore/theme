@@ -20,8 +20,6 @@ font request, or CDN dependency.
 - `docs/ADOPTION.md` — generic copy/vendor instructions.
 - `docs/MODALS.md` — modal top-layer, focus, keyboard, and confirmation
   behavior contract.
-- `docs/MIGRATE-AUTH-BACKEND.md` — AI-ready migration plan for
-  `Xore/auth-backend`.
 - `docs/MIGRATE-HONEYPOT-STACK.md` — AI-ready migration plan for
   `Xore/honeypot-stack`.
 
