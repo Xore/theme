@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Theme checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Check JavaScript syntax
+        run: node --check theme.js
+
+      - name: Lint JavaScript
+        run: npx --yes eslint@9 theme.js scripts/
+
+      - name: Validate stylesheet structure
+        run: node scripts/check-css.mjs theme.css
+
+      - name: Validate example pages
+        run: node scripts/check-examples.mjs
+
+      - name: Check capture script syntax
+        run: bash -n scripts/capture-screenshots.sh
