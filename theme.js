@@ -59,8 +59,14 @@
       var dialog = document.getElementById(opener.getAttribute('data-open-dialog'));
       var backdrop = document.querySelector('[data-dialog-backdrop="' + opener.getAttribute('data-open-dialog') + '"]');
       if (dialog) {
+        dialog._themeOpener = opener;
         if (dialog.showModal) dialog.showModal();
         dialog.classList.add('open');
+        var initialFocus =
+          dialog.querySelector('[data-dialog-initial-focus]') ||
+          dialog.querySelector('[autofocus]') ||
+          dialog.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (initialFocus) initialFocus.focus();
       }
       if (backdrop) backdrop.classList.add('open');
       return;
@@ -75,11 +81,14 @@
   function closeDialog(id) {
     var dialog = document.getElementById(id);
     var backdrop = document.querySelector('[data-dialog-backdrop="' + id + '"]');
+    var opener = dialog && dialog._themeOpener;
     if (dialog) {
       dialog.classList.remove('open');
       if (dialog.close) dialog.close();
+      dialog._themeOpener = null;
     }
     if (backdrop) backdrop.classList.remove('open');
+    if (opener && opener.isConnected) opener.focus();
   }
 
   document.addEventListener('keydown', function (event) {

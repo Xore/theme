@@ -18,6 +18,8 @@ font request, or CDN dependency.
   settings surface, and authentication.
 - `docs/TOKENS.md` — token contract and customization rules.
 - `docs/ADOPTION.md` — generic copy/vendor instructions.
+- `docs/MODALS.md` — modal top-layer, focus, keyboard, and confirmation
+  behavior contract.
 - `docs/MIGRATE-AUTH-BACKEND.md` — AI-ready migration plan for
   `Xore/auth-backend`.
 - `docs/MIGRATE-HONEYPOT-STACK.md` — AI-ready migration plan for
@@ -71,6 +73,8 @@ dialog controller should include only the stylesheet.
 - Color communicates state and severity, never whole-panel branding.
 - Independent scrolling for the sidebar and main canvas.
 - Keyboard-visible focus, reduced-motion support, and responsive layouts.
+- Permanent settings dialogs contain every application-managed nested overlay
+  so browser top-layer behavior cannot hide confirmations.
 - Locally available system fonts by default.
 
 ## Repository integrations

@@ -19,6 +19,10 @@ Copy `theme.js` only when the project needs the included light/dark/system
 preference, example tabs, or dialog helpers. Applications with existing state
 management should implement those behaviors themselves.
 
+All implementations must follow [`MODALS.md`](./MODALS.md). In particular,
+application-managed confirmations must be descendants of a permanent native
+settings dialog; a sibling `z-index` cannot escape the browser top layer.
+
 Theme controls use:
 
 ```html
@@ -52,6 +56,9 @@ is reusable.
 - Review dark, light, and system modes.
 - Navigate every control with a keyboard.
 - Check visible focus and modal Escape behavior.
+- Verify Save and Enter open the same visible configuration warning.
+- Verify nested confirmation backdrops live inside permanent native dialogs.
+- Verify confirmation runs once, Cancel runs nothing, and focus is restored.
 - Confirm no horizontal page scroll at mobile widths.
 - Confirm `prefers-reduced-motion` disables non-essential movement.
 - Run an HTML validator and a CSS parser.

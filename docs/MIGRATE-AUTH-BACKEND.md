@@ -9,12 +9,14 @@ configuration behavior.
 This guide is written as an execution contract for an AI coding agent. Do not
 redesign backend flows or deploy automatically unless the user asks.
 
+Read [`MODALS.md`](./MODALS.md) before changing the permanent settings shell or
+any confirmation behavior.
+
 ## Repositories
 
 - Application: `https://github.com/Xore/auth-backend`
 - Theme source: `https://github.com/Xore/theme`
 - Runtime stylesheet: `forward-auth/ui/theme.css`
-- Portable snapshot: `theme/`
 
 ## Non-negotiable invariants
 
@@ -29,7 +31,7 @@ redesign backend flows or deploy automatically unless the user asks.
 - Keep `forward-auth/data/common-passwords.txt` unchanged. Words in that file
   are security data, not branding.
 
-## Phase 1: establish the vendor snapshot
+## Phase 1: establish the vendored runtime stylesheet
 
 1. Confirm both worktrees are clean.
 2. Record the full source commit:
@@ -38,16 +40,17 @@ redesign backend flows or deploy automatically unless the user asks.
    git -C ../theme rev-parse HEAD
    ```
 
-3. Replace the root `theme/` directory in `auth-backend` with the contents of
-   that theme commit, excluding `.git`.
-4. Put the same `theme.css` at `forward-auth/ui/theme.css` because the Go module
-   and Docker build context embed only `forward-auth/ui`.
-5. Add the source commit to `theme/README.md` or an application vendoring note.
-6. Add a deterministic sync check. At minimum:
+3. Copy that revision's `theme.css` to `forward-auth/ui/theme.css` because the
+   Go module and Docker build context embed assets from `forward-auth/ui`.
+4. Record the source commit in `docs/THEME-GUIDE.md`.
+5. When both repositories are checked out side by side, verify the copy:
 
    ```bash
-   cmp theme/theme.css forward-auth/ui/theme.css
+   cmp ../theme/theme.css forward-auth/ui/theme.css
    ```
+
+The complete portable package, examples, and migration documentation remain in
+`Xore/theme`; do not duplicate them inside every consuming repository.
 
 ## Phase 2: remove legacy naming
 

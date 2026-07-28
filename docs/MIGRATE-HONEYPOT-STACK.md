@@ -9,6 +9,9 @@ investigation, evidence, export, alerting, map, or accessibility behavior.
 This is a staged frontend migration. Do not rewrite ingestion or analysis
 services, and do not combine the desktop-client project with this task.
 
+Read [`MODALS.md`](./MODALS.md) before adding settings, command palettes, or
+destructive confirmations.
+
 ## Repositories and baseline
 
 - Application: `https://github.com/Xore/honeypot-stack`
