@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Authentication example — Xore Theme</title>
+  <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="examples.css">
+  <script src="../theme.js" defer></script>
+  <style>
+    .auth-links{display:flex;justify-content:center;gap:14px;margin-top:18px;font-size:11px}
+    .auth-security{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:18px;color:var(--text-muted);font-size:11px}
+    .auth-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--text-muted);font-size:11px}
+    .auth-divider::before,.auth-divider::after{content:"";height:1px;flex:1;background:var(--border-subtle)}
+  </style>
+</head>
+<body>
+  <main class="auth-page">
+    <div class="auth-wrap">
+      <div class="auth-brand">
+        <div class="label-section">Secure access</div>
+        <h1 class="heading-serif">xore<span style="color:var(--accent)">//</span>auth</h1>
+        <p>One sign-on for every service behind the gate.</p>
+      </div>
+
+      <section class="auth-card" aria-labelledby="auth-title">
+        <h2 id="auth-title">Welcome back</h2>
+        <p style="font-size:12px">Enter your account identifier to continue.</p>
+        <div class="form-group">
+          <label class="form-label" for="auth-identity">Username or email</label>
+          <input class="form-input" id="auth-identity" autocomplete="username" placeholder="name@example.net">
+        </div>
+        <button class="btn btn-primary btn-lg">Continue</button>
+        <div class="auth-divider">or</div>
+        <button class="btn btn-secondary">Continue with a passkey</button>
+        <button class="btn btn-ghost" style="margin-top:8px">Continue with SSO</button>
+        <div class="auth-security"><span class="status-dot text-secondary"></span>Protected · all activity logged</div>
+      </section>
+
+      <div class="auth-links">
+        <a href="./">Example index</a>
+        <a href="#">Privacy</a>
+        <a href="#">Help</a>
+      </div>
+      <div class="theme-picker" aria-label="Color theme" style="margin:22px auto 0;display:flex;width:max-content">
+        <button data-theme-value="system" type="button">System</button>
+        <button data-theme-value="dark" type="button">Dark</button>
+        <button data-theme-value="light" type="button">Light</button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

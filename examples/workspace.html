@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workspace example — Xore Theme</title>
+  <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="examples.css">
+  <script src="../theme.js" defer></script>
+  <style>
+    .workspace-title{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:24px}
+    .workspace-title h1{margin-bottom:6px}
+    .workspace-columns{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,.7fr);gap:14px}
+    .activity-list{display:grid}
+    .activity-item{display:grid;grid-template-columns:82px minmax(0,1fr) auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-subtle)}
+    .activity-item:last-child{border-bottom:0}
+    .mini-chart{height:170px;display:flex;align-items:flex-end;gap:6px;padding-top:20px}
+    .mini-chart span{flex:1;min-width:7px;border-radius:3px 3px 0 0;background:var(--accent-soft);border-top:2px solid var(--accent)}
+    @media(max-width:900px){.workspace-columns{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-toolbar">
+      <button class="btn btn-ghost btn-icon" aria-label="Application menu">⌘</button>
+      <button class="btn btn-ghost btn-icon" aria-label="Toggle sidebar">☰</button>
+      <button class="btn btn-ghost btn-icon" aria-label="Back">‹</button>
+      <button class="btn btn-ghost btn-icon" aria-label="Forward">›</button>
+      <div class="app-toolbar__title">Security workspace</div>
+      <span class="badge badge--success"><span class="status-dot"></span>Connected</span>
+      <button class="btn btn-ghost btn-icon" aria-label="Notifications">○</button>
+      <a class="btn btn-ghost btn-sm" href="./">Examples</a>
+    </header>
+
+    <aside class="app-sidebar">
+      <div class="sidebar__search">
+        <span aria-hidden="true">⌕</span>
+        <input aria-label="Search navigation" placeholder="Search">
+        <kbd>⌘K</kbd>
+      </div>
+      <div class="app-sidebar__body">
+        <div class="sidebar__section-label">Monitor</div>
+        <button class="sidebar__item active"><span>Overview</span></button>
+        <button class="sidebar__item"><span>Source health</span></button>
+        <button class="sidebar__item"><span>Alerts</span><span class="badge badge--danger" style="margin-left:auto">3</span></button>
+        <div class="sidebar__section-label">Investigate</div>
+        <button class="sidebar__item"><span>Events</span></button>
+        <button class="sidebar__item"><span>Attack sources</span></button>
+        <button class="sidebar__item"><span>Campaigns</span></button>
+        <button class="sidebar__item"><span>Payloads</span></button>
+        <div class="sidebar__section-label">Recent</div>
+        <button class="sidebar__item"><span>203.0.113.42</span></button>
+        <button class="sidebar__item"><span>SSH credential spray</span></button>
+      </div>
+      <div class="sidebar__profile">
+        <span class="avatar">AD</span>
+        <div><div class="card__label">admin</div><div class="card__value">Administrator</div></div>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <div class="app-content">
+        <div class="workspace-title">
+          <div>
+            <div class="breadcrumb"><span>Monitor</span><span>/</span><span>Overview</span></div>
+            <h1>Good afternoon.</h1>
+            <p>Here is what changed across your environment.</p>
+          </div>
+          <div class="showcase-row">
+            <button class="btn btn-secondary">Export</button>
+            <button class="btn btn-primary">New investigation</button>
+          </div>
+        </div>
+
+        <div class="metric-grid">
+          <div class="metric"><div class="metric__label">Events · 24h</div><div class="metric__value">18,492</div><div class="metric__trend">8% above previous period</div></div>
+          <div class="metric"><div class="metric__label">Unique sources</div><div class="metric__value">641</div><div class="metric__trend">Across 38 countries</div></div>
+          <div class="metric"><div class="metric__label">Open alerts</div><div class="metric__value">3</div><div class="metric__trend text-danger">1 needs attention</div></div>
+          <div class="metric"><div class="metric__label">Pipeline</div><div class="metric__value">12/12</div><div class="metric__trend">All sources current</div></div>
+        </div>
+
+        <div class="workspace-columns" style="margin-top:14px">
+          <section class="card">
+            <div class="card__row" style="padding-top:0">
+              <div><div class="card__title">Activity</div><div class="card__value">Events by hour</div></div>
+              <div class="tabs"><button class="tab active">24 hours</button><button class="tab">7 days</button></div>
+            </div>
+            <div class="mini-chart" aria-label="Example event activity chart">
+              <span style="height:28%"></span><span style="height:38%"></span><span style="height:31%"></span>
+              <span style="height:47%"></span><span style="height:56%"></span><span style="height:42%"></span>
+              <span style="height:67%"></span><span style="height:58%"></span><span style="height:78%"></span>
+              <span style="height:64%"></span><span style="height:88%"></span><span style="height:72%"></span>
+            </div>
+          </section>
+          <section class="card">
+            <div class="card__title">Source health</div>
+            <div class="card__desc">Last update less than one minute ago.</div>
+            <div class="card__row"><span class="card__label">Event stream</span><span class="badge badge--success"><span class="status-dot"></span>Live</span></div>
+            <div class="card__row"><span class="card__label">Search archive</span><span class="badge badge--success">Healthy</span></div>
+            <div class="card__row"><span class="card__label">Analysis queue</span><span class="badge badge--warning">2 pending</span></div>
+          </section>
+        </div>
+
+        <section class="card">
+          <div class="card__row" style="padding-top:0">
+            <div><div class="card__title">Recent events</div><div class="card__value">Balanced across active sources</div></div>
+            <button class="btn btn-ghost btn-sm">View all</button>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item"><span class="mono text-muted">12:42:16</span><div><strong>SSH authentication attempt</strong><div class="card__value">203.0.113.42 · admin / password</div></div><span class="badge badge--warning">cowrie</span></div>
+            <div class="activity-item"><span class="mono text-muted">12:41:03</span><div><strong>IDS signature matched</strong><div class="card__value">Known scanner user agent</div></div><span class="badge badge--danger">suricata</span></div>
+            <div class="activity-item"><span class="mono text-muted">12:38:49</span><div><strong>HTTP path probe</strong><div class="card__value">/.env · 198.51.100.8</div></div><span class="badge badge--info">http</span></div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div class="command-bar">
+      <input class="form-input" aria-label="Investigation command" placeholder="Investigate an IP, hash, session, ASN, or search term…">
+    </div>
+  </div>
+</body>
+</html>

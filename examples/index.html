@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Xore Theme examples</title>
+  <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="examples.css">
+  <script src="../theme.js" defer></script>
+</head>
+<body class="example-site">
+  <nav class="example-nav" aria-label="Example navigation">
+    <a class="example-nav__brand" href="./">Xore Theme</a>
+    <div class="example-nav__links">
+      <a class="active" href="./">Overview</a>
+      <a href="components.html">Components</a>
+      <a href="workspace.html">Workspace</a>
+      <a href="settings.html">Settings</a>
+      <a href="auth.html">Authentication</a>
+    </div>
+    <div class="theme-picker" aria-label="Color theme">
+      <button data-theme-value="system" type="button">System</button>
+      <button data-theme-value="dark" type="button">Dark</button>
+      <button data-theme-value="light" type="button">Light</button>
+    </div>
+  </nav>
+
+  <main class="example-main">
+    <header class="example-hero">
+      <div class="label-section">Shared visual system</div>
+      <h1 class="heading-serif">Calm interfaces for serious tools.</h1>
+      <p>
+        These pages are a living visual acceptance suite. Use them to compare
+        tokens, refine component geometry, and verify that every project speaks
+        the same visual language.
+      </p>
+      <div class="showcase-row">
+        <a class="btn btn-primary" href="components.html">Review components</a>
+        <a class="btn btn-secondary" href="../docs/ADOPTION.md">Adoption guide</a>
+      </div>
+    </header>
+
+    <section class="example-grid" aria-label="Example pages">
+      <a class="example-link-card" href="components.html">
+        <strong>Component catalog</strong>
+        <span>Tokens, typography, controls, forms, status, tables, overlays, and empty states.</span>
+      </a>
+      <a class="example-link-card" href="workspace.html">
+        <strong>Workspace shell</strong>
+        <span>Compact toolbar, navigation, metrics, content, and investigation command bar.</span>
+      </a>
+      <a class="example-link-card" href="settings.html">
+        <strong>Settings surface</strong>
+        <span>Permanent and modal settings patterns with sections, forms, and dangerous actions.</span>
+      </a>
+      <a class="example-link-card" href="auth.html">
+        <strong>Authentication</strong>
+        <span>Branding, focused sign-in form, alternate actions, and security messaging.</span>
+      </a>
+    </section>
+
+    <section class="example-section">
+      <div class="example-section__head">
+        <div>
+          <h2>Core character</h2>
+          <p>Quiet surfaces, compact controls, restrained accent.</p>
+        </div>
+      </div>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric__label">Control radius</div>
+          <div class="metric__value">6px</div>
+          <div class="metric__trend">Compact and desktop-like</div>
+        </div>
+        <div class="metric">
+          <div class="metric__label">Toolbar height</div>
+          <div class="metric__value">32px</div>
+          <div class="metric__trend">Persistent global context</div>
+        </div>
+        <div class="metric">
+          <div class="metric__label">Sidebar width</div>
+          <div class="metric__value">224px</div>
+          <div class="metric__trend">Independent navigation</div>
+        </div>
+        <div class="metric">
+          <div class="metric__label">Motion</div>
+          <div class="metric__value">160ms</div>
+          <div class="metric__trend">Reduced-motion aware</div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="example-footer">Dependency-free HTML, CSS, and optional JavaScript.</footer>
+</body>
+</html>

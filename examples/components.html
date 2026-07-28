@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Component catalog — Xore Theme</title>
+  <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="examples.css">
+  <script src="../theme.js" defer></script>
+</head>
+<body class="example-site">
+  <nav class="example-nav" aria-label="Example navigation">
+    <a class="example-nav__brand" href="./">Xore Theme</a>
+    <div class="example-nav__links">
+      <a href="./">Overview</a>
+      <a class="active" href="components.html">Components</a>
+      <a href="workspace.html">Workspace</a>
+      <a href="settings.html">Settings</a>
+      <a href="auth.html">Authentication</a>
+    </div>
+    <div class="theme-picker" aria-label="Color theme">
+      <button data-theme-value="system" type="button">System</button>
+      <button data-theme-value="dark" type="button">Dark</button>
+      <button data-theme-value="light" type="button">Light</button>
+    </div>
+  </nav>
+
+  <main class="example-main">
+    <header class="example-hero">
+      <div class="label-section">Visual acceptance suite</div>
+      <h1>Component catalog</h1>
+      <p>Every reusable primitive belongs here before it is adopted downstream.</p>
+    </header>
+
+    <section class="example-section" id="color">
+      <div class="example-section__head"><div><h2>Color</h2><p>Surface and semantic hierarchy.</p></div></div>
+      <div class="showcase">
+        <div class="swatch-grid">
+          <div class="swatch" style="--swatch:var(--app-bg)">Canvas<code>--app-bg</code></div>
+          <div class="swatch" style="--swatch:var(--sidebar-bg)">Sidebar<code>--sidebar-bg</code></div>
+          <div class="swatch" style="--swatch:var(--surface-1)">Surface 1<code>--surface-1</code></div>
+          <div class="swatch" style="--swatch:var(--surface-2)">Surface 2<code>--surface-2</code></div>
+          <div class="swatch" style="--swatch:var(--accent)">Accent<code>--accent</code></div>
+          <div class="swatch" style="--swatch:var(--success-soft)">Success<code>--success-soft</code></div>
+          <div class="swatch" style="--swatch:var(--warning-soft)">Warning<code>--warning-soft</code></div>
+          <div class="swatch" style="--swatch:var(--danger-soft)">Danger<code>--danger-soft</code></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="example-section" id="type">
+      <div class="example-section__head"><div><h2>Typography</h2><p>Sans interface, optional serif display, monospace evidence.</p></div></div>
+      <div class="showcase showcase-grid">
+        <div>
+          <div class="label-section">Section label</div>
+          <h1>Page heading</h1>
+          <h2>Section heading</h2>
+          <h3>Component heading</h3>
+          <p>Body copy carries explanation without competing with the values around it.</p>
+          <a href="#">Inline action link</a>
+        </div>
+        <div>
+          <h1 class="heading-serif">A warmer display voice.</h1>
+          <p class="mono">event_id=7d0b2e status=verified</p>
+          <pre><code>fetch('/api/state')
+  .then(response =&gt; response.json());</code></pre>
+          <div>Press <kbd>Ctrl</kbd> + <kbd>K</kbd> to search.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="example-section" id="buttons">
+      <div class="example-section__head"><div><h2>Buttons</h2><p>Primary is reserved for the next best action.</p></div></div>
+      <div class="showcase">
+        <div class="showcase-row">
+          <button class="btn btn-primary">Primary action</button>
+          <button class="btn btn-secondary">Secondary</button>
+          <button class="btn btn-ghost">Ghost</button>
+          <button class="btn btn-danger">Danger</button>
+          <button class="btn btn-secondary btn-sm">Small</button>
+          <button class="btn btn-primary btn-lg">Large</button>
+          <button class="btn btn-secondary" disabled>Disabled</button>
+          <button class="btn btn-ghost btn-icon" aria-label="More options">•••</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="example-section" id="forms">
+      <div class="example-section__head"><div><h2>Forms</h2><p>Clear labels, contained focus, concise help.</p></div></div>
+      <div class="showcase showcase-grid">
+        <div>
+          <div class="form-group">
+            <label class="form-label" for="example-name">Display name</label>
+            <input class="form-input" id="example-name" placeholder="Operations workspace">
+            <div class="form-help">Visible to members of this project.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="example-select">Retention</label>
+            <select class="form-input" id="example-select">
+              <option>7 days</option><option selected>30 days</option><option>90 days</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="example-notes">Notes</label>
+            <textarea class="form-input" id="example-notes">Only trusted administrators can edit this value.</textarea>
+          </div>
+        </div>
+        <div>
+          <div class="search-field">
+            <span aria-hidden="true">⌕</span>
+            <input aria-label="Search examples" placeholder="Search">
+            <kbd>⌘ K</kbd>
+          </div>
+          <div style="display:grid;gap:12px;margin-top:18px">
+            <label class="check"><input type="checkbox" checked> Email security alerts</label>
+            <label class="check"><input type="radio" name="density" checked> Comfortable density</label>
+            <label class="check"><input type="radio" name="density"> Compact density</label>
+            <label class="check" style="justify-content:space-between">Automatic refresh
+              <span class="switch"><input type="checkbox" checked><span></span></span>
+            </label>
+            <div>
+              <label class="form-label" for="invalid-field">Invalid example</label>
+              <input class="form-input" id="invalid-field" value="not-a-host" aria-invalid="true">
+              <div class="form-error">Enter a valid hostname.</div>
+            </div>
+            <input class="form-input" value="Externally managed" disabled aria-label="Disabled field">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="example-section" id="status">
+      <div class="example-section__head"><div><h2>Status and feedback</h2><p>Color is semantic and localized.</p></div></div>
+      <div class="showcase">
+        <div class="showcase-row" style="margin-bottom:18px">
+          <span class="badge badge--accent">Selected</span>
+          <span class="badge badge--success"><span class="status-dot"></span>Healthy</span>
+          <span class="badge badge--info">Informational</span>
+          <span class="badge badge--warning">Pending</span>
+          <span class="badge badge--danger">Failed</span>
+          <span class="badge badge--muted">Neutral</span>
+        </div>
+        <div style="display:grid;gap:8px">
+          <div class="alert alert--info">A new version is ready to review.</div>
+          <div class="alert alert--success">Configuration validated successfully.</div>
+          <div class="alert alert--warning">Restart required to activate staged settings.</div>
+          <div class="alert alert--danger">This action invalidates every active session.</div>
+          <div class="toast"><span class="status-dot text-secondary"></span><div><strong>Settings saved</strong><br><span class="text-muted">The update is now active.</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="example-section" id="navigation">
+      <div class="example-section__head"><div><h2>Navigation</h2><p>Tabs, breadcrumbs, and pagination.</p></div></div>
+      <div class="showcase" data-tabs>
+        <div class="breadcrumb" style="margin-bottom:16px"><a href="#">Projects</a><span>/</span><a href="#">Security</a><span>/</span><span>Events</span></div>
+        <div class="tabs" role="tablist">
+          <button class="tab active" role="tab" aria-selected="true" data-tab-target="recent">Recent</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab-target="saved">Saved</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab-target="archived">Archived</button>
+        </div>
+        <div data-tab-panel="recent" style="padding:18px 0">Recent activity is visible.</div>
+        <div data-tab-panel="saved" hidden style="padding:18px 0">Saved activity is visible.</div>
+        <div data-tab-panel="archived" hidden style="padding:18px 0">Archived activity is visible.</div>
+        <div class="pagination">
+          <button class="btn btn-secondary btn-sm">‹</button>
+          <button class="btn btn-secondary btn-sm">1</button>
+          <button class="btn btn-ghost btn-sm">2</button>
+          <button class="btn btn-secondary btn-sm">›</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="example-section" id="data">
+      <div class="example-section__head"><div><h2>Data display</h2><p>Metrics, tables, progress, cards, and empty states.</p></div></div>
+      <div class="metric-grid" style="margin-bottom:14px">
+        <div class="metric"><div class="metric__label">Requests</div><div class="metric__value">2,418</div><div class="metric__trend">+8% from yesterday</div></div>
+        <div class="metric"><div class="metric__label">Healthy services</div><div class="metric__value">12/12</div><div class="metric__trend text-secondary">All operational</div></div>
+        <div class="metric"><div class="metric__label">Open alerts</div><div class="metric__value">3</div><div class="metric__trend text-danger">1 high priority</div></div>
+      </div>
+      <div class="card">
+        <div class="card__title">Recent activity</div>
+        <div class="card__desc">Compact rows keep evidence readable.</div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead><tr><th>Time</th><th>Event</th><th>Source</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">12:41:08</td><td>Configuration saved</td><td>admin</td><td><span class="badge badge--success">complete</span></td></tr>
+              <tr><td class="mono">12:38:44</td><td>Session rotated</td><td>system</td><td><span class="badge badge--warning">staged</span></td></tr>
+              <tr><td class="mono">12:32:17</td><td>Health check</td><td>gateway</td><td><span class="badge badge--success">healthy</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="showcase-grid">
+        <div class="card">
+          <div class="card__title">Storage used</div>
+          <div class="card__desc">18.4 GB of 50 GB</div>
+          <div class="progress"><span style="width:37%"></span></div>
+        </div>
+        <div class="card">
+          <div class="card__row"><div><div class="card__label">Organization</div><div class="card__value">Project identity</div></div><span class="card__value--mono">xore-labs</span></div>
+          <div class="card__row"><div><div class="card__label">Member</div><div class="card__value">Administrator</div></div><span class="avatar">XO</span></div>
+        </div>
+      </div>
+      <div class="card empty-state">
+        <div><div class="empty-state__icon">◇</div><h3>No saved views</h3><p>Save a filtered investigation to make it available here.</p><button class="btn btn-primary">Create a view</button></div>
+      </div>
+    </section>
+
+    <section class="example-section" id="overlays">
+      <div class="example-section__head"><div><h2>Floating layers</h2><p>Menus, dialogs, and explicit destructive confirmation.</p></div></div>
+      <div class="showcase showcase-grid">
+        <div class="dropdown" aria-label="Example menu">
+          <button class="dropdown__item">Open details</button>
+          <button class="dropdown__item">Duplicate</button>
+          <button class="dropdown__item">Copy identifier</button>
+          <div class="dropdown__divider"></div>
+          <button class="dropdown__item text-danger">Delete</button>
+        </div>
+        <div>
+          <button class="btn btn-secondary" data-open-dialog="example-dialog">Open dialog</button>
+          <button class="btn btn-danger" data-open-dialog="danger-dialog">Danger dialog</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" data-dialog-backdrop="example-dialog"></div>
+  <dialog class="modal demo-dialog" id="example-dialog" aria-labelledby="example-dialog-title">
+    <h2 id="example-dialog-title">Edit project</h2>
+    <p>Dialogs are focused, compact, and use the raised surface hierarchy.</p>
+    <label class="form-label" for="dialog-name">Project name</label>
+    <input class="form-input" id="dialog-name" value="Security operations">
+    <div class="demo-dialog__actions">
+      <button class="btn btn-ghost" data-close-dialog="example-dialog">Cancel</button>
+      <button class="btn btn-primary" data-close-dialog="example-dialog">Save</button>
+    </div>
+  </dialog>
+
+  <div class="modal-backdrop" data-dialog-backdrop="danger-dialog"></div>
+  <dialog class="modal demo-dialog" id="danger-dialog" aria-labelledby="danger-dialog-title">
+    <h2 id="danger-dialog-title">Delete this project?</h2>
+    <p>This permanently removes its settings and cannot be undone.</p>
+    <div class="alert alert--danger">Every member loses access immediately. Export anything you need before continuing.</div>
+    <div class="demo-dialog__actions">
+      <button class="btn btn-ghost" data-close-dialog="danger-dialog">Cancel</button>
+      <button class="btn btn-danger" data-close-dialog="danger-dialog">Delete project</button>
+    </div>
+  </dialog>
+  <footer class="example-footer">Add shared components here before downstream adoption.</footer>
+</body>
+</html>
