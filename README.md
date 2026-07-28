@@ -1,7 +1,6 @@
 # Xore Theme
 
 [![CI](https://github.com/Xore/theme/actions/workflows/ci.yml/badge.svg)](https://github.com/Xore/theme/actions/workflows/ci.yml)
-[![Screenshots](https://github.com/Xore/theme/actions/workflows/screenshots.yml/badge.svg)](https://github.com/Xore/theme/actions/workflows/screenshots.yml)
 
 A framework-free visual system for Xore web applications. It provides the
 warm, quiet geometry of a desktop productivity tool without copying product
@@ -41,13 +40,6 @@ Open `http://127.0.0.1:8080/examples/`.
 The examples intentionally use ordinary HTML classes rather than a framework.
 They are the visual acceptance suite for changes to the shared theme.
 
-## Screenshots
-
-The Screenshots workflow renders every example page in dark and light mode
-and commits the results to [`docs/SCREENSHOTS.md`](docs/SCREENSHOTS.md) on
-every relevant change to `main`. Pull requests that touch the theme receive
-the same renders as workflow artifacts.
-
 ## Automation
 
 - **CI** — JavaScript syntax, ESLint code-quality checks, stylesheet
@@ -57,9 +49,8 @@ the same renders as workflow artifacts.
   pull requests, and a weekly schedule.
 - **Minify** — regenerates `theme.min.css` and `theme.min.js` with esbuild
   whenever the sources change on `main`.
-- **Screenshots** — dark/light renders of each example page, committed to
-  `docs/SCREENSHOTS.md` and attached to pull requests as artifacts.
-- **Pages** — the `examples/` catalog deployed to GitHub Pages on merge.
+- **Pages** — the `examples/` catalog deployed to GitHub Pages on merge,
+  live at <https://xore.github.io/theme/>.
 - **Release** — pushing a `v*` tag publishes a release with a zip of
   `theme.css`, `theme.js`, the minified builds, and the adoption docs.
 
