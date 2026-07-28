@@ -28,6 +28,3 @@ jobs:
 
       - name: Validate example pages
         run: node scripts/check-examples.mjs
-
-      - name: Check capture script syntax
-        run: bash -n scripts/capture-screenshots.sh

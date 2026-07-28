@@ -47,7 +47,6 @@ jobs:
           if [ -f theme.min.css ]; then cp theme.min.css theme.min.js _site/; fi
           cp examples/*.html examples/*.css _site/examples/
           cp docs/*.md _site/docs/
-          if [ -d docs/screenshots ]; then cp -r docs/screenshots _site/docs/; fi
           cat > _site/index.html <<'HTML'
           <!doctype html>
           <meta charset="utf-8">
