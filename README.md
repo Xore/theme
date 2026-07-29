@@ -84,7 +84,8 @@ dialog controller should include only the stylesheet.
 ## Design principles
 
 - Warm neutral surfaces and off-white text.
-- Compact 6–10px geometry rather than oversized rounded cards.
+- Compact, softly rounded 9–18px geometry rather than oversized pill-shaped
+  application surfaces.
 - Thin, low-contrast borders; shadows only for floating layers.
 - Terracotta for focus and primary actions, not decoration.
 - Color communicates state and severity, never whole-panel branding.
