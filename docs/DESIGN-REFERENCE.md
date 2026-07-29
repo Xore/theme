@@ -83,11 +83,34 @@ Product names, the asterisk logo, artwork, exact strings, and proprietary
 typefaces. The serif stack falls back to locally available system serifs, and
 the accent color was already the theme's own terracotta value.
 
+## Live cross-check — claude.ai (login + plans, light mode)
+
+Verified against the live `claude.ai/login` page and its plans section
+(`claude.ai/` redirects to login when signed out), compared with the hosted
+theme at `xore.github.io/theme`:
+
+| Pattern on live claude.ai | Theme status |
+|---|---|
+| Split login: form column left, artwork photo right | implemented as `.auth-split` (`examples/auth.html`) |
+| Serif headline above the login card | `.heading-serif` on the auth headline |
+| White card with large radius and soft shadow | `.auth-card` now uses `--surface-0` + `--shadow-raised` + `--radius-dialog` |
+| Black full-width primary button | `--btn-inverted-*` in light mode |
+| "OR" divider between actions | present in `auth.html` |
+| Pill buttons in the top bar ("Try Claude") | new `.btn--pill` modifier |
+| Segmented plan toggle (Individual/Team) | `.segmented` |
+| Serif plan names, checkmark feature rows | covered by `.heading-serif` + list patterns |
+| Logo top-left of the content column | `.auth-split__brand` |
+
+The artwork panels (`.auth-split__aside`, `.modal__media`) intentionally ship
+empty on a cream `#e9e3d6` background — downstream apps drop in their own
+imagery.
+
 ## Change summary
 
 - Surface ramp, text, link, focus, and radius tokens aligned to the sampled
   values in dark, explicit-light, and system-light modes.
 - `.btn-primary` inverted, `.switch` blue, `.heading-serif` on display stack,
   modal backdrop blur, dropdown/menu extras, `kbd`.
-- New: `.chip`, `.segmented`, `.modal--promo`, `.badge--solid`.
+- New: `.chip`, `.segmented`, `.modal--promo`, `.badge--solid`, `.btn--pill`,
+  `.auth-split`.
 - `docs/TOKENS.md` updated to match the new contract.
