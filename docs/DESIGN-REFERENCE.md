@@ -101,9 +101,20 @@ theme at `xore.github.io/theme`:
 | Serif plan names, checkmark feature rows | covered by `.heading-serif` + list patterns |
 | Logo top-left of the content column | `.auth-split__brand` |
 
-The artwork panels (`.auth-split__aside`, `.modal__media`) intentionally ship
-empty on a cream `#e9e3d6` background — downstream apps drop in their own
-imagery.
+## Artwork
+
+The artwork panels ship with original, hand-authored SVG pieces in the
+theme's own warm palette (terracotta on cream, paper-grain texture) —
+deliberately echoing the *style* of the reference panels without borrowing
+any artwork:
+
+- `examples/assets/auth-artwork.svg` — low sun over layered dunes, shown in
+  `.auth-split__aside` on the authentication page.
+- `examples/assets/promo-artwork.svg` — concentric arches, shown in
+  `.modal__media` in the promo dialog.
+
+Both are plain SVG (no dependencies, scales cleanly) and can be replaced by
+downstream apps with their own imagery via the same `<img>` slots.
 
 ## Change summary
 
@@ -113,4 +124,5 @@ imagery.
   modal backdrop blur, dropdown/menu extras, `kbd`.
 - New: `.chip`, `.segmented`, `.modal--promo`, `.badge--solid`, `.btn--pill`,
   `.auth-split`.
+- Original SVG artworks for the auth and promo artwork panels.
 - `docs/TOKENS.md` updated to match the new contract.
