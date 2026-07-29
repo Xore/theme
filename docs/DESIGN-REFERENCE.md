@@ -1,7 +1,7 @@
-# Design reference analysis — Claude app (dark mode)
+# Design reference analysis — external productivity app
 
-Findings from a review of twelve screenshots of the Claude web and desktop
-apps (dark mode, July 2026): home screen, list pages, stats dashboard,
+Findings from a review of twelve screenshots of an external web and desktop
+product (dark mode, July 2026): home screen, list pages, stats dashboard,
 settings modal, profile menus, command palette, and a promo modal. This
 document records what was observed and how `theme.css` was aligned with it.
 Per the repository policy, no product names, logos, artwork, or copy text
@@ -83,20 +83,19 @@ Product names, the asterisk logo, artwork, exact strings, and proprietary
 typefaces. The serif stack falls back to locally available system serifs, and
 the accent color was already the theme's own terracotta value.
 
-## Live cross-check — claude.ai (login + plans, light mode)
+## Live cross-check — reference login and plans pages
 
-Verified against the live `claude.ai/login` page and its plans section
-(`claude.ai/` redirects to login when signed out), compared with the hosted
-theme at `xore.github.io/theme`:
+Verified against the reference product's public login page and plans section,
+compared with the hosted theme at `xore.github.io/theme`:
 
-| Pattern on live claude.ai | Theme status |
+| Pattern in the live reference | Theme status |
 |---|---|
 | Split login: form column left, artwork photo right | implemented as `.auth-split` (`examples/auth.html`) |
 | Serif headline above the login card | `.heading-serif` on the auth headline |
 | White card with large radius and soft shadow | `.auth-card` now uses `--surface-0` + `--shadow-raised` + `--radius-dialog` |
 | Black full-width primary button | `--btn-inverted-*` in light mode |
 | "OR" divider between actions | present in `auth.html` |
-| Pill buttons in the top bar ("Try Claude") | new `.btn--pill` modifier |
+| Pill buttons in the top bar | new `.btn--pill` modifier |
 | Segmented plan toggle (Individual/Team) | `.segmented` |
 | Serif plan names, checkmark feature rows | covered by `.heading-serif` + list patterns |
 | Logo top-left of the content column | `.auth-split__brand` |

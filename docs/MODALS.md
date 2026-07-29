@@ -74,6 +74,10 @@ A permanent settings dialog:
 - collapses to a single-column layout on narrow screens; and
 - routes legacy account/admin pages into the relevant settings pane.
 
+When `theme.js` is used, mark the dialog with `data-permanent-dialog`. The
+shared controller opens it automatically and protects it from both native
+`cancel` events and document-level Escape handling.
+
 The browser URL may identify the initial pane, for example
 `/auth/app?pane=passkeys`. Unknown pane names must fall back to a safe default.
 

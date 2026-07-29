@@ -33,6 +33,18 @@ Theme controls use:
 
 The preference is stored under `xore-theme`.
 
+Permanent settings surfaces use:
+
+```html
+<dialog class="modal modal--permanent" data-permanent-dialog>
+  <!-- sidebar, content, and every nested confirmation -->
+</dialog>
+```
+
+`theme.js` opens these dialogs on load, prevents Escape from closing them,
+restores focus after nested dialogs, synchronizes backdrop `inert` and
+`aria-hidden` state, and keeps only one `.action-menu` open at a time.
+
 ## Vendoring
 
 For repositories that embed static assets:
