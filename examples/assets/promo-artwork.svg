@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="Abstract concentric arches in warm terracotta tones">
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f2ead9"/>
+      <stop offset="1" stop-color="#eadabd"/>
+    </linearGradient>
+    <filter id="grain2">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0"/>
+    </filter>
+  </defs>
+  <rect width="800" height="800" fill="url(#paper)"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M 92 622 A 308 308 0 0 1 708 622" stroke="#d97757" stroke-width="42"/>
+    <path d="M 156 622 A 244 244 0 0 1 644 622" stroke="#de9166" stroke-width="42"/>
+    <path d="M 220 622 A 180 180 0 0 1 580 622" stroke="#e7af81" stroke-width="42"/>
+    <path d="M 284 622 A 116 116 0 0 1 516 622" stroke="#eecaa0" stroke-width="42"/>
+  </g>
+  <circle cx="400" cy="622" r="44" fill="#6e4536"/>
+  <rect x="60" y="622" width="680" height="3" rx="1.5" fill="#8a5a44" opacity="0.5"/>
+  <rect width="800" height="800" filter="url(#grain2)"/>
+</svg>
