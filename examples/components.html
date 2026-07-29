@@ -28,7 +28,7 @@
   <main class="example-main">
     <header class="example-hero">
       <div class="label-section">Visual acceptance suite</div>
-      <h1>Component catalog</h1>
+      <h1 class="heading-serif">Component catalog</h1>
       <p>Every reusable primitive belongs here before it is adopted downstream.</p>
     </header>
 
@@ -162,6 +162,18 @@
         <div data-tab-panel="recent" style="padding:18px 0">Recent activity is visible.</div>
         <div data-tab-panel="saved" hidden style="padding:18px 0">Saved activity is visible.</div>
         <div data-tab-panel="archived" hidden style="padding:18px 0">Archived activity is visible.</div>
+        <div class="showcase-row" style="margin-bottom:16px">
+          <button class="chip">Summarize</button>
+          <button class="chip">Draft</button>
+          <button class="chip">Review</button>
+          <button class="chip">Automate</button>
+          <span class="segmented" role="group" aria-label="Mode">
+            <button class="active">Chat</button><button>Cowork</button>
+          </span>
+          <span class="segmented" role="group" aria-label="Appearance">
+            <button class="active">Auto</button><button>Light</button><button>Dark</button>
+          </span>
+        </div>
         <div class="pagination">
           <button class="btn btn-secondary btn-sm">‹</button>
           <button class="btn btn-secondary btn-sm">1</button>
@@ -212,15 +224,18 @@
       <div class="example-section__head"><div><h2>Floating layers</h2><p>Menus, dialogs, and explicit destructive confirmation.</p></div></div>
       <div class="showcase showcase-grid">
         <div class="dropdown" aria-label="Example menu">
-          <button class="dropdown__item">Open details</button>
-          <button class="dropdown__item">Duplicate</button>
-          <button class="dropdown__item">Copy identifier</button>
+          <button class="dropdown__item">New investigation<span class="dropdown__shortcut">Ctrl+N</span></button>
+          <button class="dropdown__item">Settings…<span class="dropdown__shortcut">Ctrl+,</span></button>
+          <button class="dropdown__item">Language<span class="dropdown__chevron">›</span></button>
           <div class="dropdown__divider"></div>
-          <button class="dropdown__item text-danger">Delete</button>
+          <button class="dropdown__item dropdown__item--accent">Upgrade plan</button>
+          <div class="dropdown__divider"></div>
+          <button class="dropdown__item text-danger">Delete<span class="dropdown__shortcut">⌫</span></button>
         </div>
         <div>
           <button class="btn btn-secondary" data-open-dialog="example-dialog">Open dialog</button>
           <button class="btn btn-danger" data-open-dialog="danger-dialog">Danger dialog</button>
+          <button class="btn btn-secondary" data-open-dialog="promo-dialog">Promo dialog</button>
         </div>
       </div>
     </section>
@@ -247,6 +262,18 @@
       <button class="btn btn-ghost" data-close-dialog="danger-dialog">Cancel</button>
       <button class="btn btn-danger" data-dialog-initial-focus data-close-dialog="danger-dialog">Delete project</button>
     </div>
+  </dialog>
+
+  <div class="modal-backdrop" data-dialog-backdrop="promo-dialog"></div>
+  <dialog class="modal modal--promo" id="promo-dialog" aria-labelledby="promo-dialog-title">
+    <button class="modal__close" data-close-dialog="promo-dialog" aria-label="Close">✕</button>
+    <div class="modal__body">
+      <span class="badge badge--solid">New</span>
+      <h2 class="heading-serif" id="promo-dialog-title" style="margin:14px 0 10px">Announcements with room to breathe.</h2>
+      <p class="text-secondary">Split dialogs pair a short message with an artwork panel. The close control stays in the corner, the action spans the content column, and the artwork hides on narrow screens.</p>
+      <button class="btn btn-primary" data-close-dialog="promo-dialog" style="width:100%;margin-top:18px">Try it now</button>
+    </div>
+    <div class="modal__media" aria-hidden="true"></div>
   </dialog>
   <footer class="example-footer">Add shared components here before downstream adoption.</footer>
 </body>
