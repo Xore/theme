@@ -18,8 +18,10 @@ destructive confirmations.
 - Theme source: `https://github.com/Xore/theme`
 - Existing UI plan: `docs/DASHBOARD-UI-REDESIGN-GUIDE.md`
 - Server templates: `dashboard/page.go`
-- Current shell adapter: `dashboard/static/hp-adminlte.js`
-- Current application styling: `dashboard/static/hp-adminlte.css`
+- Current shell behavior: `dashboard/static/hp-app.js`
+- Current application styling source:
+  `dashboard/frontend/src/shell.css` (compiled to
+  `dashboard/static/hp-tailwind.css`)
 - Frontend contracts: `dashboard/frontend/`
 
 Before editing:
@@ -154,9 +156,11 @@ runtime.
 ## Visual requirements
 
 - Thin quiet borders, no gradients or glowing panels.
-- 6px controls, 10px panels, 12px dialogs.
+- 9px controls, 14px panels, 18px dialogs, all through the shared radius
+  tokens.
 - Neutral metrics; severity appears in text/badges, not whole tiles.
-- Warm off-white text and restrained terracotta focus/selection.
+- Warm off-white text, blue keyboard focus and links, and restrained
+  terracotta brand emphasis/selection.
 - Main content 960–1180px, detailed investigations up to 1360px.
 - Large tables, maps, and evidence viewers may use full available width.
 - Motion 120–160ms and disabled by reduced-motion preference.
