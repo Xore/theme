@@ -30,9 +30,57 @@
     catch (_) { return 'system'; }
   }
 
+  function dialogBackdrop(id) {
+    return document.querySelector('[data-dialog-backdrop="' + id + '"]');
+  }
+
+  function setBackdropState(backdrop, open) {
+    if (!backdrop) return;
+    backdrop.classList.toggle('open', open);
+    backdrop.setAttribute('aria-hidden', String(!open));
+    if (open) backdrop.removeAttribute('inert');
+    else backdrop.setAttribute('inert', '');
+  }
+
+  function initialDialogFocus(dialog) {
+    return dialog.querySelector('[data-dialog-initial-focus]') ||
+      dialog.querySelector('[autofocus]') ||
+      dialog.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  }
+
+  function openDialog(id, opener) {
+    var dialog = document.getElementById(id);
+    if (!dialog) return;
+    dialog._themeOpener = opener || document.activeElement;
+    setBackdropState(dialogBackdrop(id), true);
+    if (dialog.showModal && !dialog.open) dialog.showModal();
+    dialog.classList.add('open');
+    var initialFocus = initialDialogFocus(dialog);
+    if (initialFocus) initialFocus.focus();
+  }
+
+  function closeDialog(id) {
+    var dialog = document.getElementById(id);
+    if (!dialog || dialog.hasAttribute('data-permanent-dialog')) return;
+    var opener = dialog._themeOpener;
+    dialog.classList.remove('open');
+    if (dialog.close && dialog.open) dialog.close();
+    dialog._themeOpener = null;
+    setBackdropState(dialogBackdrop(id), false);
+    if (opener && opener.isConnected) opener.focus();
+  }
+
   applyTheme(savedTheme());
 
   document.addEventListener('click', function (event) {
+    if (!event.target.closest('.action-menu')) {
+      document.querySelectorAll('.action-menu[open]').forEach(function (menu) {
+        menu.removeAttribute('open');
+      });
+    }
+    var menuItem = event.target.closest('.action-menu__item');
+    if (menuItem) menuItem.closest('.action-menu').removeAttribute('open');
+
     var themeButton = event.target.closest('[data-theme-value]');
     if (themeButton) {
       setTheme(themeButton.getAttribute('data-theme-value'));
@@ -56,59 +104,55 @@
 
     var opener = event.target.closest('[data-open-dialog]');
     if (opener) {
-      var dialog = document.getElementById(opener.getAttribute('data-open-dialog'));
-      var backdrop = document.querySelector('[data-dialog-backdrop="' + opener.getAttribute('data-open-dialog') + '"]');
-      if (dialog) {
-        dialog._themeOpener = opener;
-        if (dialog.showModal) dialog.showModal();
-        dialog.classList.add('open');
-        var initialFocus =
-          dialog.querySelector('[data-dialog-initial-focus]') ||
-          dialog.querySelector('[autofocus]') ||
-          dialog.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-        if (initialFocus) initialFocus.focus();
-      }
-      if (backdrop) backdrop.classList.add('open');
+      openDialog(opener.getAttribute('data-open-dialog'), opener);
       return;
     }
 
     var closer = event.target.closest('[data-close-dialog]');
     if (closer) {
       closeDialog(closer.getAttribute('data-close-dialog'));
+      return;
+    }
+
+    var backdrop = event.target.closest('[data-dialog-backdrop]');
+    if (backdrop && backdrop === event.target) {
+      closeDialog(backdrop.getAttribute('data-dialog-backdrop'));
     }
   });
 
-  function closeDialog(id) {
-    var dialog = document.getElementById(id);
-    var backdrop = document.querySelector('[data-dialog-backdrop="' + id + '"]');
-    var opener = dialog && dialog._themeOpener;
-    if (dialog) {
-      dialog.classList.remove('open');
-      if (dialog.close) dialog.close();
-      dialog._themeOpener = null;
-    }
-    if (backdrop) backdrop.classList.remove('open');
-    if (opener && opener.isConnected) opener.focus();
-  }
+  document.addEventListener('toggle', function (event) {
+    if (!event.target.matches || !event.target.matches('.action-menu[open]')) return;
+    document.querySelectorAll('.action-menu[open]').forEach(function (menu) {
+      if (menu !== event.target) menu.removeAttribute('open');
+    });
+  }, true);
 
   document.addEventListener('keydown', function (event) {
     if (event.key !== 'Escape') return;
-    var openDialog = document.querySelector('dialog.open');
-    if (openDialog) {
+    var dialogs = document.querySelectorAll('dialog.open:not([data-permanent-dialog])');
+    var deepestDialog = dialogs[dialogs.length - 1];
+    if (deepestDialog) {
       event.preventDefault();
-      closeDialog(openDialog.id);
+      closeDialog(deepestDialog.id);
     }
   });
 
   document.querySelectorAll('dialog').forEach(function (dialog) {
     dialog.addEventListener('cancel', function (event) {
       event.preventDefault();
-      closeDialog(dialog.id);
+      if (!dialog.hasAttribute('data-permanent-dialog')) closeDialog(dialog.id);
     });
+  });
+
+  document.querySelectorAll('dialog[data-permanent-dialog]').forEach(function (dialog) {
+    if (dialog.showModal && !dialog.open) dialog.showModal();
+    dialog.classList.add('open');
   });
 
   window.XoreTheme = {
     get: savedTheme,
-    set: setTheme
+    set: setTheme,
+    openDialog: openDialog,
+    closeDialog: closeDialog
   };
 }());

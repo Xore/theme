@@ -34,6 +34,13 @@ Links use `--text-link` / `--text-link-hover` (blue) and focus outlines use
 info, warning, and danger only when the content carries that meaning. Every
 semantic color has a matching `-soft` surface token.
 
+Supporting component tokens:
+
+- `--control-knob`: toggle thumb color.
+- `--text-on-status`: text on solid semantic badges.
+- `--artwork-bg`: fallback surface behind optional artwork.
+- `--overlay-bg`: modal and nested-confirmation scrim.
+
 ## Geometry
 
 - `--radius-control`: inputs, buttons, navigation items (9px).
