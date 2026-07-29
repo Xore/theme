@@ -26,21 +26,33 @@ but should not redefine component internals.
 
 ## Semantic color
 
-Use `--accent` for the primary action and focus state. Use success, info,
-warning, and danger only when the content carries that meaning. Every semantic
-color has a matching `-soft` surface token.
+`--accent` (terracotta) is the brand emphasis: progress, checked controls,
+selected states, and decorative highlights. The primary action button is the
+inverted `--btn-inverted-bg` / `--btn-inverted-text` pair, not the accent.
+Links use `--text-link` / `--text-link-hover` (blue) and focus outlines use
+`--border-focus`. Toggle switches use `--switch-on` when active. Use success,
+info, warning, and danger only when the content carries that meaning. Every
+semantic color has a matching `-soft` surface token.
 
 ## Geometry
 
-- `--radius-control`: inputs, buttons, navigation items.
-- `--radius-panel`: cards, metrics, command bar.
-- `--radius-dialog`: floating application surfaces.
+- `--radius-control`: inputs, buttons, navigation items (9px).
+- `--radius-panel`: cards, metrics, menus, command bar (14px).
+- `--radius-dialog`: floating application surfaces (18px).
+- `--radius-pill`: chips and fully rounded controls.
 - `--toolbar-height`: global desktop toolbar.
 - `--sidebar-width`: full desktop navigation.
 - `--content-width`: normal reading/workspace column.
 
-Large radii, thick outlines, gradients, and permanent card shadows are outside
-the system. Floating layers may use `--shadow-raised` or `--shadow-dialog`.
+## Typography
+
+- `--font-display` is the serif display stack for greetings, page titles, and
+  announcement headings (`.heading-serif`). Interface text stays sans.
+- `kbd` renders inline keyboard hints inside menus, search fields, and copy.
+
+Gradients and permanent card shadows are outside the system. Floating layers
+may use `--shadow-raised` or `--shadow-dialog`, and modal backdrops may blur
+the page behind them.
 
 ## Compatibility aliases
 
