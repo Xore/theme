@@ -213,6 +213,17 @@
         <button class="btn btn-secondary" data-open-dialog="demo-settings">Open Settings Modal</button>
       </div>
 
+      <!-- Command Palette -->
+      <div class="demo-section">
+        <div class="demo-label">Command Palette — .modal--palette</div>
+        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:52ch;">
+          A search-everything dialog, not the docked .command-bar above:
+          anchored near the top of the viewport instead of centered, and
+          sized to its content instead of a fixed box.
+        </p>
+        <button class="btn btn-secondary" data-open-dialog="demo-palette">Open Command Palette</button>
+      </div>
+
       <!-- Chips -->
       <div class="demo-section">
         <div class="demo-label">Suggestion Chips — .chip</div>
@@ -275,6 +286,33 @@
       </div>
     </div>
   </main>
+</dialog>
+
+<!-- Demo Command Palette -->
+<div class="modal-backdrop" data-dialog-backdrop="demo-palette" aria-hidden="true" inert></div>
+<dialog id="demo-palette" class="modal modal--palette" aria-label="Search">
+  <div class="command-palette__field">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="Search chats and projects">
+    <button class="modal__close" data-close-dialog="demo-palette" aria-label="Close">✕</button>
+  </div>
+  <div class="command-palette__results" role="listbox">
+    <button class="command-palette__row active" role="option" aria-selected="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <span class="command-palette__row-title">FreeRADIUS client certificate WiFi auth</span>
+      <span class="command-palette__row-meta">Enter</span>
+    </button>
+    <button class="command-palette__row" role="option">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <span class="command-palette__row-title">CGNAT Docker examples and advanced applications</span>
+      <span class="command-palette__row-meta">Past week</span>
+    </button>
+    <button class="command-palette__row" role="option">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+      <span class="command-palette__row-title">SENTINEL</span>
+      <span class="command-palette__row-meta">Xore</span>
+    </button>
+  </div>
 </dialog>
 
 </body>
