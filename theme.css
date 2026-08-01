@@ -1017,6 +1017,59 @@ pre {
   font-size: var(--font-size-xs);
 }
 
+/* ── Catalog card ─────────────────────────────────────────────────────
+   .project-card (above) is "your own items" -- a plain title/description/
+   meta list. This is for a browsable directory of things you *add*
+   (skills, connectors, plugins): a leading icon slot, a badge row for
+   flags like New/Community/#N popular, and a trailing round add button. */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+.catalog-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-panel);
+  background: var(--surface-1);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+.catalog-card:hover { background: var(--surface-2); border-color: var(--border-strong); }
+.catalog-card__header { display: flex; align-items: flex-start; gap: 10px; }
+.catalog-card__icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: var(--radius-control);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.catalog-card__icon svg { width: 18px; height: 18px; }
+.catalog-card__title-group { flex: 1; min-width: 0; }
+.catalog-card__title { color: var(--text-primary); font-size: var(--font-size-body); font-weight: 600; }
+.catalog-card__badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+.catalog-card__desc { flex: 1; color: var(--text-secondary); font-size: var(--font-size-caption); line-height: 1.5; }
+.catalog-card__add {
+  display: grid;
+  place-items: center;
+  align-self: flex-end;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+.catalog-card__add:hover { background: var(--accent); border-color: var(--accent); color: var(--text-on-accent); }
+.catalog-card__add svg { width: 14px; height: 14px; }
+
 /* ── Modal header with search ────────────────────────────────────── */
 
 .modal__header {
