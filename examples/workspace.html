@@ -14,8 +14,9 @@
     .activity-list{display:grid}
     .activity-item{display:grid;grid-template-columns:82px minmax(0,1fr) auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-subtle)}
     .activity-item:last-child{border-bottom:0}
-    .mini-chart{height:170px;display:flex;align-items:flex-end;gap:6px;padding-top:20px}
-    .mini-chart span{flex:1;min-width:7px;border-radius:3px 3px 0 0;background:var(--accent-soft);border-top:2px solid var(--accent)}
+    /* .mini-chart itself (height, gap, bar color/radius) comes from
+       theme.css; this page only wants it taller than the shared default. */
+    .mini-chart{height:170px;padding-top:20px}
     @media(max-width:900px){.workspace-columns{grid-template-columns:1fr}}
   </style>
 </head>
@@ -86,11 +87,23 @@
               <div class="tabs"><button class="tab active">24 hours</button><button class="tab">7 days</button></div>
             </div>
             <div class="mini-chart" aria-label="Example event activity chart">
-              <span style="height:28%"></span><span style="height:38%"></span><span style="height:31%"></span>
-              <span style="height:47%"></span><span style="height:56%"></span><span style="height:42%"></span>
-              <span style="height:67%"></span><span style="height:58%"></span><span style="height:78%"></span>
-              <span style="height:64%"></span><span style="height:88%"></span><span style="height:72%"></span>
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span><span></span>
             </div>
+            <!-- Bar heights are set here, not as a style="" attribute on each
+                 span above: see docs/CSP.md. This page has no server and no
+                 real CSP header, so the nonce below is just illustrative --
+                 a real app generates one nonce per request and puts the
+                 same value in both this attribute and its
+                 Content-Security-Policy header. -->
+            <style nonce="__CSP_NONCE__">
+              .mini-chart span:nth-child(1) { --v: 28 } .mini-chart span:nth-child(2) { --v: 38 }
+              .mini-chart span:nth-child(3) { --v: 31 } .mini-chart span:nth-child(4) { --v: 47 }
+              .mini-chart span:nth-child(5) { --v: 56 } .mini-chart span:nth-child(6) { --v: 42 }
+              .mini-chart span:nth-child(7) { --v: 67 } .mini-chart span:nth-child(8) { --v: 58 }
+              .mini-chart span:nth-child(9) { --v: 78 } .mini-chart span:nth-child(10) { --v: 64 }
+              .mini-chart span:nth-child(11) { --v: 88 } .mini-chart span:nth-child(12) { --v: 72 }
+            </style>
           </section>
           <section class="card">
             <div class="card__title">Source health</div>

@@ -25,6 +25,10 @@ font request, or CDN dependency.
 - `docs/ADOPTION.md` — generic copy/vendor instructions.
 - `docs/MODALS.md` — modal top-layer, focus, keyboard, and confirmation
   behavior contract.
+- `docs/CSP.md` — Content-Security-Policy contract: what the theme already
+  satisfies, and the required pattern for a consumer's own dynamic
+  per-element styling (chart bars, progress fills, and similar) under a
+  strict nonce-based `style-src`.
 - `docs/MIGRATE-HONEYPOT-STACK.md` — AI-ready migration plan for
   `Xore/honeypot-stack`.
 
