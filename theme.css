@@ -982,6 +982,12 @@ pre {
   gap: 14px;
 }
 .project-card {
+  /* A grid item's default min-width is auto (content-based), so an
+     unbreakable long title (a hash, a URL) would widen the whole track
+     instead of respecting the title's own overflow:hidden/ellipsis -- the
+     classic CSS Grid + nowrap-text trap. min-width: 0 lets the item (and
+     everything nested in it) actually shrink to the track's size. */
+  min-width: 0;
   padding: 18px;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-panel);
