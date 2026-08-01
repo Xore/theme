@@ -993,12 +993,26 @@ pre {
 .project-card__header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 10px;
   margin-bottom: 8px;
 }
-.project-card__title { color: var(--text-primary); font-size: var(--font-size-body); font-weight: 600; }
+/* An icon and/or multiple badges are both optional -- a header with just a
+   title behaves exactly as before (the title filling the row takes over
+   space-between's old job of pushing a lone badge to the far end). */
+.project-card__icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: var(--radius-control);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.project-card__icon svg { width: 16px; height: 16px; }
+.project-card__title { flex: 1; min-width: 0; color: var(--text-primary); font-size: var(--font-size-body); font-weight: 600; }
 .project-card__badge { flex: none; }
+.project-card__badges { display: flex; flex: none; flex-wrap: wrap; gap: 5px; }
 .project-card__desc {
   color: var(--text-secondary);
   font-size: var(--font-size-caption);
