@@ -130,7 +130,7 @@ the same way as `.mini-chart` above, addressed by row then column:
 <div class="heatmap">
   <div class="heatmap__row">
     <span class="heatmap__label">cowrie</span>
-    <div class="heatmap__cells"><span title="09:00 — 4 events"></span><span title="10:00 — 9 events"></span></div>
+    <div class="heatmap__cells"><span class="heatmap__cell" title="09:00 — 4 events"></span><span class="heatmap__cell" title="10:00 — 9 events"></span></div>
   </div>
 </div>
 <style nonce="{{ .Nonce }}">
