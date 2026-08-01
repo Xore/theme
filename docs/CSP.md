@@ -111,3 +111,39 @@ way described above:
 Wrap in a taller container and set `height` on `.mini-chart` directly (as
 `examples/workspace.html` does) for a bigger chart; the 64px default is
 just a sensible minimum, not a hard limit.
+
+## `.heatmap`
+
+A row-labeled grid of small shaded cells for a two-dimensional count --
+e.g. one row per category, one column per time bucket (see
+`examples/workspace.html`). Each cell's shade comes from `--v` (0–100), set
+the same way as `.mini-chart` above, addressed by row then column:
+
+```css
+.heatmap { display: flex; flex-direction: column; gap: 3px; }
+.heatmap__row { display: flex; align-items: center; gap: 8px; }
+.heatmap__cells { display: flex; flex: 1; gap: 3px; }
+.heatmap__cell { --v: 0; flex: 1; aspect-ratio: 1; background: color-mix(in srgb, var(--accent) calc(var(--v) * 1%), var(--surface-2)); }
+```
+
+```html
+<div class="heatmap">
+  <div class="heatmap__row">
+    <span class="heatmap__label">cowrie</span>
+    <div class="heatmap__cells"><span class="heatmap__cell" title="09:00 — 4 events"></span><span class="heatmap__cell" title="10:00 — 9 events"></span></div>
+  </div>
+</div>
+<style nonce="{{ .Nonce }}">
+  .heatmap__row:nth-child(1) .heatmap__cells span:nth-child(1) { --v: 9 }
+  .heatmap__row:nth-child(1) .heatmap__cells span:nth-child(2) { --v: 20 }
+</style>
+```
+
+Quantize `--v` into a small number of steps (5 is a good default) rather
+than passing raw continuous counts: a heatmap communicates "roughly how
+much" at a glance, and a hundred subtly different shades reads as noise,
+not signal. Put the precise value in each cell's `title` attribute (native,
+no script or styled tooltip required) instead of trying to make the shade
+itself precise. `.heatmap__legend` renders an optional low→high key using
+the same `.heatmap__cell` shades, so it always matches the grid even if a
+consumer overrides the accent token.
