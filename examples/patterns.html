@@ -235,6 +235,73 @@
         </div>
       </div>
 
+      <!-- Motion utilities -->
+      <div class="demo-section">
+        <div class="demo-label">Staggered list entrance — .stagger-in</div>
+        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+          Add to a row container (a &lt;tbody&gt;, a menu's item list) so
+          freshly-rendered rows settle in one after another instead of all
+          at once. Pure CSS -- nth-child carries the delay, nothing to set
+          per row.
+        </p>
+        <button class="btn btn-ghost btn-sm" id="replay-stagger" style="margin-bottom:12px;">Replay</button>
+        <div class="stagger-in" id="stagger-demo" style="display:flex;flex-direction:column;gap:6px;max-width:360px;">
+          <div class="card" style="padding:10px 12px;">Row one</div>
+          <div class="card" style="padding:10px 12px;">Row two</div>
+          <div class="card" style="padding:10px 12px;">Row three</div>
+          <div class="card" style="padding:10px 12px;">Row four</div>
+        </div>
+      </div>
+
+      <div class="demo-section">
+        <div class="demo-label">Attention flash — .flash</div>
+        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+          A one-shot accent-colored ring for a value that just changed --
+          a live-refreshed row, a cell whose count just updated. Not a
+          semantic success/warning/danger signal, just "this changed."
+        </p>
+        <button class="btn btn-ghost btn-sm" id="replay-flash" style="margin-bottom:12px;">Replay</button>
+        <div class="card" id="flash-demo" style="max-width:280px;padding:14px 16px;">
+          <div class="card__label">Sessions</div>
+          <div class="card__value">40</div>
+        </div>
+      </div>
+
+      <div class="demo-section">
+        <div class="demo-label">Timeline entrance — .timeline-block</div>
+        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+          A blur+lift settle for timeline/session-replay entries -- a
+          touch more pronounced than .stagger-in, since a timeline reads
+          one block at a time rather than as a batch of equivalent rows.
+        </p>
+        <button class="btn btn-ghost btn-sm" id="replay-timeline" style="margin-bottom:12px;">Replay</button>
+        <div id="timeline-demo" style="display:flex;flex-direction:column;gap:10px;max-width:420px;">
+          <div class="card timeline-block" style="padding:10px 12px;animation-delay:0ms;">Connection opened &mdash; 10.8.0.1:51422</div>
+          <div class="card timeline-block" style="padding:10px 12px;animation-delay:90ms;">Login attempt &mdash; root / (blank)</div>
+          <div class="card timeline-block" style="padding:10px 12px;animation-delay:180ms;">Command executed &mdash; uname -a</div>
+        </div>
+      </div>
+
+      <div class="demo-section">
+        <div class="demo-label">Toast entrance — .toast / .toast--slide-in-right</div>
+        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+          .toast now settles in on its own (fade + lift) -- direction-
+          agnostic, since a toast stack can sit anywhere. Add
+          .toast--slide-in-right when the consumer's own stack is pinned
+          to a side and a directional arrival reads better.
+        </p>
+        <div style="display:flex;gap:24px;flex-wrap:wrap;">
+          <div>
+            <button class="btn btn-ghost btn-sm" id="replay-toast" style="margin-bottom:12px;">Replay — default</button>
+            <div class="toast" id="toast-demo" style="max-width:280px;"><span class="status-dot text-secondary"></span><div><strong>Settings saved</strong><br><span class="text-muted">The update is now active.</span></div></div>
+          </div>
+          <div>
+            <button class="btn btn-ghost btn-sm" id="replay-toast-right" style="margin-bottom:12px;">Replay — slide from right</button>
+            <div class="toast toast--slide-in-right" id="toast-demo-right" style="max-width:280px;"><span class="status-dot text-secondary"></span><div><strong>Export ready</strong><br><span class="text-muted">events.csv (2.1 MB)</span></div></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 </div>
@@ -315,5 +382,30 @@
   </div>
 </dialog>
 
+<script>
+  // Demo-only replay wiring: restart a CSS animation by removing its
+  // class, forcing a reflow, then re-adding it -- synchronous, so there
+  // is no visible flash of unstyled content between the two steps.
+  function replay(className, ...els) {
+    els.forEach(el => el.classList.remove(className));
+    void els[0].offsetWidth;
+    els.forEach(el => el.classList.add(className));
+  }
+  document.getElementById('replay-stagger').addEventListener('click', () => {
+    replay('stagger-in', document.getElementById('stagger-demo'));
+  });
+  document.getElementById('replay-flash').addEventListener('click', () => {
+    replay('flash', document.getElementById('flash-demo'));
+  });
+  document.getElementById('replay-timeline').addEventListener('click', () => {
+    replay('timeline-block', ...document.querySelectorAll('#timeline-demo .timeline-block'));
+  });
+  document.getElementById('replay-toast').addEventListener('click', () => {
+    replay('toast', document.getElementById('toast-demo'));
+  });
+  document.getElementById('replay-toast-right').addEventListener('click', () => {
+    replay('toast--slide-in-right', document.getElementById('toast-demo-right'));
+  });
+</script>
 </body>
 </html>
