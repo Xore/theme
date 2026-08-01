@@ -153,6 +153,76 @@
         </div>
       </div>
 
+      <!-- Catalog Cards -->
+      <div class="demo-section">
+        <div class="demo-label">Catalog Grid — .catalog-grid / .catalog-card</div>
+        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+          A browsable directory of things you <em>add</em> (skills,
+          connectors, plugins) -- distinct from .project-card above, which
+          is a plain list of things you already have.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+          <button class="chip">Popular</button>
+          <button class="chip">Web search</button>
+          <button class="chip">Code execution</button>
+          <button class="chip">File analysis</button>
+        </div>
+        <div class="catalog-grid">
+          <div class="catalog-card">
+            <div class="catalog-card__header">
+              <span class="catalog-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              </span>
+              <div class="catalog-card__title-group">
+                <span class="catalog-card__title">Deep Research</span>
+                <div class="catalog-card__badges">
+                  <span class="badge badge--solid">New</span>
+                  <span class="badge badge--muted">#1 popular</span>
+                </div>
+              </div>
+            </div>
+            <p class="catalog-card__desc">Multi-step web research with citations, condensed into one report.</p>
+            <button class="catalog-card__add" aria-label="Add Deep Research">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card__header">
+              <span class="catalog-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              </span>
+              <div class="catalog-card__title-group">
+                <span class="catalog-card__title">Code Execution</span>
+                <div class="catalog-card__badges">
+                  <span class="badge badge--muted">Interactive</span>
+                </div>
+              </div>
+            </div>
+            <p class="catalog-card__desc">Run Python in a sandboxed environment for analysis and charts.</p>
+            <button class="catalog-card__add" aria-label="Add Code Execution">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card__header">
+              <span class="catalog-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              </span>
+              <div class="catalog-card__title-group">
+                <span class="catalog-card__title">Report Builder</span>
+                <div class="catalog-card__badges">
+                  <span class="badge badge--muted">Community</span>
+                </div>
+              </div>
+            </div>
+            <p class="catalog-card__desc">Community-maintained skill for structured incident writeups.</p>
+            <button class="catalog-card__add" aria-label="Add Report Builder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Chat Messages -->
       <div class="demo-section">
         <div class="demo-label">Chat Messages — .message</div>
