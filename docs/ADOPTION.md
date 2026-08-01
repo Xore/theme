@@ -62,6 +62,15 @@ for example audit-table column widths, map sizing, or authentication form
 layout. Move a selector into the shared theme only when its semantic contract
 is reusable.
 
+## Content Security Policy
+
+If the application enforces a strict `style-src`/`script-src` (a per-request
+nonce, no `'unsafe-inline'`), read [`CSP.md`](./CSP.md) before building
+anything that sets a per-element value at render time — a chart bar's
+height, a progress fill, a positioned tooltip. The obvious inline
+`style="..."` attribute is silently dropped under that policy in every
+CSP-enforcing browser; `CSP.md` has the pattern that actually works.
+
 ## Validation checklist
 
 - Review all example pages at 1440×900, 1024×768, and 390×844.

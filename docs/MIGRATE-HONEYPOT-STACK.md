@@ -108,11 +108,14 @@ logic from `hp-adminlte.js`. Keep behavior that has not yet moved.
 | Toasts/alerts | `.toast`, `.alert` |
 | Settings | `.modal` or `.settings-layout` primitives |
 | Global query | `.command-bar` |
+| Simple hourly/periodic bar chart (e.g. the overview activity chart) | `.mini-chart` -- see `docs/CSP.md` for the required nonced-`<style>`-element pattern for setting each bar's `--v`; do not reintroduce a per-bar `style=""` attribute |
 
 Keep these dashboard-specific:
 
 - Leaflet and map container sizing;
-- charts and visualization compatibility;
+- any visualization beyond a simple bar chart (the map, evidence/session
+  timelines, and anything else with product-specific interaction or
+  data shape) -- a periodic bar chart itself is `.mini-chart`, above;
 - payload/evidence layouts;
 - timeline and session replay;
 - expandable normalized JSON;
