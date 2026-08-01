@@ -105,6 +105,45 @@
               .mini-chart span:nth-child(11) { --v: 88 } .mini-chart span:nth-child(12) { --v: 72 }
             </style>
           </section>
+          <section class="card wide">
+            <div class="card__row" style="padding-top:0">
+              <div><div class="card__title">Activity by sensor</div><div class="card__value">Events per hour, last 12 hours</div></div>
+            </div>
+            <!-- .heatmap: see docs/CSP.md -- --v per cell comes from this
+                 nonced <style> element, addressed by row then column, never
+                 a style="" attribute. -->
+            <div class="heatmap" aria-label="Example sensor activity heatmap">
+              <div class="heatmap__row"><span class="heatmap__label">cowrie</span><div class="heatmap__cells">
+                <span title="09:00 — 4 events"></span><span title="10:00 — 9 events"></span><span title="11:00 — 14 events"></span><span title="12:00 — 22 events"></span><span title="13:00 — 31 events"></span><span title="14:00 — 44 events"></span><span title="15:00 — 38 events"></span><span title="16:00 — 27 events"></span><span title="17:00 — 19 events"></span><span title="18:00 — 12 events"></span><span title="19:00 — 8 events"></span><span title="20:00 — 6 events"></span>
+              </div></div>
+              <div class="heatmap__row"><span class="heatmap__label">dionaea</span><div class="heatmap__cells">
+                <span title="09:00 — 2 events"></span><span title="10:00 — 3 events"></span><span title="11:00 — 5 events"></span><span title="12:00 — 8 events"></span><span title="13:00 — 11 events"></span><span title="14:00 — 9 events"></span><span title="15:00 — 13 events"></span><span title="16:00 — 10 events"></span><span title="17:00 — 7 events"></span><span title="18:00 — 5 events"></span><span title="19:00 — 3 events"></span><span title="20:00 — 2 events"></span>
+              </div></div>
+              <div class="heatmap__row"><span class="heatmap__label">conpot</span><div class="heatmap__cells">
+                <span title="09:00 — 0 events"></span><span title="10:00 — 1 event"></span><span title="11:00 — 0 events"></span><span title="12:00 — 1 event"></span><span title="13:00 — 2 events"></span><span title="14:00 — 1 event"></span><span title="15:00 — 0 events"></span><span title="16:00 — 1 event"></span><span title="17:00 — 0 events"></span><span title="18:00 — 0 events"></span><span title="19:00 — 1 event"></span><span title="20:00 — 0 events"></span>
+              </div></div>
+              <div class="heatmap__row"><span class="heatmap__label">tanner</span><div class="heatmap__cells">
+                <span title="09:00 — 1 event"></span><span title="10:00 — 2 events"></span><span title="11:00 — 3 events"></span><span title="12:00 — 4 events"></span><span title="13:00 — 6 events"></span><span title="14:00 — 5 events"></span><span title="15:00 — 7 events"></span><span title="16:00 — 4 events"></span><span title="17:00 — 3 events"></span><span title="18:00 — 2 events"></span><span title="19:00 — 1 event"></span><span title="20:00 — 1 event"></span>
+              </div></div>
+              <div class="heatmap__row"><span class="heatmap__label">multipot</span><div class="heatmap__cells">
+                <span title="09:00 — 0 events"></span><span title="10:00 — 0 events"></span><span title="11:00 — 1 event"></span><span title="12:00 — 1 event"></span><span title="13:00 — 2 events"></span><span title="14:00 — 1 event"></span><span title="15:00 — 2 events"></span><span title="16:00 — 1 event"></span><span title="17:00 — 0 events"></span><span title="18:00 — 0 events"></span><span title="19:00 — 0 events"></span><span title="20:00 — 0 events"></span>
+              </div></div>
+            </div>
+            <style nonce="__CSP_NONCE__">
+              .heatmap__row:nth-child(1) .heatmap__cells span:nth-child(1){--v:9}.heatmap__row:nth-child(1) .heatmap__cells span:nth-child(2){--v:20}.heatmap__row:nth-child(1) .heatmap__cells span:nth-child(3){--v:32}.heatmap__row:nth-child(1) .heatmap__cells span:nth-child(4){--v:50}.heatmap__row:nth-child(1) .heatmap__cells span:nth-child(5){--v:70}.heatmap__row:nth-child(1) .heatmap__cells span:nth-child(6){--v:100}.heatmap__row:nth-child(1) .heatmap__cells span:nth-child(7){--v:86}.heatmap__row:nth-child(1) .heatmap__cells span:nth-child(8){--v:61}.heatmap__row:nth-child(1) .heatmap__cells span:nth-child(9){--v:43}.heatmap__row:nth-child(1) .heatmap__cells span:nth-child(10){--v:27}.heatmap__row:nth-child(1) .heatmap__cells span:nth-child(11){--v:18}.heatmap__row:nth-child(1) .heatmap__cells span:nth-child(12){--v:14}
+              .heatmap__row:nth-child(2) .heatmap__cells span:nth-child(1){--v:5}.heatmap__row:nth-child(2) .heatmap__cells span:nth-child(2){--v:7}.heatmap__row:nth-child(2) .heatmap__cells span:nth-child(3){--v:11}.heatmap__row:nth-child(2) .heatmap__cells span:nth-child(4){--v:18}.heatmap__row:nth-child(2) .heatmap__cells span:nth-child(5){--v:25}.heatmap__row:nth-child(2) .heatmap__cells span:nth-child(6){--v:20}.heatmap__row:nth-child(2) .heatmap__cells span:nth-child(7){--v:30}.heatmap__row:nth-child(2) .heatmap__cells span:nth-child(8){--v:23}.heatmap__row:nth-child(2) .heatmap__cells span:nth-child(9){--v:16}.heatmap__row:nth-child(2) .heatmap__cells span:nth-child(10){--v:11}.heatmap__row:nth-child(2) .heatmap__cells span:nth-child(11){--v:7}.heatmap__row:nth-child(2) .heatmap__cells span:nth-child(12){--v:5}
+              .heatmap__row:nth-child(3) .heatmap__cells span:nth-child(1){--v:0}.heatmap__row:nth-child(3) .heatmap__cells span:nth-child(2){--v:8}.heatmap__row:nth-child(3) .heatmap__cells span:nth-child(3){--v:0}.heatmap__row:nth-child(3) .heatmap__cells span:nth-child(4){--v:8}.heatmap__row:nth-child(3) .heatmap__cells span:nth-child(5){--v:16}.heatmap__row:nth-child(3) .heatmap__cells span:nth-child(6){--v:8}.heatmap__row:nth-child(3) .heatmap__cells span:nth-child(7){--v:0}.heatmap__row:nth-child(3) .heatmap__cells span:nth-child(8){--v:8}.heatmap__row:nth-child(3) .heatmap__cells span:nth-child(9){--v:0}.heatmap__row:nth-child(3) .heatmap__cells span:nth-child(10){--v:0}.heatmap__row:nth-child(3) .heatmap__cells span:nth-child(11){--v:8}.heatmap__row:nth-child(3) .heatmap__cells span:nth-child(12){--v:0}
+              .heatmap__row:nth-child(4) .heatmap__cells span:nth-child(1){--v:14}.heatmap__row:nth-child(4) .heatmap__cells span:nth-child(2){--v:28}.heatmap__row:nth-child(4) .heatmap__cells span:nth-child(3){--v:43}.heatmap__row:nth-child(4) .heatmap__cells span:nth-child(4){--v:57}.heatmap__row:nth-child(4) .heatmap__cells span:nth-child(5){--v:86}.heatmap__row:nth-child(4) .heatmap__cells span:nth-child(6){--v:71}.heatmap__row:nth-child(4) .heatmap__cells span:nth-child(7){--v:100}.heatmap__row:nth-child(4) .heatmap__cells span:nth-child(8){--v:57}.heatmap__row:nth-child(4) .heatmap__cells span:nth-child(9){--v:43}.heatmap__row:nth-child(4) .heatmap__cells span:nth-child(10){--v:28}.heatmap__row:nth-child(4) .heatmap__cells span:nth-child(11){--v:14}.heatmap__row:nth-child(4) .heatmap__cells span:nth-child(12){--v:14}
+              .heatmap__row:nth-child(5) .heatmap__cells span:nth-child(1){--v:0}.heatmap__row:nth-child(5) .heatmap__cells span:nth-child(2){--v:0}.heatmap__row:nth-child(5) .heatmap__cells span:nth-child(3){--v:14}.heatmap__row:nth-child(5) .heatmap__cells span:nth-child(4){--v:14}.heatmap__row:nth-child(5) .heatmap__cells span:nth-child(5){--v:28}.heatmap__row:nth-child(5) .heatmap__cells span:nth-child(6){--v:14}.heatmap__row:nth-child(5) .heatmap__cells span:nth-child(7){--v:28}.heatmap__row:nth-child(5) .heatmap__cells span:nth-child(8){--v:14}.heatmap__row:nth-child(5) .heatmap__cells span:nth-child(9){--v:0}.heatmap__row:nth-child(5) .heatmap__cells span:nth-child(10){--v:0}.heatmap__row:nth-child(5) .heatmap__cells span:nth-child(11){--v:0}.heatmap__row:nth-child(5) .heatmap__cells span:nth-child(12){--v:0}
+              .heatmap__legend .heatmap__cell:nth-of-type(1){--v:0}.heatmap__legend .heatmap__cell:nth-of-type(2){--v:25}.heatmap__legend .heatmap__cell:nth-of-type(3){--v:50}.heatmap__legend .heatmap__cell:nth-of-type(4){--v:75}.heatmap__legend .heatmap__cell:nth-of-type(5){--v:100}
+            </style>
+            <div class="heatmap__legend" style="margin-top:8px">
+              <span>Less</span>
+              <span class="heatmap__cell"></span><span class="heatmap__cell"></span><span class="heatmap__cell"></span><span class="heatmap__cell"></span><span class="heatmap__cell"></span>
+              <span>More</span>
+            </div>
+          </section>
+
           <section class="card">
             <div class="card__title">Source health</div>
             <div class="card__desc">Last update less than one minute ago.</div>

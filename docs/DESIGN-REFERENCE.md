@@ -58,7 +58,8 @@ focus rings are **blue**.
 | Two-pane settings dialog with search nav | existing `.modal__sidebar` / `__content` |
 | Split promo modal with artwork panel | new `.modal--promo`, `.modal__body`, `__media` |
 | Empty states: line icon, title, description, CTA | existing `.empty-state`, title now serif |
-| Stats tiles + contribution heatmap | existing `.metric-grid` / `.metric` |
+| Stats tiles | existing `.metric-grid` / `.metric` |
+| Contribution heatmap | new `.heatmap` (row-labeled shaded-cell grid; see `docs/CSP.md`) |
 | "New" solid blue badge | new `.badge--solid` |
 | Table badges ("Included", "Local dev") | existing `.badge` variants |
 
