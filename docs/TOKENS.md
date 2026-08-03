@@ -31,8 +31,11 @@ selected states, and decorative highlights. The primary action button is the
 inverted `--btn-inverted-bg` / `--btn-inverted-text` pair, not the accent.
 Links use `--text-link` / `--text-link-hover` (blue) and focus outlines use
 `--border-focus`. Toggle switches use `--switch-on` when active. Use success,
-info, warning, and danger only when the content carries that meaning. Every
-semantic color has a matching `-soft` surface token.
+info, warning, danger, and critical only when the content carries that
+meaning. `--critical` is reserved for a severity strictly above danger --
+e.g. confirmed active compromise or exfiltration, versus danger's general
+"something is wrong." Every semantic color has a matching `-soft` surface
+token.
 
 Supporting component tokens:
 

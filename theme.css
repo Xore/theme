@@ -50,6 +50,8 @@
   --warning-soft: rgba(222, 179, 106, 0.14);
   --danger: #dc7774;
   --danger-soft: rgba(220, 119, 116, 0.14);
+  --critical: #ff5c5c;
+  --critical-soft: rgba(255, 92, 92, 0.16);
 
   --radius-xs: 6px;
   --radius-control: 9px;
@@ -57,8 +59,8 @@
   --radius-dialog: 18px;
   --radius-pill: 999px;
 
-  --shadow-raised: 0 8px 26px rgba(0, 0, 0, 0.24);
-  --shadow-dialog: 0 24px 80px rgba(0, 0, 0, 0.52);
+  --shadow-raised: 0 1px 2px rgba(0, 0, 0, 0.18), 0 8px 26px rgba(0, 0, 0, 0.24);
+  --shadow-dialog: 0 2px 6px rgba(0, 0, 0, 0.3), 0 24px 80px rgba(0, 0, 0, 0.52);
   --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
   /* A standard ease-out curve (fast start, gentle settle) rather than the
      linear-ish default `ease` keyword -- every hover/focus/panel transition
@@ -153,8 +155,10 @@
   --warning-soft: rgba(155, 107, 37, 0.11);
   --danger: #b34f4c;
   --danger-soft: rgba(179, 79, 76, 0.11);
-  --shadow-raised: 0 8px 26px rgba(48, 42, 36, 0.09);
-  --shadow-dialog: 0 24px 70px rgba(48, 42, 36, 0.19);
+  --critical: #c53030;
+  --critical-soft: rgba(197, 48, 48, 0.13);
+  --shadow-raised: 0 1px 2px rgba(48, 42, 36, 0.06), 0 8px 26px rgba(48, 42, 36, 0.09);
+  --shadow-dialog: 0 2px 6px rgba(48, 42, 36, 0.12), 0 24px 70px rgba(48, 42, 36, 0.19);
 }
 
 @media (prefers-color-scheme: light) {
@@ -199,8 +203,10 @@
     --warning-soft: rgba(155, 107, 37, 0.11);
     --danger: #b34f4c;
     --danger-soft: rgba(179, 79, 76, 0.11);
-    --shadow-raised: 0 8px 26px rgba(48, 42, 36, 0.09);
-    --shadow-dialog: 0 24px 70px rgba(48, 42, 36, 0.19);
+    --critical: #c53030;
+    --critical-soft: rgba(197, 48, 48, 0.13);
+    --shadow-raised: 0 1px 2px rgba(48, 42, 36, 0.06), 0 8px 26px rgba(48, 42, 36, 0.09);
+    --shadow-dialog: 0 2px 6px rgba(48, 42, 36, 0.12), 0 24px 70px rgba(48, 42, 36, 0.19);
   }
 }
 
@@ -610,6 +616,7 @@ select.form-input { cursor: pointer; }
 .badge--blue, .badge--info { background: var(--info-soft); color: var(--info); }
 .badge--orange, .badge--warning { background: var(--warning-soft); color: var(--warning); }
 .badge--red, .badge--danger { background: var(--danger-soft); color: var(--danger); }
+.badge--critical { border: 1px solid color-mix(in srgb, var(--critical) 45%, transparent); background: var(--critical-soft); color: var(--critical); }
 .badge--muted { border: 1px solid var(--border-subtle); }
 .badge--current { background: var(--info-soft); color: var(--info); }
 .badge--solid { border: 0; background: var(--switch-on); color: var(--text-on-status); }
@@ -629,6 +636,7 @@ select.form-input { cursor: pointer; }
 .alert--success { border-color: color-mix(in srgb, var(--success) 28%, transparent); background: var(--success-soft); }
 .alert--warning { border-color: color-mix(in srgb, var(--warning) 28%, transparent); background: var(--warning-soft); }
 .alert--danger { border-color: color-mix(in srgb, var(--danger) 28%, transparent); background: var(--danger-soft); }
+.alert--critical { border-color: color-mix(in srgb, var(--critical) 40%, transparent); background: var(--critical-soft); color: var(--critical); }
 
 .tabs {
   display: inline-flex;
