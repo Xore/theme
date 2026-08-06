@@ -441,6 +441,52 @@ select.form-input { cursor: pointer; }
   font-size: var(--font-size-xs);
 }
 
+/*
+ * Structured card: opt-in title/content/footer layout for a card whose
+ * content varies a lot in length across instances (a table with 2 rows on
+ * one page, 40 on another) but should still read as the same card shape
+ * everywhere it's used. .card__title/.card__footer stay a fixed size
+ * regardless of content; .card__content is the only region that grows,
+ * and its own modifiers pick a display shape to match what it holds
+ * rather than forcing every card into one fixed height or one table
+ * layout no matter the data.
+ *
+ * Base .card is untouched and remains simple block flow -- opt in with
+ * .card--structured only where a card actually needs this discipline.
+ */
+.card--structured { display: flex; flex-direction: column; }
+.card--structured .card__title,
+.card--structured .card__footer { flex: 0 0 auto; }
+.card--structured .card__footer {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: var(--font-size-footnote);
+}
+.card--structured .card__content { flex: 1 1 auto; min-height: 0; }
+
+/* Long/unbounded lists (a feed, an event tail): fixed max-height, internal
+   scroll, so one busy card never pushes the rest of the page down. */
+.card__content--scroll { max-height: 320px; overflow-y: auto; }
+
+/* Key/value summaries: compact 2-column layout instead of a 1-column
+   table -- pairs a short label with its value without a full <table>'s
+   row chrome, for cards whose content is a handful of facts, not a list. */
+.card__content--kv {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 14px;
+  align-items: baseline;
+}
+.card__content--kv dt { color: var(--text-secondary); font-size: var(--font-size-footnote); }
+.card__content--kv dd { margin: 0; color: var(--text-primary); font-size: var(--font-size-caption); }
+
+/* Graphs/sparklines: fill the content box the card actually has instead
+   of a fixed pixel size baked into the consuming page. */
+.card--structured .card__content > svg,
+.card--structured .card__content > canvas { display: block; width: 100%; height: auto; }
+
 .metric-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));

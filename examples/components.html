@@ -218,6 +218,35 @@
       <div class="card empty-state">
         <div><div class="empty-state__icon">◇</div><h3>No saved views</h3><p>Save a filtered investigation to make it available here.</p><button class="btn btn-primary">Create a view</button></div>
       </div>
+      <h3 style="margin:24px 0 4px">Structured cards</h3>
+      <p class="text-secondary" style="margin-bottom:14px">Opt-in title/content/footer layout (<code>.card--structured</code>) for a card whose content varies a lot in length across instances but should still read as the same shape everywhere. Title and footer stay a fixed size; only <code>.card__content</code> grows, and its own modifier picks the display shape that matches what it holds.</p>
+      <div class="showcase-grid">
+        <div class="card card--structured">
+          <div class="card__title">Sensor feeds</div>
+          <div class="card__content card__content--scroll">
+            <table class="data-table">
+              <thead><tr><th>feed</th><th>events</th><th>state</th></tr></thead>
+              <tbody>
+                <tr><td>cowrie</td><td class="mono">1,204</td><td><span class="badge badge--success">live</span></td></tr>
+                <tr><td>dionaea</td><td class="mono">318</td><td><span class="badge badge--success">live</span></td></tr>
+                <tr><td>conpot</td><td class="mono">92</td><td><span class="badge badge--success">live</span></td></tr>
+                <tr><td>dnp3</td><td class="mono">41</td><td><span class="badge badge--success">live</span></td></tr>
+                <tr><td>tanner</td><td class="mono">17</td><td><span class="badge badge--warning">stale</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card__footer">5 feeds &bull; updated 8s ago</div>
+        </div>
+        <div class="card card--structured">
+          <div class="card__title">Analysis identity</div>
+          <dl class="card__content card__content--kv">
+            <dt>SHA-256</dt><dd class="mono">7f9c…21ab</dd>
+            <dt>requested</dt><dd>2026-08-06 09:14 UTC</dd>
+            <dt>exit status</dt><dd><span class="badge badge--success">ok</span></dd>
+          </dl>
+          <div class="card__footer">Ghidra headless decompilation</div>
+        </div>
+      </div>
     </section>
 
     <section class="example-section" id="overlays">
