@@ -251,6 +251,52 @@
       <div class="card empty-state">
         <div><div class="empty-state__icon">◇</div><h3>No saved views</h3><p>Save a filtered investigation to make it available here.</p><button class="btn btn-primary">Create a view</button></div>
       </div>
+
+      <h3 style="margin:24px 0 4px;">Card footer alignment (#24)</h3>
+      <p class="text-secondary" style="margin-bottom:14px;">
+        Same <code>.card</code> class, deliberately mismatched content lengths (one line,
+        a short list, a long/unbounded list) -- <code>.card__footer</code> stays pinned to
+        the bottom edge of every card regardless, and the grid stretches every card in a
+        row to match the tallest one so the row itself reads as one consistent shape.
+      </p>
+      <!-- grid-column:auto overrides theme.css's own .card{grid-column:span 4}
+           (meant for a wider 12-column dashboard grid elsewhere in this
+           file, not this 3-column showcase grid) -- without it each card's
+           span-4 exceeds this grid's 3 explicit tracks and auto-placement
+           wraps every card to its own row, which trivially "stretches" to
+           match itself and defeats the whole point of this demo. -->
+      <div class="showcase-grid" style="grid-template-columns:repeat(3, minmax(0, 1fr));">
+        <div class="card" style="grid-column:auto;">
+          <div class="card__title">Storage used</div>
+          <div class="card__content">
+            <div class="card__desc">18.4 GB of 50 GB</div>
+            <div class="progress"><span style="width:37%"></span></div>
+          </div>
+          <div class="card__footer">Updated 2 minutes ago</div>
+        </div>
+        <div class="card" style="grid-column:auto;">
+          <div class="card__title">Recent members</div>
+          <div class="card__content">
+            <div class="card__row"><div><div class="card__label">Organization</div><div class="card__value">Project identity</div></div><span class="card__value--mono">xore-labs</span></div>
+            <div class="card__row"><div><div class="card__label">Member</div><div class="card__value">Administrator</div></div><span class="avatar">XO</span></div>
+          </div>
+          <div class="card__footer"><a href="#">View all members &rarr;</a></div>
+        </div>
+        <div class="card" style="grid-column:auto;">
+          <div class="card__title">Recent activity</div>
+          <div class="card__content card__scroll">
+            <div class="card__row"><div><div class="card__label">12:41:08</div><div class="card__value">Configuration saved</div></div></div>
+            <div class="card__row"><div><div class="card__label">12:38:44</div><div class="card__value">Session rotated</div></div></div>
+            <div class="card__row"><div><div class="card__label">12:32:17</div><div class="card__value">Health check passed</div></div></div>
+            <div class="card__row"><div><div class="card__label">12:29:51</div><div class="card__value">User logged in</div></div></div>
+            <div class="card__row"><div><div class="card__label">12:24:03</div><div class="card__value">Backup completed</div></div></div>
+            <div class="card__row"><div><div class="card__label">12:19:37</div><div class="card__value">Policy updated</div></div></div>
+            <div class="card__row"><div><div class="card__label">12:11:52</div><div class="card__value">Session rotated</div></div></div>
+            <div class="card__row"><div><div class="card__label">12:04:19</div><div class="card__value">Configuration saved</div></div></div>
+          </div>
+          <div class="card__footer">8 of 214 events</div>
+        </div>
+      </div>
     </section>
 
     <section class="example-section" id="overlays">
