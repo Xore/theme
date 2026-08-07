@@ -206,6 +206,37 @@
           </table>
         </div>
       </div>
+
+      <h3 style="margin:24px 0 4px;">Responsive data-table (Xore/theme#24 follow-up)</h3>
+      <p class="text-secondary" style="margin-bottom:14px;">
+        <code>.data-table--responsive</code>: below 720px width each row becomes a stacked
+        label:value block (label from each cell's <code>data-label</code> attribute) instead of
+        a table too wide for the viewport. Resize the window/preview below 720px to see it
+        engage -- at desktop width it renders as an ordinary table.
+      </p>
+      <div class="card">
+        <div class="table-scroll">
+          <table class="data-table data-table--responsive">
+            <thead><tr><th>Time</th><th>Source IP</th><th>Port</th><th>Country</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="mono" data-label="Time">17:19:24</td>
+                <td data-label="Source IP"><a href="#">203.0.113.55</a></td>
+                <td class="mono" data-label="Port">445</td>
+                <td data-label="Country"><a class="badge badge--info" href="#">DE</a></td>
+                <td data-label="Detail">HONEYPOT-SCAN VNC interaction [Attempted Information Leak]</td>
+              </tr>
+              <tr>
+                <td class="mono" data-label="Time">17:19:22</td>
+                <td data-label="Source IP"><a href="#">18.119.20.95</a></td>
+                <td class="mono" data-label="Port">8092</td>
+                <td data-label="Country"><a class="badge badge--info" href="#">US</a></td>
+                <td data-label="Detail">ET CINS Active Threat Intelligence Poor Reputation IP</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
       <div class="showcase-grid">
         <div class="card">
           <div class="card__title">Storage used</div>
