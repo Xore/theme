@@ -7,6 +7,9 @@ change, not as a follow-up.
 
 ## Unreleased
 
+- Dashboard ownership: moved APIARY's remaining static report, payload,
+  sandbox, VNC, TTY, and IP-filter rules into the shared stylesheet; added
+  compact theme-aware raster-brand and mobile-toolbar primitives. (#68)
 - Typography: replaced the inherited Inter/Iowan/Palatino stacks with shared
   Xore font tokens and web-loaded Google Fonts: Space Grotesk for display,
   Fira Sans for interface text, and Fira Code for monospace evidence, with
