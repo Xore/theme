@@ -131,7 +131,7 @@
 .example-section__head p { margin: 0; font-size: 12px; }
 
 .showcase {
-  padding: 22px;
+  padding: var(--space-xl);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-panel);
   background: var(--surface-0);

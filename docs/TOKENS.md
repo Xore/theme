@@ -54,6 +54,16 @@ Supporting component tokens:
 - `--sidebar-width`: full desktop navigation.
 - `--content-width`: normal reading/workspace column.
 
+## Spacing
+
+A 7-step scale for padding, margin, and gap: `--space-xs` (4px), `--space-sm`
+(8px), `--space-md` (12px), `--space-lg` (16px), `--space-xl` (24px),
+`--space-2xl` (32px), `--space-3xl` (40px). Use the nearest step rather than a
+hand-typed pixel value so spacing reads as one system instead of drifting
+component-by-component; land between two steps only when a component has a
+concrete reason (e.g. matching an unrelated fixed dimension elsewhere on the
+same element) to sit off-scale.
+
 ## Typography
 
 - `--font-display` is the serif display stack for greetings, page titles, and
