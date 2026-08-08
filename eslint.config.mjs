@@ -11,6 +11,8 @@ const browserGlobals = {
   localStorage: 'readonly',
   location: 'readonly',
   navigator: 'readonly',
+  setTimeout: 'readonly',
+  clearTimeout: 'readonly',
 };
 
 const nodeGlobals = {
