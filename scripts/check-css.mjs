@@ -4,8 +4,7 @@
  *
  * Zero dependencies so it runs anywhere Node runs. It checks:
  *   - balanced comments, strings, braces, parentheses, and brackets
- *   - no @import and no external url() references (repository policy:
- *     no external font request or CDN dependency)
+ *   - no external url() references except the approved Google Fonts CSS API
  *   - every var(--token) refers to a token defined somewhere in the file
  *
  * Usage: node scripts/check-css.mjs [file ...]
@@ -75,14 +74,23 @@ function checkStructure(file, css) {
 function checkPolicy(file, css) {
   const problems = [];
   const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
-  if (/@import\b/i.test(withoutComments)) {
-    problems.push('@import is not allowed (no external requests policy)');
+  const isApprovedFontStylesheet = (target) =>
+    target.startsWith('https://fonts.googleapis.com/css2?');
+  const importPattern = /@import\s+url\(\s*(['"]?)([^'")]+)\1\s*\)\s*;/gi;
+  let importMatch;
+  while ((importMatch = importPattern.exec(withoutComments)) !== null) {
+    if (!isApprovedFontStylesheet(importMatch[2].trim())) {
+      problems.push(`unapproved @import target "${importMatch[2].trim()}" at ${lineCol(css, importMatch.index)}`);
+    }
+  }
+  if (/@import\b/i.test(withoutComments.replace(importPattern, ''))) {
+    problems.push('@import must use url() and the approved Google Fonts CSS API');
   }
   const urlPattern = /url\(\s*(['"]?)([^'")]+)\1\s*\)/gi;
   let match;
   while ((match = urlPattern.exec(withoutComments)) !== null) {
     const target = match[2].trim();
-    if (!target.startsWith('data:') && !target.startsWith('#')) {
+    if (!target.startsWith('data:') && !target.startsWith('#') && !isApprovedFontStylesheet(target)) {
       problems.push(`external url() reference "${target}" at ${lineCol(css, match.index)}`);
     }
   }

@@ -27,6 +27,10 @@ must follow for its own dynamic, per-element styling.
   a component instance not yet converted to the `--v` pattern) is a gap in
   that example, not a property of the component itself -- if you spot one,
   it should be fixed the same way `.progress`'s own instances were.
+- `theme.css` imports Space Grotesk, Fira Sans, and Fira Code from Google Fonts.
+  Consumers must allow `https://fonts.googleapis.com` in `style-src` and
+  `https://fonts.gstatic.com` in `font-src`. The local fallback stacks remain
+  usable when either request is unavailable.
 
 A minimal policy this contract is compatible with:
 
@@ -34,7 +38,8 @@ A minimal policy this contract is compatible with:
 Content-Security-Policy:
   default-src 'self';
   script-src 'self' 'nonce-<per-request-value>';
-  style-src 'self' 'nonce-<per-request-value>';
+  style-src 'self' https://fonts.googleapis.com 'nonce-<per-request-value>';
+  font-src 'self' https://fonts.gstatic.com;
   ...
 ```
 

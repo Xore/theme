@@ -69,7 +69,9 @@ nonce, no `'unsafe-inline'`), read [`CSP.md`](./CSP.md) before building
 anything that sets a per-element value at render time — a chart bar's
 height, a progress fill, a positioned tooltip. The obvious inline
 `style="..."` attribute is silently dropped under that policy in every
-CSP-enforcing browser; `CSP.md` has the pattern that actually works.
+CSP-enforcing browser; `CSP.md` has the pattern that actually works. The policy
+must also allow `fonts.googleapis.com` in `style-src` and `fonts.gstatic.com` in
+`font-src` for the theme's web typography.
 
 ## Validation checklist
 

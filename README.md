@@ -6,8 +6,9 @@ A framework-free visual system for Xore web applications. It provides the
 warm, quiet geometry of a desktop productivity tool.
 
 The repository is intentionally portable: copy `theme.css` and, if desired,
-`theme.js` into any project. There is no package manager, build step, external
-font request, or CDN dependency.
+`theme.js` into any project. There is no package manager or build step.
+`theme.css` loads Space Grotesk, Fira Sans, and Fira Code through Google Fonts;
+platform-native fallbacks preserve usability when that request is unavailable.
 
 ## What is included
 
@@ -102,7 +103,8 @@ dialog controller should include only the stylesheet.
   so browser top-layer behavior cannot hide confirmations.
 - Permanent settings dialogs carry `data-permanent-dialog`; the shared
   controller opens them on load and never closes them on Escape.
-- Locally available system fonts by default.
+- Web-loaded Space Grotesk headings, Fira Sans interface text, and Fira Code
+  evidence text, with platform-native fallbacks.
 
 ## Repository integrations
 
