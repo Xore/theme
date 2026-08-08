@@ -38,6 +38,84 @@
           <div class="auth-security"><span class="status-dot text-secondary"></span>Protected · all activity logged</div>
         </section>
 
+        <h2 style="margin:28px 0 4px;font-size:15px">Sign in — error states</h2>
+        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:14px">
+          A per-field wrong-credential message and a form-level rate-limit lockout are visually
+          distinct here; a real login screen should not collapse both into one plain paragraph.
+        </p>
+        <section class="auth-card" aria-labelledby="auth-error-title">
+          <h2 id="auth-error-title" style="font-size:15px">Sign in</h2>
+          <div class="alert alert--warning" style="margin-bottom:14px">Too many attempts. Try again in 42s.</div>
+          <div class="form-group">
+            <label class="form-label" for="auth-identity-error">Username or email</label>
+            <input class="form-input" id="auth-identity-error" autocomplete="username" value="operator@example.net" aria-invalid="true">
+            <div class="form-error" role="alert">Incorrect password. 2 attempts remaining.</div>
+          </div>
+          <button class="btn btn-primary btn-lg">Continue</button>
+        </section>
+
+        <h2 style="margin:28px 0 4px;font-size:15px">Sign in — identity, then credential</h2>
+        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:14px">
+          theme.js's plain <code>[role="tab"][data-tab-target]</code> click delegate needs no
+          tab-strip markup to drive a two-step form -- these buttons keep their normal
+          <code>.btn</code> styling; only the wiring is reused.
+        </p>
+        <section class="auth-card" aria-labelledby="auth-step-title" data-tabs>
+          <h2 id="auth-step-title" style="font-size:15px">Sign in</h2>
+          <div data-tab-panel="step-identity">
+            <div class="form-group">
+              <label class="form-label" for="auth-identity-2">Username or email</label>
+              <input class="form-input" id="auth-identity-2" autocomplete="username" placeholder="name@example.net">
+            </div>
+            <button class="btn btn-primary btn-lg" type="button" role="tab" data-tab-target="step-credential" aria-selected="false">Continue</button>
+          </div>
+          <div data-tab-panel="step-credential" hidden>
+            <button class="btn btn-ghost" type="button" role="tab" data-tab-target="step-identity" aria-selected="false" style="margin-bottom:10px">&larr; Back</button>
+            <div class="form-group">
+              <label class="form-label" for="auth-password-2">Password</label>
+              <input class="form-input" id="auth-password-2" type="password" autocomplete="current-password">
+            </div>
+            <label class="check"><input type="checkbox"> Trust this device for 30 days</label>
+            <button class="btn btn-primary btn-lg" style="margin-top:10px">Sign in</button>
+            <div class="auth-divider">or</div>
+            <button class="btn btn-secondary">Continue with a passkey</button>
+          </div>
+        </section>
+
+        <h2 style="margin:28px 0 4px;font-size:15px">Password recovery</h2>
+        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:14px">
+          The generic success notice does not confirm or deny that the account exists -- a
+          deliberate anti-enumeration property, shown here as the three states a consumer
+          actually renders in sequence.
+        </p>
+        <div class="showcase-grid" style="grid-template-columns:repeat(3, minmax(0, 1fr))">
+          <section class="auth-card" style="padding:20px" aria-labelledby="auth-recover-1">
+            <h2 id="auth-recover-1" style="font-size:14px">Request a reset</h2>
+            <div class="form-group">
+              <label class="form-label" for="auth-recover-email">Email</label>
+              <input class="form-input" id="auth-recover-email" type="email" placeholder="name@example.net">
+            </div>
+            <button class="btn btn-primary">Send reset link</button>
+          </section>
+          <section class="auth-card" style="padding:20px" aria-labelledby="auth-recover-2">
+            <h2 id="auth-recover-2" style="font-size:14px">Check your inbox</h2>
+            <div class="alert alert--success">If that account exists, a reset email is on its way — check your inbox.</div>
+          </section>
+          <section class="auth-card" style="padding:20px" aria-labelledby="auth-recover-3">
+            <h2 id="auth-recover-3" style="font-size:14px">Choose a new password</h2>
+            <div class="form-group">
+              <label class="form-label" for="auth-recover-pw1">New password</label>
+              <input class="form-input" id="auth-recover-pw1" type="password">
+              <div class="form-help">At least 15 characters.</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="auth-recover-pw2">Confirm password</label>
+              <input class="form-input" id="auth-recover-pw2" type="password">
+            </div>
+            <button class="btn btn-primary">Set new password</button>
+          </section>
+        </div>
+
         <div class="auth-links">
           <a href="./">Example index</a>
           <a href="#">Privacy</a>
