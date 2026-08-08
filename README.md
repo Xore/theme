@@ -3,8 +3,7 @@
 [![CI](https://github.com/Xore/theme/actions/workflows/ci.yml/badge.svg)](https://github.com/Xore/theme/actions/workflows/ci.yml)
 
 A framework-free visual system for Xore web applications. It provides the
-warm, quiet geometry of a desktop productivity tool without copying product
-names, logos, artwork, or text from another service.
+warm, quiet geometry of a desktop productivity tool.
 
 The repository is intentionally portable: copy `theme.css` and, if desired,
 `theme.js` into any project. There is no package manager, build step, external
