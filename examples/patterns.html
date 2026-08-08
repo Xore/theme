@@ -299,6 +299,19 @@
         <button class="btn btn-secondary" data-open-dialog="demo-settings">Open Settings Modal</button>
       </div>
 
+      <!-- Evidence Modal -->
+      <div class="demo-section">
+        <div class="demo-label">Evidence Modal — .hp-evidence-modal</div>
+        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+          A different shape from the settings modal above: the header
+          search filters the scrollable text dump below it directly (a
+          single-pane investigative viewer), not a sidebar-form two-pane
+          layout. The dashboard's single most-reused detail surface --
+          payload/sandbox/Ghidra/event detail views all open this.
+        </p>
+        <button class="btn btn-secondary" data-open-dialog="demo-evidence">Open Evidence Modal</button>
+      </div>
+
       <!-- Command Palette -->
       <div class="demo-section">
         <div class="demo-label">Command Palette — .modal--palette</div>
@@ -388,6 +401,24 @@
         </div>
       </div>
 
+      <div class="demo-section">
+        <div class="demo-label">Toast stack — .hp-toast-stack / .hp-toast</div>
+        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+          The dashboard's live-update variant: a left-border accent stripe
+          and a stacking container theme.css doesn't otherwise model,
+          layered on top of the plain .toast above. Normally
+          position:fixed in the page's top-right corner; boxed here in a
+          relatively-positioned demo area instead.
+        </p>
+        <button class="btn btn-ghost btn-sm" id="replay-toast-stack" style="margin-bottom:12px;">Replay — stacked</button>
+        <div style="position:relative;height:190px;border:1px solid var(--border-subtle);border-radius:var(--radius-panel);background:var(--surface-0);overflow:hidden;">
+          <div class="hp-toast-stack" id="hp-toast-stack-demo" style="position:absolute;top:12px;right:12px;">
+            <a class="toast hp-toast" href="#" id="hp-toast-demo-1" style="max-width:260px;"><span class="status-dot text-secondary"></span><div><strong>New session</strong><br><span class="text-muted">203.0.113.42 &middot; cowrie</span></div></a>
+            <a class="toast hp-toast" href="#" id="hp-toast-demo-2" style="max-width:260px;"><span class="status-dot text-secondary"></span><div><strong>Payload captured</strong><br><span class="text-muted">stage2.elf &middot; sandboxed</span></div></a>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 </div>
@@ -441,6 +472,30 @@
   </main>
 </dialog>
 
+<!-- Demo Evidence Modal -->
+<div class="modal-backdrop" data-dialog-backdrop="demo-evidence" aria-hidden="true" inert></div>
+<dialog id="demo-evidence" class="modal hp-evidence-modal" aria-labelledby="demo-evidence-title">
+  <div class="modal__header">
+    <span class="modal__header-title" id="demo-evidence-title">Evidence</span>
+    <label class="search-field" style="max-width:280px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;flex:none;opacity:0.5;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" placeholder="Filter lines…" aria-label="Filter evidence lines" style="font-size:12px;">
+    </label>
+    <span class="hp-evidence-count">12 of 340 lines</span>
+    <button class="modal__close" data-close-dialog="demo-evidence" aria-label="Close">✕</button>
+  </div>
+  <div class="hp-evidence-body">
+    <pre class="code">00000000  4d 5a 90 00 03 00 00 00  04 00 00 00 ff ff 00 00  |MZ..............|
+00000010  b8 00 00 00 00 00 00 00  40 00 00 00 00 00 00 00  |........@.......|
+00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00000030  00 00 00 00 00 00 00 00  00 00 00 00 e8 00 00 00  |................|
+0000004b  0e 1f ba 0e 00 b4 09 cd  21 b8 01 4c cd 21 54 68  |........!..L.!Th|
+0000005b  69 73 20 70 72 6f 67 72  61 6d 20 63 61 6e 6e 6f  |is program canno|
+0000006b  74 20 62 65 20 72 75 6e  20 69 6e 20 44 4f 53 20  |t be run in DOS |
+0000007b  6d 6f 64 65 2e 0d 0d 0a  24 00 00 00 00 00 00 00  |mode....$.......|</pre>
+  </div>
+</dialog>
+
 <!-- Demo Command Palette -->
 <div class="modal-backdrop" data-dialog-backdrop="demo-palette" aria-hidden="true" inert></div>
 <dialog id="demo-palette" class="modal modal--palette" aria-label="Search">
@@ -491,6 +546,14 @@
   });
   document.getElementById('replay-toast-right').addEventListener('click', () => {
     replay('toast--slide-in-right', document.getElementById('toast-demo-right'));
+  });
+  document.getElementById('replay-toast-stack').addEventListener('click', () => {
+    const stacked = [document.getElementById('hp-toast-demo-1'), document.getElementById('hp-toast-demo-2')];
+    stacked.forEach((el, i) => {
+      el.classList.remove('hp-toast');
+      void el.offsetWidth;
+      setTimeout(() => el.classList.add('hp-toast'), i * 150);
+    });
   });
 </script>
 </body>
