@@ -1808,6 +1808,33 @@ body [hidden] { display: none !important; }
     border-right: 1px solid var(--border-subtle);
     box-shadow: var(--shadow-dialog);
   }
+  /* Scrim behind the off-canvas drawer, same dim/blur treatment as
+     .modal-backdrop, z-index just under the sidebar's 60 so it sits
+     between .app-main and the open drawer. Always present in the DOM;
+     theme.js toggles visibility via .hp-nav-open on the shell, same as
+     the sidebar rule above. */
+  .app-shell__nav-scrim {
+    position: fixed; z-index: 50; inset: 0;
+    visibility: hidden; opacity: 0; pointer-events: none;
+    background: var(--overlay-bg);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: opacity var(--transition), visibility var(--transition);
+  }
+  .app-shell.hp-nav-open .app-shell__nav-scrim {
+    visibility: visible; opacity: 1; pointer-events: auto;
+  }
+  /* The <=720px compact-rail rule below (icons only, text hidden) still
+     matches at this narrower width too -- override it back to labeled
+     items while the full-width off-canvas drawer is open, since there's
+     room for text here and the rail's icon-only affordance assumes a
+     76px-wide strip, not a 224px drawer. */
+  .app-shell.hp-nav-open .app-sidebar .sidebar__item span { display: inline; }
+  .app-shell.hp-nav-open .app-sidebar .sidebar__section-label,
+  .app-shell.hp-nav-open .app-sidebar .sidebar__profile > div {
+    display: block;
+  }
+  .app-shell.hp-nav-open .app-sidebar .sidebar__item { justify-content: flex-start; }
   /* #210/#215: the live indicator is now the single global one (was
      previously a page-local pill with room to say "Reconnecting…" on the
      overview page only). In the compact toolbar that text is the widest
