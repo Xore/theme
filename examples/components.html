@@ -286,7 +286,10 @@
         <div class="card">
           <div class="card__title">Storage used</div>
           <div class="card__desc">18.4 GB of 50 GB</div>
-          <div class="progress"><span style="width:37%"></span></div>
+          <div class="progress" id="progress-demo-1"><span></span></div>
+          <!-- A real app generates one nonce per request, matching
+               .mini-chart/.heatmap above: see docs/CSP.md. -->
+          <style nonce="__CSP_NONCE__">#progress-demo-1 span { --v: 37 }</style>
         </div>
         <div class="card">
           <div class="card__row"><div><div class="card__label">Organization</div><div class="card__value">Project identity</div></div><span class="card__value--mono">xore-labs</span></div>
@@ -319,7 +322,8 @@
           <div class="card__title">Storage used</div>
           <div class="card__content">
             <div class="card__desc">18.4 GB of 50 GB</div>
-            <div class="progress"><span style="width:37%"></span></div>
+            <div class="progress" id="progress-demo-2"><span></span></div>
+            <style nonce="__CSP_NONCE__">#progress-demo-2 span { --v: 37 }</style>
           </div>
           <div class="card__footer">Updated 2 minutes ago</div>
         </div>

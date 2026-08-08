@@ -22,6 +22,8 @@ font request, or CDN dependency.
 - `examples/` — focused pages for the component catalog, workspace shell,
   settings surface, and authentication.
 - `docs/TOKENS.md` — token contract and customization rules.
+- `docs/COMPONENTS.md` — component-by-component reference: purpose, markup
+  shape, and whether `theme.js` wires it or a consumer must.
 - `docs/ADOPTION.md` — generic copy/vendor instructions.
 - `docs/MODALS.md` — modal top-layer, focus, keyboard, and confirmation
   behavior contract.
@@ -31,6 +33,7 @@ font request, or CDN dependency.
   strict nonce-based `style-src`.
 - `docs/MIGRATE-HONEYPOT-STACK.md` — AI-ready migration plan for
   `Xore/honeypot-stack`.
+- `CHANGELOG.md` — notable changes, newest first.
 
 ## Preview locally
 
@@ -57,7 +60,8 @@ They are the visual acceptance suite for changes to the shared theme.
 - **Pages** — the `examples/` catalog deployed to GitHub Pages on merge,
   live at <https://xore.github.io/theme/>.
 - **Release** — pushing a `v*` tag publishes a release with a zip of
-  `theme.css`, `theme.js`, the minified builds, and the adoption docs.
+  `theme.css`, `theme.js`, the minified builds, and the adoption docs. See
+  [`CHANGELOG.md`](CHANGELOG.md) for what changed.
 
 ## Install by copying
 
@@ -105,6 +109,9 @@ dialog controller should include only the stylesheet.
 
 - [`Xore/auth-backend`](https://github.com/Xore/auth-backend) vendors the
   stylesheet for its embedded Go UI.
-- [`Xore/honeypot-stack`](https://github.com/Xore/honeypot-stack) can migrate
-  its dashboard shell in phases while preserving server-rendered routes and
-  investigation behavior.
+- [`Xore/honeypot-stack`](https://github.com/Xore/honeypot-stack) vendors the
+  stylesheet byte-identical for its dashboard shell; layout convergence onto
+  shared primitives (cards, tables, overlays) is tracked in honeypot-stack's
+  own issues, not in this repository. See
+  [`docs/MIGRATE-HONEYPOT-STACK.md`](docs/MIGRATE-HONEYPOT-STACK.md) for the
+  status of the original migration plan.

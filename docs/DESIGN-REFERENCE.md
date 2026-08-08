@@ -116,7 +116,11 @@ any artwork:
 Both are plain SVG (no dependencies, scales cleanly) and can be replaced by
 downstream apps with their own imagery via the same `<img>` slots.
 
-## Change summary
+## Changes from this pass
+
+Scoped to the screenshot-review pass described above, not an ongoing
+changelog -- see [`CHANGELOG.md`](../CHANGELOG.md) at the repo root for
+what has changed since.
 
 - Surface ramp, text, link, focus, and radius tokens aligned to the sampled
   values in dark, explicit-light, and system-light modes.

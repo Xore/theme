@@ -1,5 +1,28 @@
 # AI migration guide: Xore/honeypot-stack
 
+## Status
+
+Phases 1-4 below (shell/selector migration away from AdminLTE) are
+**complete**. `dashboard/frontend/theme.lock` pins a byte-identical vendored
+`theme.css`; `hp-adminlte.js` and `dashboard/static/hp-tailwind.css` no
+longer exist in the repository (`grep -ril adminlte dashboard/` returns
+nothing). `app-shell` markup is already in place across every
+`dashboard/ui/*.html` page, backed by `dashboard/shell_layout_test.go`.
+
+Phase 5's target below -- moving sidebar/palette/dialog/table/lazy-list/
+live-update behavior out of vanilla JS and into `dashboard/frontend/`
+TypeScript ownership -- was **not** adopted. That behavior still lives in
+`dashboard/static/hp-app.js` (1,400+ lines); `dashboard/frontend/src/`
+contains only a small `api.ts`. Treat `hp-app.js` as the source of truth
+for that behavior unless the honeypot-stack team explicitly revisits this
+plan; do not re-propose the Phase 5 TypeScript rewrite as if it were still
+pending unless asked.
+
+The "Current shell behavior" / "Current application styling source" bullets
+and the `hp-adminlte.js` reference below are kept for historical context on
+what the migration started from -- they no longer describe the present
+state.
+
 ## Objective
 
 Migrate the custom dashboard in `Xore/honeypot-stack` from its AdminLTE-adapted
