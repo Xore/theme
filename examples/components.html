@@ -61,9 +61,15 @@
         </div>
         <div>
           <h1 class="heading-serif">A warmer display voice.</h1>
-          <p class="mono">event_id=7d0b2e status=verified</p>
+          <p class="mono copy-field">event_id=7d0b2e status=verified
+            <button class="btn btn-ghost btn-icon" type="button" data-copy="event_id=7d0b2e status=verified" aria-label="Copy event ID">⧉</button>
+          </p>
           <pre><code>fetch('/api/state')
   .then(response =&gt; response.json());</code></pre>
+          <pre class="code" style="margin-top:10px"><span class="diff-line diff-line--add">+ spawned: powershell.exe -enc SQBFAFgA...</span>
+<span class="diff-line diff-line--add">+ opened: C:\Windows\Temp\stage2.dll</span>
+<span class="diff-line diff-line--del">- listening: 127.0.0.1:4444</span>
+<span class="diff-line diff-line--del">- process: svchost.exe (pid 2204)</span></pre>
           <div>Press <kbd>Ctrl</kbd> + <kbd>K</kbd> to search.</div>
         </div>
       </div>
@@ -141,6 +147,10 @@
           <span class="badge badge--critical">Critical</span>
           <span class="badge badge--muted">Neutral</span>
         </div>
+        <div class="showcase-row" style="margin-bottom:18px">
+          <button class="btn btn-ghost btn-sm" type="button" data-tip="Detected by the honeypot's built-in Suricata ruleset">Detection source ⓘ</button>
+          <span tabindex="0" data-tip="Focusable via keyboard since this element isn't natively interactive">Hover or tab to a plain span ⓘ</span>
+        </div>
         <div style="display:grid;gap:8px">
           <div class="alert alert--info">A new version is ready to review.</div>
           <div class="alert alert--success">Configuration validated successfully.</div>
@@ -189,9 +199,25 @@
       <div class="example-section__head"><div><h2>Data display</h2><p>Metrics, tables, progress, cards, and empty states.</p></div></div>
       <div class="metric-grid" style="margin-bottom:14px">
         <div class="metric"><div class="metric__label">Requests</div><div class="metric__value">2,418</div><div class="metric__trend">+8% from yesterday</div></div>
-        <div class="metric"><div class="metric__label">Healthy services</div><div class="metric__value">12/12</div><div class="metric__trend text-secondary">All operational</div></div>
-        <div class="metric"><div class="metric__label">Open alerts</div><div class="metric__value">3</div><div class="metric__trend text-danger">1 high priority</div></div>
+        <div class="metric"><div class="metric__label">Healthy services</div><div class="metric__value">12/12</div><div class="metric__trend metric__trend--up">All operational</div></div>
+        <div class="metric"><div class="metric__label">Open alerts</div><div class="metric__value">3</div><div class="metric__trend metric__trend--down">1 high priority</div></div>
       </div>
+
+      <h3 style="margin:24px 0 4px;">Loading placeholders</h3>
+      <p class="text-secondary" style="margin-bottom:14px;">Shaped skeletons for content still loading -- a card, table row, or map rectangle rendered as its own layout shape instead of a plain "Loading…" line.</p>
+      <div class="showcase-grid" style="margin-bottom:14px">
+        <div class="metric">
+          <div class="skeleton-line" style="width:40%;height:9px"></div>
+          <div class="skeleton-line" style="width:70%;height:22px;margin-top:6px"></div>
+        </div>
+        <div class="card">
+          <div class="skeleton-line" style="width:30%"></div>
+          <div class="skeleton-line" style="width:95%"></div>
+          <div class="skeleton-line" style="width:80%"></div>
+        </div>
+        <div class="skeleton" style="height:90px"></div>
+      </div>
+
       <div class="card">
         <div class="card__title">Recent activity</div>
         <div class="card__desc">Compact rows keep evidence readable.</div>
@@ -316,6 +342,21 @@
           <button class="btn btn-danger" data-open-dialog="danger-dialog">Danger dialog</button>
           <button class="btn btn-secondary" data-open-dialog="promo-dialog">Promo dialog</button>
         </div>
+        <details class="popover" id="hash-popover-example">
+          <summary class="btn btn-secondary">Hash details</summary>
+          <div class="popover__panel" role="group" aria-label="Hash details">
+            <div class="hp-sb-info-row" style="display:flex;flex-direction:column;gap:2px;padding:6px 10px;font-size:12px">
+              <span class="text-muted" style="font-size:10.5px;text-transform:uppercase;letter-spacing:.05em">SHA-256</span>
+              <span class="mono" style="word-break:break-all">a94a8fe5ccb19ba61c4c0873d391e987982fbbd3</span>
+            </div>
+          </div>
+        </details>
+        <!-- A real app generates one nonce per request for this style element,
+             matching the .mini-chart/.heatmap pattern in workspace.html --
+             this fixed width, not the panel's usual 200px default, is
+             per-instance data, not something a shared class name should
+             carry. See docs/CSP.md. -->
+        <style nonce="__CSP_NONCE__">#hash-popover-example { --popover-width: 300px }</style>
       </div>
     </section>
   </main>

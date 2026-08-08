@@ -372,6 +372,36 @@ p { color: var(--text-secondary); }
 }
 .flash { animation: flash-ring 900ms var(--ease-out); }
 
+/* A shaped placeholder for content still loading -- a card, table row, or
+   map rectangle rendered as its own layout shape instead of a plain text
+   line. No per-element dynamic value and no JS: static markup a consumer
+   renders instead of (or before replacing with) real content. The sweep
+   animation is already neutralized by the prefers-reduced-motion catch-all
+   above (animation-duration: 0.01ms !important on *, *::before, *::after). */
+.skeleton, .skeleton-line {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-2);
+  border-radius: var(--radius-control);
+}
+.skeleton::after, .skeleton-line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--surface-3) 60%, transparent), transparent);
+  animation: skeleton-sweep 1.4s ease-in-out infinite;
+}
+@keyframes skeleton-sweep {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+/* .skeleton-line is a standalone shimmering bar (its own background+sweep,
+   same as .skeleton above) sized for text-line placeholders -- stack
+   several directly, no wrapping .skeleton parent needed. .skeleton itself
+   is for a single rectangular block (a map, an image, a whole card). */
+.skeleton-line { height: 12px; margin-bottom: 8px; border-radius: var(--radius-xs); }
+.skeleton-line:last-child { margin-bottom: 0; }
+
 /* A timeline/session-replay entry settling into place -- a touch more
    pronounced than .stagger-in's plain fade+lift, since a timeline reads
    one block at a time rather than as a batch of equivalent rows. */
@@ -620,6 +650,15 @@ select.form-input { cursor: pointer; }
 .metric__label { color: var(--text-muted); font-size: var(--font-size-xs); }
 .metric__value { margin-top: 6px; color: var(--text-primary); font-size: 24px; font-weight: 600; letter-spacing: -0.03em; }
 .metric__trend { margin-top: 4px; color: var(--text-secondary); font-size: var(--font-size-xs); }
+/* Discrete, server-chosen modifiers (not a per-element continuous value),
+   so unlike .mini-chart/.heatmap below this needs no CSP.md nonce pattern.
+   Mapping: positive/spike-like states -> --up, negative/low states ->
+   --down, neutral/baseline-unavailable states -> no modifier (plain
+   .metric__trend, today's look). */
+.metric__trend--up { color: var(--success); }
+.metric__trend--down { color: var(--danger); }
+.metric__trend--up::before { content: "\2191 "; }
+.metric__trend--down::before { content: "\2193 "; }
 
 /* Each bar's height comes from --v (0-100), not an inline height/width.
    Read docs/CSP.md before setting --v: under a strict style-src (a nonce
@@ -684,6 +723,40 @@ select.form-input { cursor: pointer; }
    accent token. */
 .heatmap__legend { display: flex; align-items: center; gap: 4px; color: var(--text-muted); font-size: var(--font-size-xs); }
 .heatmap__legend .heatmap__cell { flex: none; width: 10px; height: 10px; }
+
+/* CSS-only tooltip, reading its text straight from the DOM attribute via
+   attr() inside this stylesheet rule rather than a computed inline style
+   value -- unlike .mini-chart/.heatmap above, it needs no nonce and no
+   per-page <style> block at all, since attr() here is a static rule, not
+   a per-request dynamic one. :focus-visible makes it keyboard-reachable
+   only on elements that are already focusable (links, buttons); a bare
+   element (e.g. a <span> label) needs tabindex="0" added to pick up
+   keyboard/focus access, this primitive doesn't grant that by itself.
+   white-space:nowrap suits short strings; pair a max-width + white-space:
+   normal modifier alongside it for longer copy. */
+[data-tip] { position: relative; }
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 5px 9px;
+  border-radius: var(--radius-control);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  box-shadow: var(--shadow-raised);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  z-index: 40;
+}
+[data-tip]:hover::after, [data-tip]:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
 
 .badge {
   display: inline-flex;
@@ -955,6 +1028,16 @@ select.form-input { cursor: pointer; }
 .dropdown__chevron { margin-left: auto; color: var(--text-muted); }
 
 .action-menu { position: relative; display: inline-block; }
+/* Generic floating panel for non-menu content -- a details/summary
+   disclosure that isn't a role="menu" (a hash-disclosure list, an
+   account/settings popup body, anything that isn't a set of
+   role="menuitem" actions). Built on the same native <details> mechanism
+   as .action-menu, so it inherits outside-click-close and
+   close-siblings-on-toggle for free via theme.js's :is(.action-menu,
+   .popover) selectors. Panel chrome is shared with .action-menu__popover
+   below (same surface-raised/border-strong/shadow-raised trio); only the
+   menu-specific summary button styling stays exclusive to .action-menu. */
+.popover { position: relative; display: inline-block; --popover-width: 200px; }
 .action-menu > summary {
   display: flex;
   width: 32px;
@@ -973,12 +1056,16 @@ select.form-input { cursor: pointer; }
 .action-menu > summary::-webkit-details-marker { display: none; }
 .action-menu > summary:hover,
 .action-menu[open] > summary { background: var(--surface-2); color: var(--text-primary); }
-.action-menu__popover {
+.action-menu__popover,
+.popover__panel {
   position: absolute;
   z-index: 30;
   top: calc(100% + 6px);
   right: 0;
-  width: 200px;
+  /* Per-instance width is a nonced <style> rule setting --popover-width
+     (docs/CSP.md's existing --v-style pattern), not a page-local class --
+     see docs/CSP.md for the pattern this follows. */
+  width: var(--popover-width, 200px);
   padding: 6px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-panel);
@@ -2151,6 +2238,15 @@ button.copy {
 }
 button.copy:hover { color: var(--text-primary); background: var(--surface-2); }
 
+/* Clipboard-copy primitive: any [data-copy] element toggles .is-copied via
+   theme.js's click delegate -- a plain class toggle, not a per-element
+   dynamic value, so no CSP nonce is needed here (contrast .mini-chart/
+   .heatmap above). .copy-field is a suggested wrapper for a value+copy
+   affordance pairing; [data-copy] itself is what theme.js listens for and
+   works on any element, with or without this class. */
+.copy-field { display: inline-flex; align-items: center; gap: 6px; }
+[data-copy].is-copied::after { content: "copied"; margin-left: 6px; color: var(--success); font-size: var(--font-size-xs); }
+
 /* ── Legacy content hooks ───────────────────────────────────────────────── */
 .note { font-size: 12px; color: var(--text-muted); margin: 0 0 12px; }
 .card .note { margin: -4px 0 12px; }
@@ -2316,6 +2412,14 @@ pre.code {
   font: 12px/1.5 var(--hp-mono);
   max-height: 520px; overflow: auto;
 }
+/* Add/remove line coloring for a diff/comparison view inside pre.code --
+   a static per-line class the template already knows to emit (choosing
+   between an Added-range and a Removed-range, not a computed value), so
+   no CSP nonce pattern is needed. Reuses the same --success/--danger
+   state-color tokens .badge--success/--danger already establish. */
+.diff-line { display: block; padding: 0 6px; border-radius: 2px; }
+.diff-line--add { background: var(--success-soft); color: var(--success); }
+.diff-line--del { background: var(--danger-soft); color: var(--danger); }
 footer {
   margin-top: 24px; padding-top: 8px;
   font: 10px var(--hp-mono); letter-spacing: 0.08em; text-transform: uppercase;

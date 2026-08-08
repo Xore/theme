@@ -113,8 +113,8 @@
   applyTheme(savedTheme());
 
   document.addEventListener('click', function (event) {
-    if (!event.target.closest('.action-menu')) {
-      document.querySelectorAll('.action-menu[open]').forEach(closeActionMenu);
+    if (!event.target.closest('.action-menu, .popover')) {
+      document.querySelectorAll('.action-menu[open], .popover[open]').forEach(closeActionMenu);
     }
     var menuItem = event.target.closest('.action-menu__item');
     if (menuItem) closeActionMenu(menuItem.closest('.action-menu'));
@@ -147,6 +147,32 @@
     var themeButton = event.target.closest('[data-theme-value]');
     if (themeButton) {
       setTheme(themeButton.getAttribute('data-theme-value'));
+      return;
+    }
+
+    var copyEl = event.target.closest('[data-copy]');
+    if (copyEl) {
+      var text = copyEl.getAttribute('data-copy') || copyEl.textContent;
+      var done = function () {
+        copyEl.classList.add('is-copied');
+        clearTimeout(copyEl._copyTimer);
+        copyEl._copyTimer = setTimeout(function () {
+          copyEl.classList.remove('is-copied');
+        }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, done);
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (_) { /* no clipboard access */ }
+        document.body.removeChild(ta);
+        done();
+      }
       return;
     }
 
@@ -184,19 +210,19 @@
   });
 
   document.addEventListener('toggle', function (event) {
-    if (!event.target.matches || !event.target.matches('.action-menu[open]')) return;
+    if (!event.target.matches || !event.target.matches('.action-menu[open], .popover[open]')) return;
     // No focus-restore here (unlike the two closeActionMenu() call sites
     // above): the menu just opened via a real click on its own summary,
     // which the browser already focused natively -- calling .focus() on a
     // sibling menu's summary here would steal focus straight back off it.
-    document.querySelectorAll('.action-menu[open]').forEach(function (menu) {
+    document.querySelectorAll('.action-menu[open], .popover[open]').forEach(function (menu) {
       if (menu !== event.target) menu.removeAttribute('open');
     });
   }, true);
 
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') {
-      var openMenu = document.querySelector('.action-menu[open]');
+      var openMenu = document.querySelector('.action-menu[open], .popover[open]');
       if (openMenu) {
         event.preventDefault();
         closeActionMenu(openMenu);
