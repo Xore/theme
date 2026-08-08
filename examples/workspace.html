@@ -24,7 +24,7 @@
   <div class="app-shell">
     <header class="app-toolbar">
       <button class="btn btn-ghost btn-icon" aria-label="Application menu">⌘</button>
-      <button class="btn btn-ghost btn-icon" aria-label="Toggle sidebar">☰</button>
+      <button class="btn btn-ghost btn-icon" data-nav-toggle aria-expanded="false" aria-controls="workspace-sidebar" aria-label="Toggle navigation">☰</button>
       <button class="btn btn-ghost btn-icon" aria-label="Back">‹</button>
       <button class="btn btn-ghost btn-icon" aria-label="Forward">›</button>
       <div class="app-toolbar__title">Security workspace</div>
@@ -33,7 +33,7 @@
       <a class="btn btn-ghost btn-sm" href="./">Examples</a>
     </header>
 
-    <aside class="app-sidebar">
+    <aside class="app-sidebar" id="workspace-sidebar">
       <div class="sidebar__search">
         <span aria-hidden="true">⌕</span>
         <input aria-label="Search navigation" placeholder="Search">
@@ -58,6 +58,8 @@
         <div><div class="card__label">admin</div><div class="card__value">Administrator</div></div>
       </div>
     </aside>
+
+    <div class="app-shell__nav-scrim" data-nav-scrim></div>
 
     <main class="app-main">
       <div class="app-content">
