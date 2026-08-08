@@ -18,10 +18,15 @@ must follow for its own dynamic, per-element styling.
   state change it makes is a class toggle (`classList`) or a DOM attribute
   (`aria-*`, `data-*`, `open`, `inert`). None of that is affected by
   `style-src` at all.
-- `theme.css`'s own components need no inline styles to work. Every example
-  page links only `theme.css` (plus, where relevant, a page-local
-  `<style>` for that page's own one-off layout) and never depends on a
-  `style=""` attribute for a component to render correctly.
+- `theme.css`'s own components are built so a `style=""` attribute is never
+  *required* for correct rendering: `.mini-chart`, `.heatmap`, and
+  `.progress` (see below) all read their one per-element dynamic value from
+  a `--v` custom property with a `0` default, set via the nonced-`<style>`
+  pattern this document describes, not an inline attribute. An example page
+  that reaches for `style=""` anyway (a one-off page-local layout tweak, or
+  a component instance not yet converted to the `--v` pattern) is a gap in
+  that example, not a property of the component itself -- if you spot one,
+  it should be fixed the same way `.progress`'s own instances were.
 
 A minimal policy this contract is compatible with:
 
@@ -91,7 +96,7 @@ attribute at any point.
 
 This applies to *any* per-element dynamic value under this CSP, not just
 `.mini-chart` — the same nonced-`<style>`-element pattern is the answer for
-a positioned tooltip, a progress bar's fill, a heatmap cell's color, or
+a positioned tooltip, `.progress`'s fill, a heatmap cell's color, or
 anything else a future component computes per request. Do not reach for
 `'unsafe-inline'` or `'unsafe-hashes'` to route around this: those weaken
 the policy for the whole page's styling, not just the one dynamic value,
@@ -147,3 +152,23 @@ no script or styled tooltip required) instead of trying to make the shade
 itself precise. `.heatmap__legend` renders an optional low→high key using
 the same `.heatmap__cell` shades, so it always matches the grid even if a
 consumer overrides the accent token.
+
+## `.progress`
+
+A single-value fill bar (see `examples/components.html`). Width comes from
+`--v` (0–100) on the fill `<span>`, set the same way as `.mini-chart` above:
+
+```css
+.progress { height: 6px; overflow: hidden; border-radius: var(--radius-pill); background: var(--surface-3); }
+.progress > span { --v: 0; display: block; width: calc(var(--v) * 1%); height: 100%; background: var(--accent); }
+```
+
+```html
+<div class="progress" id="storage-progress"><span></span></div>
+<style nonce="{{ .Nonce }}">#storage-progress span { --v: 37 }</style>
+```
+
+A `style="width:37%"` attribute renders the same fill under a policy-free
+preview, which is exactly what makes it easy to ship by mistake: it looks
+correct in every check except a real CSP-enforcing browser reading the real
+response headers, per the production incident above.

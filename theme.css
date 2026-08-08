@@ -951,7 +951,10 @@ select.form-input { cursor: pointer; }
   border-radius: var(--radius-pill);
   background: var(--surface-3);
 }
-.progress > span { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+/* --v (0-100) drives the fill width, the same nonced-<style> pattern as
+   .mini-chart/.heatmap above: see docs/CSP.md. Defaults to 0 so an unset
+   fill renders empty, not an invalid width. */
+.progress > span { display: block; width: calc(var(--v) * 1%); height: 100%; border-radius: inherit; background: var(--accent); --v: 0; }
 
 .breadcrumb {
   display: flex;
