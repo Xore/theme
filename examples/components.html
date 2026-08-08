@@ -148,6 +148,25 @@
           <span class="badge badge--muted">Neutral</span>
         </div>
         <div class="showcase-row" style="margin-bottom:18px">
+          <span class="badge wb-state wb-state--completed">completed</span>
+          <span class="badge wb-state wb-state--failed">failed</span>
+          <span class="badge wb-state wb-state--timed_out">timed_out</span>
+          <span class="badge wb-state wb-state--running">running</span>
+          <span class="badge wb-state wb-state--claimed">claimed</span>
+          <span class="badge wb-state wb-state--queued">queued</span>
+        </div>
+        <div class="showcase-row" style="margin-bottom:18px">
+          <button class="hp-live-state" type="button" aria-pressed="false" title="Dashboard refresh is active -- pause it">
+            <span class="status-dot"></span><span>Live</span>
+          </button>
+          <button class="hp-live-state hp-live-state--paused" type="button" aria-pressed="true" title="Dashboard refresh is paused -- resume it">
+            <span class="status-dot"></span><span>Paused</span>
+          </button>
+          <button class="hp-live-state hp-live-state--stalled" type="button" aria-pressed="false" title="Live connection lost -- retrying">
+            <span class="status-dot"></span><span>Reconnecting&hellip;</span>
+          </button>
+        </div>
+        <div class="showcase-row" style="margin-bottom:18px">
           <button class="btn btn-ghost btn-sm" type="button" data-tip="Detected by the honeypot's built-in Suricata ruleset">Detection source ⓘ</button>
           <span tabindex="0" data-tip="Focusable via keyboard since this element isn't natively interactive">Hover or tab to a plain span ⓘ</span>
         </div>
