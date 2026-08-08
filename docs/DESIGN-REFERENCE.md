@@ -32,9 +32,10 @@ focus rings are **blue**.
 
 ## Typography
 
-- Big moments (greeting, "Chats", "Projects", promo headings) use a **serif
-  display face** at regular weight; everything else is sans. Implemented as
-  `--font-display` (system serif stack) applied via `.heading-serif`.
+- Big moments (greeting, "Chats", "Projects", promo headings) use **Space
+  Grotesk**; interface text uses **Fira Sans**. Implemented through
+  `--font-display` and `--font-sans`. The `.heading-serif` class name remains
+  for backwards compatibility even though its face is now sans-serif.
 - Keyboard shortcuts appear inline, muted, right-aligned in menus (`Ctrl+N`,
   `Ctrl+,`), and as `kbd` chips in search fields.
 
@@ -81,7 +82,7 @@ focus rings are **blue**.
 ## What was deliberately not copied
 
 Product names, the asterisk logo, artwork, exact strings, and proprietary
-typefaces. The serif stack falls back to locally available system serifs, and
+typefaces. Xore now uses open Google Fonts with platform-native fallbacks, and
 the accent color was already the theme's own terracotta value.
 
 ## Live cross-check — reference login and plans pages

@@ -69,7 +69,8 @@ sandbox, pipeline, or infrastructure work.
 - Preserve server-sent events and transient live-event notifications.
 - Preserve accessible table sorting, selectable columns, expanded JSON, and
   load-more controls.
-- Do not add CDN assets or external fonts.
+- Allow only the Google Fonts requests declared by `Xore/theme`; do not add
+  other CDN assets or external fonts.
 - Do not copy product names, logos, proprietary artwork, or product-specific
   text into the dashboard.
 
@@ -176,8 +177,8 @@ Use `dashboard/frontend/` for:
 - live-update reconciliation.
 
 Keep API contracts strict. Do not expose raw unbounded backend objects to new
-components. The production bundle must remain vendored and dependency-free at
-runtime.
+components. The production CSS/JavaScript bundle must remain vendored; its only
+runtime asset dependency is the Google Fonts request declared by `Xore/theme`.
 
 ## Visual requirements
 
@@ -246,7 +247,8 @@ overflow, loading, empty, warning, and error states.
 - Theme commit is documented and `dashboard/static/theme.css` matches it.
 - Every current route and critical action has an automated or manual check.
 - No initial shell reconstruction or white flash remains.
-- No external UI assets are requested.
+- No external UI assets are requested except the Google Fonts families declared
+  by `Xore/theme`.
 - No unused AdminLTE/Bootstrap shell reference remains after the final phase.
 - All Go, TypeScript, Compose, and repository CI checks pass.
 - Visual acceptance matrix is reviewed before deployment.

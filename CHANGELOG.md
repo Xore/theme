@@ -7,6 +7,10 @@ change, not as a follow-up.
 
 ## Unreleased
 
+- Typography: replaced the inherited Inter/Iowan/Palatino stacks with shared
+  Xore font tokens and web-loaded Google Fonts: Space Grotesk for display,
+  Fira Sans for interface text, and Fira Code for monospace evidence, with
+  platform-native fallbacks.
 - Docs: added this changelog, corrected `docs/CSP.md`'s inaccurate
   no-`style=""`-attribute claim and gave `.progress` a `--v`-driven fill
   (closing the one component that still needed a `style=""` attribute),

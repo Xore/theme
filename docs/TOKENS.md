@@ -66,8 +66,14 @@ same element) to sit off-scale.
 
 ## Typography
 
-- `--font-display` is the serif display stack for greetings, page titles, and
-  announcement headings (`.heading-serif`). Interface text stays sans.
+- `--font-sans` is the interface stack and uses web-loaded Fira Sans.
+- `--font-display` is the display stack for greetings, page titles, and
+  announcement headings. It uses web-loaded Space Grotesk; `.heading-serif`
+  remains as a backwards-compatible class name.
+- `--font-mono` uses web-loaded Fira Code for evidence, identifiers, keyboard
+  hints, and code.
+- All three stacks include platform-native fallbacks for offline use or a
+  blocked font request.
 - `kbd` renders inline keyboard hints inside menus, search fields, and copy.
 
 Gradients and permanent card shadows are outside the system. Floating layers
