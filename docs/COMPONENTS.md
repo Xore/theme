@@ -19,7 +19,7 @@ a component, update this file in the same PR (`docs/TOKENS.md`'s own
 | `.app-shell`, `.app-toolbar`, `.app-sidebar`, `.app-main`, `.app-content` | Desktop application frame: fixed toolbar, independently-scrolling sidebar and main canvas | `.app-shell` > `.app-toolbar` + `.app-sidebar` + `.app-main` > `.app-content` | CSS-only (grid) | `workspace.html` |
 | `.app-shell.hp-nav-open`, `.app-shell__nav-scrim`, `[data-nav-toggle]`, `[data-nav-scrim]` | Off-canvas mobile nav drawer (<=520px) with scrim, focus trap, and `inert` on `.app-main` | trigger button + `.app-sidebar` + `.app-shell__nav-scrim`, all inside `.app-shell` | Wired (open/close/focus/`aria-expanded`/Escape) | `workspace.html` |
 | `.sidebar__item`, `.sidebar__section-label`, `.sidebar__search`, `.sidebar__profile` | Sidebar navigation list, section headers, search field, profile footer | flat list of `<button>`/`<div>` inside `.app-sidebar__body` | CSS-only | `workspace.html` |
-| `.hp-brand`, `.hp-brand-mark`, `.hp-brand-text`, `.hp-brand-accent` | Product mark + wordmark in the sidebar/toolbar | `<a class="hp-brand">` wrapping an icon chip and text | CSS-only | `workspace.html` |
+| `.hp-brand`, `.hp-brand-mark`, `.hp-brand-text`, `.hp-brand-accent`, `.app-toolbar__brand`, `.theme-art--dark`/`--light` | Product mark + wordmark in the sidebar, plus a compact theme-aware mobile-toolbar mark | brand link wrapping an icon chip and text; paired dark/light raster children use the theme-art modifiers | CSS-only | `workspace.html` |
 | `.settings-layout`, `.settings-layout__sidebar`, `.settings-layout__content`, `.settings-grid`, `.settings-field` | Two-pane settings surface (nav list + form fields) | `.settings-layout` > `.settings-layout__sidebar` + `.settings-layout__content` | CSS-only | `settings.html` |
 | `.auth-split`, `.auth-split__main`, `.auth-split__aside`, `.auth-card`, `.auth-brand` | Split-screen sign-in layout (form column + artwork column) | `.auth-split` > `.auth-split__main` (containing `.auth-card`) + `.auth-split__aside` | CSS-only | `auth.html` |
 
@@ -122,6 +122,10 @@ fixes at once, even though several are single-consumer today.
 | `.hp-cap-list`, `.hp-cfg-source`, `.hp-dash-settings` | Settings-page capability list and config-source display | `settings.html` |
 | `.hp-rev-row`, `.hp-rev-meta` | Revision/comparison list row | -- (see honeypot-stack) |
 | `.hp-audit-row`, `.hp-audit-filter` | Audit-log table row and its filter controls | -- (see honeypot-stack) |
+| `.hp-ip-filter-*` | Event/IP multi-select filter menu | -- (see honeypot-stack) |
+| `.hp-rp-*`, `.pdf-viewer-*` | Reports studio controls, generated-report rows, and the shared PDF viewer surface | -- (see honeypot-stack) |
+| `.hp-pl-*`, `.hp-sb-*` | Payload/sandbox evidence-info popovers and compact label triggers | -- (see honeypot-stack) |
+| `.hp-vnc-*`, `.hp-tty-*` | Sandbox VNC canvas and terminal replay surfaces | -- (see honeypot-stack) |
 
 ## Utilities
 
