@@ -7,6 +7,16 @@ change, not as a follow-up.
 
 ## Unreleased
 
+- Fixed a real WCAG 2 AA contrast failure (1.4.3): light mode's `--accent`/
+  `--accent-hover`/`--accent-pressed` were too light against `--text-on-accent`
+  (3.76:1 on the base color, needs 4.5:1) -- found live by an axe scan against
+  `Xore/auth-backend`'s login theme's primary button. Deepened all three
+  stops (`#c76548`/`#b9583c`/`#a74b33` → `#af593f`/`#a34d35`/`#93422d`),
+  preserving the same hue and the existing base/hover/pressed darkening
+  order; all three now clear 4.5:1 against `--text-on-accent` with margin
+  (4.68/5.50/6.62:1). Dark mode's accent tokens were already compliant
+  (5.49:1) and are unchanged. `--accent-soft`/`--accent-text-on-soft`
+  (translucent/badge pairings, a different contrast context) are unaffected.
 - Dashboard ownership: moved APIARY's remaining static report, payload,
   sandbox, VNC, TTY, and IP-filter rules into the shared stylesheet; added
   compact theme-aware raster-brand and mobile-toolbar primitives. (#68)
