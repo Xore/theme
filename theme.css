@@ -1961,7 +1961,19 @@ body [hidden] { display: none !important; }
   height: 100%;
 }
 .hp-brand-mark img { object-fit: contain; border-radius: inherit; }
-.theme-art--light { display: none; }
+/* theme-art--light's base "off" state must win against any consumer's own
+   image-visibility rule (e.g. .hp-brand-mark img { display: block; } just
+   above -- a completely reasonable thing for a consumer to write, and one
+   real consumer already did) regardless of specificity, since this utility
+   exists specifically to be the deciding word on which paired dark/light
+   asset renders. Without !important, a consumer selector combining one
+   class with the img type selector (0,1,1) already outranks this rule's
+   own (0,1,0), so in dark mode -- the one state with no more-specific
+   override below to rescue it -- both images stayed visible at once. Light
+   mode's own [data-theme="light"] .theme-art--dark override happens to
+   have enough specificity (0,2,0) to win regardless, which is why only
+   dark mode ever showed the bug. */
+.theme-art--light { display: none !important; }
 [data-theme="light"] .theme-art--dark { display: none; }
 [data-theme="light"] .theme-art--light { display: block; }
 @media (prefers-color-scheme: light) {

@@ -7,6 +7,16 @@ change, not as a follow-up.
 
 ## Unreleased
 
+- Fixed `.hp-brand-mark`'s dark/light logo pair both rendering at once in
+  dark mode: `.theme-art--light`'s base `display: none` (specificity 0,1,0)
+  lost to a consumer's own `.hp-brand-mark img { display: block; }`
+  (0,1,1), so the light-theme image never actually hid outside
+  `[data-theme="light"]`/light-`prefers-color-scheme`, where a
+  higher-specificity override rule happened to rescue it instead. Found live
+  via `Xore/APIARY`'s dashboard sidebar (bee logo doubled, overlapping the
+  nav section label beneath it). Now `!important`, matching this file's
+  existing pattern for utility rules meant to be the deciding word
+  regardless of a consumer's own specificity. (#73)
 - Fixed a real WCAG 2 AA contrast failure (1.4.3): light mode's `--accent`/
   `--accent-hover`/`--accent-pressed` were too light against `--text-on-accent`
   (3.76:1 on the base color, needs 4.5:1) -- found live by an axe scan against
