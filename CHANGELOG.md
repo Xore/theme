@@ -7,6 +7,16 @@ change, not as a follow-up.
 
 ## Unreleased
 
+- Fixed `.hp-brand-mark`'s dark/light theme-art toggle showing both images
+  at once in dark mode: `.theme-art--light`'s own base-hide rule
+  (specificity 0,1,0) loses to any container that styles its own
+  `<img>`/`<picture>` children directly (e.g. `.hp-brand-mark img`,
+  specificity 0,1,1). Light mode already had a high-enough-specificity
+  override (`[data-theme="light"] .theme-art--dark`, 0,2,1) to hide the
+  wrong image; nothing symmetric existed for dark mode. Added
+  `[data-theme="dark"] .theme-art--light` and the matching
+  `prefers-color-scheme: dark` no-override case. Found live in
+  `Xore/honeypot-stack`'s dashboard sidebar logo.
 - Fixed a real WCAG 2 AA contrast failure (1.4.3): light mode's `--accent`/
   `--accent-hover`/`--accent-pressed` were too light against `--text-on-accent`
   (3.76:1 on the base color, needs 4.5:1) -- found live by an axe scan against
