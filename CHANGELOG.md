@@ -7,6 +7,10 @@ change, not as a follow-up.
 
 ## Unreleased
 
+- Added reusable render-first data-surface primitives for shaped card, table,
+  project-grid, and code placeholders; made `.skeleton-line` work on inline
+  elements; and gave `.card__scroll` matching horizontal overflow and
+  scrollbar affordance for wide bounded datasets.
 - Fixed `.hp-brand-mark`'s dark/light theme-art toggle showing both images
   at once in dark mode: `.theme-art--light`'s own base-hide rule
   (specificity 0,1,0) loses to any container that styles its own
