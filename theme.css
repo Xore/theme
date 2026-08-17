@@ -2355,7 +2355,11 @@ a.metric:hover { border-color: var(--border-strong); background: var(--surface-2
 td.n { color: var(--accent); font-family: var(--hp-mono); font-size: 12px; text-align: right; white-space: nowrap; }
 td.n a { color: inherit; text-decoration: none; border-bottom: 1px dotted color-mix(in srgb, var(--accent) 45%, transparent); }
 td.n a:hover { color: var(--text-primary); border-color: var(--accent); }
-td.v { color: var(--text-secondary); font-family: var(--hp-mono); font-size: 12px; word-break: break-all; }
+/* min-width: nowrap sibling columns (td.n, td.v a) could crush a
+   plain-text value column (clusters' "coverage") to letter-per-line
+   width -- word-break:break-all then breaks every character. A readable
+   floor stops the collapse without giving up hash-wrapping. */
+td.v { color: var(--text-secondary); font-family: var(--hp-mono); font-size: 12px; word-break: break-all; min-width: 180px; }
 td.v a, td a.lnk { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--border-strong); }
 td.v a:hover, td a.lnk:hover { color: var(--accent); border-color: var(--accent); }
 td.ago { color: var(--text-muted); font-family: var(--hp-mono); font-size: 11px; text-align: right; white-space: nowrap; }
@@ -2445,7 +2449,10 @@ button.copy:hover { color: var(--text-primary); background: var(--surface-2); }
 .empty { font: 12px var(--hp-mono); color: var(--text-muted); margin: 0; }
 .cc {
   padding: 1px 5px; border-radius: var(--radius-xs);
-  background: var(--info-soft); color: var(--info);
+  /* a11y: ink on the soft fill, not the fill's own hue -- var(--info) on
+     var(--info-soft) read as white-on-light-blue in dark theme. Same
+     pairing the sensor badges use. */
+  background: var(--info-soft); color: var(--info-text-on-soft);
   font: 10px var(--hp-mono); text-decoration: none;
 }
 .lnk.sess { color: var(--success); border-color: color-mix(in srgb, var(--success) 40%, transparent); }
@@ -2521,19 +2528,26 @@ button.copy:hover { color: var(--text-primary); background: var(--surface-2); }
 .hp-open-in > summary {
   display: inline-flex; align-items: center; gap: 5px;
   list-style: none; cursor: pointer;
+}
+/* Plain-link trigger styling only for summaries that do NOT opt into real
+   button chrome -- the :not(.btn) scoping keeps this from out-specifying
+   .btn/.btn-sm/.btn-secondary on the filter-bar's trigger (the bug behind
+   "the Filter button is not in the normal button theme": these rules used
+   to win on color/font-size and the border-bottom:none patch below cut the
+   button's own bottom border). */
+.hp-open-in > summary:not(.btn) {
   font-size: 11px; color: var(--accent);
   border-bottom: 1px dotted color-mix(in srgb, var(--accent) 45%, transparent);
   transition: color var(--transition-fast), border-color var(--transition-fast);
 }
 .hp-open-in > summary::-webkit-details-marker { display: none; }
 .hp-open-in > summary::marker { content: ""; }
-.hp-open-in > summary:hover, .hp-open-in[open] > summary { color: var(--text-primary); border-color: var(--accent); }
+.hp-open-in > summary:not(.btn):hover, .hp-open-in[open] > summary:not(.btn) { color: var(--text-primary); border-color: var(--accent); }
 .hp-open-in > summary svg { width: 13px; height: 13px; }
 /* #303: the filter-bar's trigger opts into real button chrome via .btn on
-   the <summary> itself (dashboard.html); this only cancels the plain-link
-   styling above for THAT case (summary.btn), so events.html's other
-   .hp-open-in usage (a link-list menu, no .btn class) is unaffected. */
-.hp-open-in > summary.btn { border-bottom: none; }
+   the <summary> itself (dashboard.html); the :not(.btn) scoping above is
+   what keeps the plain-link styling off it, so .btn/.btn-sm/.btn-secondary
+   apply untouched here. */
 /* Panel chrome (background/border/radius/shadow/padding) now comes from
    theme.css's own .dropdown, combined at every call site instead of
    duplicated here (Xore/theme is the reference) -- this is only the
@@ -2783,7 +2797,8 @@ a.project-card { display: block; color: inherit; text-decoration: none; }
   border-color: var(--border-strong) !important;
 }
 .leaflet-control-home {
-  width: 32px; height: 32px; text-align: center;
+  /* Sized to its label ("World") -- a fixed 32px clipped it to "Wor". */
+  min-width: 32px; width: auto; height: 32px; padding: 0 9px; text-align: center;
   font: 700 11px/30px var(--hp-mono); cursor: pointer;
 }
 .leaflet-control-attribution {
@@ -3129,13 +3144,22 @@ button.sidebar__profile:disabled:hover { background: transparent; }
 .hp-hero__links a { color: var(--text-link); text-decoration: none; }
 .hp-hero__links a:hover { text-decoration: underline; }
 
-/* Master-detail event explorer (pick EV-B): compact list left, sticky
-   normalized-record pane right. Falls back to stacked below 1100px. */
-.hp-md { display: grid; grid-template-columns: minmax(0, 11fr) minmax(340px, 9fr); gap: 14px; align-items: start; }
+/* Master-detail investigate layout (pick EV-B, extended per Xore): the
+   table gets the whole width by default; selecting a row opens the sticky
+   detail pane on the right (.hp-md--open, added by hp-app.js), and the
+   pane's close control returns the full-width table. Falls back to
+   stacked below 1100px. */
+.hp-md { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
+.hp-md--open { grid-template-columns: minmax(0, 11fr) minmax(340px, 9fr); }
+.hp-md:not(.hp-md--open) > .hp-md__pane { display: none; }
 /* The list card carries .wide for the no-JS/stacked fallback; inside the
    two-column grid that span would push the pane below -- neutralize it. */
 .hp-md > .card.wide, .hp-md .hp-md__list { grid-column: auto; }
 .hp-md__list { min-width: 0; }
+/* Wide investigate tables keep their 720px floor (readable columns); when
+   the pane narrows the list, the card scrolls sideways instead of
+   spilling under the pane. */
+.hp-md--open .hp-md__list > .card { overflow-x: auto; }
 .hp-md__pane { position: sticky; top: 14px; min-width: 0; }
 .hp-md__pane .card { margin-bottom: 0; }
 .hp-md__list tbody tr { cursor: pointer; }
@@ -3152,9 +3176,27 @@ button.sidebar__profile:disabled:hover { background: transparent; }
 .hp-md__pane [data-hp-md-slot] article { margin: 0 0 12px; }
 .hp-md__pane [data-hp-md-slot] article.card.wide { grid-column: auto; }
 .hp-row-actions-cell { width: 1%; }
+/* Pane close control (the pane is sticky -- a positioned box -- so the
+   button anchors to it) and the generic row inspector: pages without a
+   dedicated per-row detail render the selected row as labelled fields. */
+.hp-md__close {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px;
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-pill);
+  background: var(--surface-2); color: var(--text-secondary);
+  font-size: 13px; line-height: 1; cursor: pointer;
+}
+.hp-md__close:hover { color: var(--text-primary); border-color: var(--border-strong); background: var(--surface-3); }
+.hp-md__rowcard dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 7px 12px; margin: 0; }
+.hp-md__rowcard dt { color: var(--text-muted); font: 10px/18px var(--hp-mono); text-transform: uppercase; letter-spacing: .04em; }
+.hp-md__rowcard dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: 12px; }
+/* Cells projected into the inspector lose their table context: neutralize
+   the value-cell floor so the narrow pane isn't forced wide. */
+.hp-md__rowcard dd td.v, .hp-md__rowcard dd.v { min-width: 0; }
 
 @media (max-width: 1100px) {
-  .hp-md { grid-template-columns: 1fr; }
+  .hp-md--open { grid-template-columns: 1fr; }
   .hp-md__pane { position: static; }
 }
 
