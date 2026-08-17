@@ -56,11 +56,34 @@
   --critical: #ff5c5c;
   --critical-soft: rgba(255, 92, 92, 0.16);
   --accent-text-on-soft: #e38f74;
-  --success-text-on-soft: #77cb9e;
-  --info-text-on-soft: #8bb7dd;
-  --warning-text-on-soft: #e1b467;
-  --danger-text-on-soft: #e89b99;
+  /* success/info/warning/danger-text-on-soft (a11y -- .badge--current, the
+     *--soft tokens' other consumers below, and both light-theme blocks):
+     raised from the original values, which measured 4.6-4.7:1 against a
+     real rendered page (composited over --surface-1, a badge's realistic
+     worst-case backdrop) -- a thin pass of the 4.5:1 AA floor, one shade
+     from failing. Retuned for a ~5.3:1 margin instead, same hue, lighter.
+     Unchanged here in dark theme (already passing); see --*-badge-fill
+     just below for the actual bug this was chasing -- .badge--success/
+     info/warning/danger don't use these two soft tokens at all, they use a
+     solid fill + fixed near-black text (design refresh, pick 5D), and dark
+     theme's fills already clear 5.8-8.3:1 against that near-black
+     unmodified. */
+  --success-text-on-soft: #8ed4ae;
+  --info-text-on-soft: #9fc3e3;
+  --warning-text-on-soft: #e7c284;
+  --danger-text-on-soft: #ecaba9;
   --critical-text-on-soft: #ff8080;
+  /* success/info/warning/danger-badge-fill: identity in dark theme (the
+     solid-fill badge design's own near-black text already clears 5.8-8.3:1
+     against these unmodified) -- overridden in both light-theme blocks
+     below, where the same near-black text against these same colors
+     measured 3.4-4.0:1, failing AA. A country-code badge (badge--info,
+     e.g. events.html's {{.Country}}) reported hard to read against its own
+     background is what surfaced this. */
+  --success-badge-fill: var(--success);
+  --info-badge-fill: var(--info);
+  --warning-badge-fill: var(--warning);
+  --danger-badge-fill: var(--danger);
 
   /* Design refresh (APIARY design lab, Xore's picks): larger, calmer radii
      in the claude.ai direction. Every consumer shares the shift -- that is
@@ -177,11 +200,25 @@
   --critical: #c53030;
   --critical-soft: rgba(197, 48, 48, 0.13);
   --accent-text-on-soft: #a2472b;
-  --success-text-on-soft: #317152;
-  --info-text-on-soft: #396991;
-  --warning-text-on-soft: #885c1c;
-  --danger-text-on-soft: #a64441;
+  /* a11y: see the :root (dark) block's own comment on this same family --
+     these light-theme values were the ones actually measuring below the
+     4.5:1 AA floor (4.1-4.24:1 against --surface-1), not just thin. */
+  --success-text-on-soft: #2d674b;
+  --info-text-on-soft: #346084;
+  --warning-text-on-soft: #7a5319;
+  --danger-text-on-soft: #943d3a;
   --critical-text-on-soft: #b82929;
+  /* a11y: see the :root (dark) block's own comment on --*-badge-fill --
+     .badge--success/info/warning/danger's near-black text (#0d2417 etc.,
+     the .badge--* rules themselves) against these same light-theme
+     --success/info/warning/danger colors unmodified measured 3.4-4.0:1,
+     below the 4.5:1 AA floor. Lightened just enough (8-17%, same hue) for
+     ~4.6-4.7:1 against that same near-black text -- confirmed against a
+     real rendered page, not just this math. */
+  --success-badge-fill: #569577;
+  --info-badge-fill: #5788b1;
+  --warning-badge-fill: #ab8348;
+  --danger-badge-fill: #c06d6a;
   --shadow-raised: 0 1px 2px rgba(48, 42, 36, 0.11), 0 8px 26px rgba(48, 42, 36, 0.16);
   --shadow-dialog: 0 2px 6px rgba(48, 42, 36, 0.12), 0 24px 70px rgba(48, 42, 36, 0.19);
 }
@@ -231,11 +268,20 @@
     --critical: #c53030;
     --critical-soft: rgba(197, 48, 48, 0.13);
     --accent-text-on-soft: #a2472b;
-    --success-text-on-soft: #317152;
-    --info-text-on-soft: #396991;
-    --warning-text-on-soft: #885c1c;
-    --danger-text-on-soft: #a64441;
+    /* a11y: see the :root (dark) block's own comment on this same family --
+       kept in sync with the [data-theme="light"] block above, both light
+       surfaces. */
+    --success-text-on-soft: #2d674b;
+    --info-text-on-soft: #346084;
+    --warning-text-on-soft: #7a5319;
+    --danger-text-on-soft: #943d3a;
     --critical-text-on-soft: #b82929;
+    /* a11y: see the [data-theme="light"] block above's own comment on
+       --*-badge-fill -- kept in sync, both light surfaces. */
+    --success-badge-fill: #569577;
+    --info-badge-fill: #5788b1;
+    --warning-badge-fill: #ab8348;
+    --danger-badge-fill: #c06d6a;
     --shadow-raised: 0 1px 2px rgba(48, 42, 36, 0.11), 0 8px 26px rgba(48, 42, 36, 0.16);
     --shadow-dialog: 0 2px 6px rgba(48, 42, 36, 0.12), 0 24px 70px rgba(48, 42, 36, 0.19);
   }
@@ -835,10 +881,12 @@ select.form-input { cursor: pointer; }
   text-decoration: none;
 }
 .badge--accent { background: var(--accent-soft); color: var(--accent-text-on-soft); }
-/* Design refresh 2 (pick 5E, supersedes 5D's solid fills): one quiet
-   neutral chip everywhere; only a leading dot and the ink carry the status
-   hue. Ink uses the *-text-on-soft tokens (AA on soft/neutral surfaces in
-   both themes); the dot shows the full-strength hue. */
+/* Design refresh 2 (pick 5E, supersedes 5D's solid fills -- and #82's
+   --*-badge-fill light-theme retune of them, which the neutral-chip
+   design no longer needs; the dot uses the badge-fill token so it
+   keeps #82's light-theme legibility): one quiet neutral chip
+   everywhere; only a leading dot and the ink carry the status hue.
+   Ink uses the *-text-on-soft tokens (#82's raised AA values). */
 .badge--green, .badge--success, .badge--blue, .badge--info,
 .badge--orange, .badge--warning, .badge--red, .badge--danger { background: var(--surface-2); }
 .badge--green::before, .badge--success::before, .badge--blue::before, .badge--info::before,
@@ -847,13 +895,13 @@ select.form-input { cursor: pointer; }
   border-radius: 50%; margin-right: 6px; background: currentColor;
 }
 .badge--green, .badge--success { color: var(--success-text-on-soft); }
-.badge--green::before, .badge--success::before { background: var(--success); }
+.badge--green::before, .badge--success::before { background: var(--success-badge-fill); }
 .badge--blue, .badge--info { color: var(--info-text-on-soft); }
-.badge--blue::before, .badge--info::before { background: var(--info); }
+.badge--blue::before, .badge--info::before { background: var(--info-badge-fill); }
 .badge--orange, .badge--warning { color: var(--warning-text-on-soft); }
-.badge--orange::before, .badge--warning::before { background: var(--warning); }
+.badge--orange::before, .badge--warning::before { background: var(--warning-badge-fill); }
 .badge--red, .badge--danger { color: var(--danger-text-on-soft); }
-.badge--red::before, .badge--danger::before { background: var(--danger); }
+.badge--red::before, .badge--danger::before { background: var(--danger-badge-fill); }
 .badge--critical { border: 1px solid color-mix(in srgb, var(--critical) 45%, transparent); background: var(--critical-soft); color: var(--critical-text-on-soft); }
 .badge--muted { border: 1px solid var(--border-subtle); }
 .badge--current { background: var(--info-soft); color: var(--info-text-on-soft); }
@@ -2615,6 +2663,20 @@ button.copy:hover { color: var(--text-primary); background: var(--surface-2); }
    Reuses .hp-open-in's floating-panel shell above; these rules cover only
    the form-specific parts, shared across every page that includes it. */
 .hp-filterbar-menu { min-width: 260px; padding: 10px; }
+/* #1567: a visible close affordance -- click-away already dismissed this
+   panel (delegated document click handler, hp-app.js), but nothing in the
+   panel itself said so. .hp-open-in-menu (above) is already the
+   positioned ancestor, so this only needs its own corner offset. */
+.hp-filterbar-menu__close {
+  position: absolute; top: 6px; right: 6px;
+  display: flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; padding: 0;
+  border: 0; border-radius: var(--radius-control);
+  background: transparent; color: var(--text-muted);
+  font-size: 11px; line-height: 1; cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.hp-filterbar-menu__close:hover { background: var(--surface-2); color: var(--text-primary); }
 .hp-filterbar-field { display: block; margin-bottom: 8px; }
 .hp-filterbar-field span { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 4px; }
 .hp-filterbar-field input, .hp-filterbar-field select { width: 100%; background: var(--surface-0); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); color: var(--text-primary); padding: 6px 10px; font-size: 12.5px; }
@@ -2798,6 +2860,15 @@ a.project-card { display: block; color: inherit; text-decoration: none; }
 #hp-rp-generated .project-card__title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #hp-rp-generated .project-card__meta { flex-wrap: wrap; }
 #hp-rp-generated .project-card__meta .hp-rp-row-actions { margin-left: auto; }
+/* #1567: Delete sat directly beside Download (6px flex gap, same as any
+   other two buttons in a row) with no confirm-independent margin for a
+   slip -- a real destructive-adjacency risk even though the click itself
+   already opens a confirm dialog (hp-reports.js), since the *miss-click*
+   is what a wider gap actually guards against, not the confirm step
+   after it. Scoped to this specific two-button (Download, Delete) row --
+   the report-definitions table row above it (Edit/Generate/Delete) has a
+   secondary action between the primary one and Delete already. */
+#hp-rp-generated .hp-rp-row-actions .btn-danger { margin-left: 14px; }
 
 /* ── Leaflet attack map (dark-tile filter scoped to dark mode only) ─────── */
 .map-shell {
