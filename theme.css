@@ -4,86 +4,81 @@
  * Framework-free and safe to copy into another repository.
  */
 
-@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+/* Typography is web-loaded, but NOT from here. An @import at the top of the
+   main stylesheet is the worst place for it: the browser has to fetch and
+   parse this file before it even discovers the import, then fetch the font
+   CSS, then the font files — three serial round trips on the critical path,
+   repeated on every page load, with first paint of the whole application
+   blocked behind a third-party host.
+
+   Consumers add these two lines to <head> instead, so the font CSS is
+   discovered immediately and resolves in parallel with this stylesheet:
+
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+   The --font-* stacks below carry platform-native fallbacks, so a blocked or
+   offline font host degrades rather than breaks. See docs/ADOPTION.md. */
+
+
+/* ── Mode ──────────────────────────────────────────────────────────────
+   :root declares both schemes, so the operating system's preference wins
+   by default; [data-theme] pins an explicit choice. Every colour token
+   below resolves through light-dark() against this, which is what lets a
+   theme be one block instead of the three it used to take (:root for dark,
+   [data-theme="light"], and a prefers-color-scheme copy of the second). */
+:root { color-scheme: light dark; }
+[data-theme="light"] { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
 
 :root {
-  color-scheme: dark;
+  /* ── Semantic status ramp ────────────────────────────────────────────
+     Shared across every theme, deliberately. Status colour is meaning, not
+     decoration: "danger" must read as danger whichever theme the operator
+     picked. A theme owns its surfaces and its accent; it does not own what
+     red means.
 
-  --app-bg: #20201f;
-  --sidebar-bg: #1e1e1c;
-  --toolbar-bg: #242422;
-  --surface-0: #242422;
-  --surface-1: #2c2c2a;
-  --surface-2: #343432;
-  --surface-3: #3d3d3b;
-  --surface-hover: #42423f;
-  --surface-raised: #383835;
+     a11y: the *-text-on-soft family is measured composited over --surface-1
+     (a badge's realistic worst-case backdrop), not against the raw token,
+     and the *-badge-fill family exists because the badge design's fixed
+     near-black ink measured 3.4-4.0:1 against the plain status colours in
+     light theme. Both are enforced by scripts/check-contrast.mjs rather
+     than restated as measurements in comments here. */
+  --success: light-dark(#3f8764, #79c99e);
+  --success-soft: light-dark(rgba(63, 135, 100, 0.18), rgba(121, 201, 158, 0.20));
+  --info: light-dark(#487eaa, #78a9d4);
+  --info-soft: light-dark(rgba(72, 126, 170, 0.18), rgba(120, 169, 212, 0.20));
+  --warning: light-dark(#9b6b25, #deb36a);
+  --warning-soft: light-dark(rgba(155, 107, 37, 0.19), rgba(222, 179, 106, 0.21));
+  --danger: light-dark(#b34f4c, #dc7774);
+  --danger-soft: light-dark(rgba(179, 79, 76, 0.20), rgba(220, 119, 116, 0.21));
+  --critical: light-dark(#c53030, #ff5c5c);
+  --critical-soft: light-dark(rgba(197, 48, 48, 0.13), rgba(255, 92, 92, 0.16));
+  --success-text-on-soft: light-dark(#2d674b, #8ed4ae);
+  --info-text-on-soft: light-dark(#346084, #9fc3e3);
+  --warning-text-on-soft: light-dark(#7a5319, #e7c284);
+  --danger-text-on-soft: light-dark(#943d3a, #ecaba9);
+  --critical-text-on-soft: light-dark(#b82929, #ff8080);
+  --success-badge-fill: light-dark(#569577, #79c99e);
+  --info-badge-fill: light-dark(#5788b1, #78a9d4);
+  --warning-badge-fill: light-dark(#ab8348, #deb36a);
+  --danger-badge-fill: light-dark(#c06d6a, #dc7774);
 
-  /* Softer hairlines (design refresh): chrome recedes, content leads. */
-  --border-subtle: rgba(255, 255, 255, 0.05);
-  --border-strong: rgba(255, 255, 255, 0.11);
-  --border-focus: rgba(109, 167, 236, 0.75);
-
-  --text-primary: #e9e6df;
-  --text-secondary: #a8a49c;
-  --text-muted: #a5a9a6;
-  --text-disabled: #68635e;
-  --text-on-accent: #211a17;
-  --text-link: #6da7ec;
-  --text-link-hover: #93bdf1;
-  --switch-on: #2a78d6;
-  --btn-inverted-bg: #f5f4ef;
-  --btn-inverted-bg-hover: #ffffff;
-  --btn-inverted-text: #161513;
+  /* Fixed regardless of theme or mode: ink on a saturated status fill, the
+     knob of a control, and the artwork plate promo media sits on. */
   --control-knob: #ffffff;
   --text-on-status: #ffffff;
   --artwork-bg: #e9e3d6;
-  --overlay-bg: rgba(0, 0, 0, 0.5);
 
-  --accent: #d97757;
-  --accent-hover: #e18768;
-  --accent-pressed: #c9684b;
-  --accent-soft: rgba(217, 119, 87, 0.14);
-
-  --success: #79c99e;
-  --success-soft: rgba(121, 201, 158, 0.20);
-  --info: #78a9d4;
-  --info-soft: rgba(120, 169, 212, 0.20);
-  --warning: #deb36a;
-  --warning-soft: rgba(222, 179, 106, 0.21);
-  --danger: #dc7774;
-  --danger-soft: rgba(220, 119, 116, 0.21);
-  --critical: #ff5c5c;
-  --critical-soft: rgba(255, 92, 92, 0.16);
-  --accent-text-on-soft: #e38f74;
-  /* success/info/warning/danger-text-on-soft (a11y -- .badge--current, the
-     *--soft tokens' other consumers below, and both light-theme blocks):
-     raised from the original values, which measured 4.6-4.7:1 against a
-     real rendered page (composited over --surface-1, a badge's realistic
-     worst-case backdrop) -- a thin pass of the 4.5:1 AA floor, one shade
-     from failing. Retuned for a ~5.3:1 margin instead, same hue, lighter.
-     Unchanged here in dark theme (already passing); see --*-badge-fill
-     just below for the actual bug this was chasing -- .badge--success/
-     info/warning/danger don't use these two soft tokens at all, they use a
-     solid fill + fixed near-black text (design refresh, pick 5D), and dark
-     theme's fills already clear 5.8-8.3:1 against that near-black
-     unmodified. */
-  --success-text-on-soft: #8ed4ae;
-  --info-text-on-soft: #9fc3e3;
-  --warning-text-on-soft: #e7c284;
-  --danger-text-on-soft: #ecaba9;
-  --critical-text-on-soft: #ff8080;
-  /* success/info/warning/danger-badge-fill: identity in dark theme (the
-     solid-fill badge design's own near-black text already clears 5.8-8.3:1
-     against these unmodified) -- overridden in both light-theme blocks
-     below, where the same near-black text against these same colors
-     measured 3.4-4.0:1, failing AA. A country-code badge (badge--info,
-     e.g. events.html's {{.Country}}) reported hard to read against its own
-     background is what surfaced this. */
-  --success-badge-fill: var(--success);
-  --info-badge-fill: var(--info);
-  --warning-badge-fill: var(--warning);
-  --danger-badge-fill: var(--danger);
+  /* ── Elevation geometry ──────────────────────────────────────────────
+     The colours are per-theme (see the generated block below); the shape is
+     shared. --shadow-inset and --shadow-pill are new: six rules used to
+     hardcode rgba(0, 0, 0, ...) box-shadows and so never followed the theme
+     at all, which was visibly wrong in light mode long before themes. */
+  --shadow-raised: 0 1px 2px var(--shadow-raised-near), 0 8px 26px var(--shadow-raised-far);
+  --shadow-dialog: 0 2px 6px var(--shadow-dialog-near), 0 24px 80px var(--shadow-dialog-far);
+  --shadow-inset: 0 1px 4px var(--shadow-inset-color);
+  --shadow-pill: 0 3px 12px var(--shadow-pill-color);
 
   /* Design refresh (APIARY design lab, Xore's picks): larger, calmer radii
      in the claude.ai direction. Every consumer shares the shift -- that is
@@ -156,183 +151,395 @@
   --shadow-modal: var(--shadow-dialog);
 }
 
-[data-theme="light"] {
-  color-scheme: light;
-  --app-bg: #f7f6f2;
-  --sidebar-bg: #f0efeb;
-  --toolbar-bg: #f5f4f0;
-  --surface-0: #fbfaf7;
-  --surface-1: #f4f2ed;
-  --surface-2: #ebe9e3;
-  --surface-3: #e1dfd8;
-  --surface-hover: #e9e7e1;
-  --surface-raised: #fffefa;
-  --border-subtle: rgba(34, 31, 28, 0.07);
-  --border-strong: rgba(34, 31, 28, 0.14);
-  --text-primary: #2f2b27;
-  --text-secondary: #68615a;
-  --text-muted: #66615b;
-  --text-disabled: #aaa49d;
-  --text-on-accent: #fffaf5;
-  --text-link: #2a78d6;
-  --text-link-hover: #2566d0;
-  --switch-on: #2566d0;
-  --border-focus: #1f5fae;
-  --btn-inverted-bg: #262421;
-  --btn-inverted-bg-hover: #151412;
-  --btn-inverted-text: #f5f4ef;
-  --control-knob: #ffffff;
-  --text-on-status: #ffffff;
-  --artwork-bg: #e9e3d6;
-  --overlay-bg: rgba(34, 31, 28, 0.36);
-  --accent: #af593f;
-  --accent-hover: #a34d35;
-  --accent-pressed: #93422d;
-  --accent-soft: rgba(199, 101, 72, 0.12);
-  --success: #3f8764;
-  --success-soft: rgba(63, 135, 100, 0.18);
-  --info: #487eaa;
-  --info-soft: rgba(72, 126, 170, 0.18);
-  --warning: #9b6b25;
-  --warning-soft: rgba(155, 107, 37, 0.19);
-  --danger: #b34f4c;
-  --danger-soft: rgba(179, 79, 76, 0.20);
-  --critical: #c53030;
-  --critical-soft: rgba(197, 48, 48, 0.13);
-  --accent-text-on-soft: #a2472b;
-  /* a11y: see the :root (dark) block's own comment on this same family --
-     these light-theme values were the ones actually measuring below the
-     4.5:1 AA floor (4.1-4.24:1 against --surface-1), not just thin. */
-  --success-text-on-soft: #2d674b;
-  --info-text-on-soft: #346084;
-  --warning-text-on-soft: #7a5319;
-  --danger-text-on-soft: #943d3a;
-  --critical-text-on-soft: #b82929;
-  /* a11y: see the :root (dark) block's own comment on --*-badge-fill --
-     .badge--success/info/warning/danger's near-black text (#0d2417 etc.,
-     the .badge--* rules themselves) against these same light-theme
-     --success/info/warning/danger colors unmodified measured 3.4-4.0:1,
-     below the 4.5:1 AA floor. Lightened just enough (8-17%, same hue) for
-     ~4.6-4.7:1 against that same near-black text -- confirmed against a
-     real rendered page, not just this math. */
-  --success-badge-fill: #569577;
-  --info-badge-fill: #5788b1;
-  --warning-badge-fill: #ab8348;
-  --danger-badge-fill: #c06d6a;
-  --shadow-raised: 0 1px 2px rgba(48, 42, 36, 0.11), 0 8px 26px rgba(48, 42, 36, 0.16);
-  --shadow-dialog: 0 2px 6px rgba(48, 42, 36, 0.12), 0 24px 70px rgba(48, 42, 36, 0.19);
+/* ── Mode-dependent values that are not colours ────────────────────────
+   light-dark() takes <color> only, so the handful of tokens whose value is
+   a filter or a display keyword still need a per-mode rule. Keeping them as
+   *intent* tokens is the point: rules elsewhere read the token instead of
+   matching on [data-theme="dark"] themselves, so a theme beyond light/dark
+   cannot silently miss them. That is exactly how the Leaflet basemap ended
+   up unfiltered and the brand mark ended up wrong outside the two names the
+   selectors happened to enumerate. */
+:root {
+  --basemap-filter: none;
+  --theme-art-dark-display: none;
+  --theme-art-light-display: block;
 }
-
-@media (prefers-color-scheme: light) {
+[data-theme="dark"] {
+  --basemap-filter: brightness(0.62) invert(1) contrast(1.25) hue-rotate(180deg) saturate(0.35);
+  --theme-art-dark-display: block;
+  --theme-art-light-display: none;
+}
+@media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    color-scheme: light;
-    --app-bg: #f7f6f2;
-    --sidebar-bg: #f0efeb;
-    --toolbar-bg: #f5f4f0;
-    --surface-0: #fbfaf7;
-    --surface-1: #f4f2ed;
-    --surface-2: #ebe9e3;
-    --surface-3: #e1dfd8;
-    --surface-hover: #e9e7e1;
-    --surface-raised: #fffefa;
-    --border-subtle: rgba(34, 31, 28, 0.09);
-    --border-strong: rgba(34, 31, 28, 0.18);
-    --text-primary: #2f2b27;
-    --text-secondary: #68615a;
-    --text-muted: #66615b;
-    --text-disabled: #aaa49d;
-    --text-on-accent: #fffaf5;
-    --text-link: #2a78d6;
-    --text-link-hover: #2566d0;
-    --switch-on: #2566d0;
-    --border-focus: #1f5fae;
-    --btn-inverted-bg: #262421;
-    --btn-inverted-bg-hover: #151412;
-    --btn-inverted-text: #f5f4ef;
-    --control-knob: #ffffff;
-    --text-on-status: #ffffff;
-    --artwork-bg: #e9e3d6;
-    --overlay-bg: rgba(34, 31, 28, 0.36);
-    --accent: #af593f;
-    --accent-hover: #a34d35;
-    --accent-pressed: #93422d;
-    --accent-soft: rgba(199, 101, 72, 0.12);
-    --success: #3f8764;
-    --success-soft: rgba(63, 135, 100, 0.18);
-    --info: #487eaa;
-    --info-soft: rgba(72, 126, 170, 0.18);
-    --warning: #9b6b25;
-    --warning-soft: rgba(155, 107, 37, 0.19);
-    --danger: #b34f4c;
-    --danger-soft: rgba(179, 79, 76, 0.20);
-    --critical: #c53030;
-    --critical-soft: rgba(197, 48, 48, 0.13);
-    --accent-text-on-soft: #a2472b;
-    /* a11y: see the :root (dark) block's own comment on this same family --
-       kept in sync with the [data-theme="light"] block above, both light
-       surfaces. */
-    --success-text-on-soft: #2d674b;
-    --info-text-on-soft: #346084;
-    --warning-text-on-soft: #7a5319;
-    --danger-text-on-soft: #943d3a;
-    --critical-text-on-soft: #b82929;
-    /* a11y: see the [data-theme="light"] block above's own comment on
-       --*-badge-fill -- kept in sync, both light surfaces. */
-    --success-badge-fill: #569577;
-    --info-badge-fill: #5788b1;
-    --warning-badge-fill: #ab8348;
-    --danger-badge-fill: #c06d6a;
-    --shadow-raised: 0 1px 2px rgba(48, 42, 36, 0.11), 0 8px 26px rgba(48, 42, 36, 0.16);
-    --shadow-dialog: 0 2px 6px rgba(48, 42, 36, 0.12), 0 24px 70px rgba(48, 42, 36, 0.19);
+    --basemap-filter: brightness(0.62) invert(1) contrast(1.25) hue-rotate(180deg) saturate(0.35);
+    --theme-art-dark-display: block;
+    --theme-art-light-display: none;
   }
 }
 
-/* ── Palette presets (per Xore): one-click accent palettes, selected in
-   Settings → Appearance and applied as data-hp-palette on <html>.
-   "claude" is the default token set above (no attribute). Every pair
-   below is WCAG-AA validated (soft ink + links vs surface-1, button
-   ink vs accent) in BOTH themes by scripts in the APIARY design lab;
-   status colors stay semantic across palettes. */
-:root[data-hp-palette="slate"] { --accent: #8aa2c0; --accent-hover: #9bafc9; --accent-pressed: #7995b7; --accent-soft: rgba(138, 162, 192, 0.16); --accent-text-on-soft: #8aa2c0; --text-on-accent: #1c1613; --text-link: #8aa2c0; --text-link-hover: #9eb2cb; }
-[data-theme="light"][data-hp-palette="slate"] { --accent: #44618a; --accent-hover: #3d577c; --accent-pressed: #374e6f; --accent-soft: rgba(68, 97, 138, 0.13); --accent-text-on-soft: #44618a; --text-on-accent: #ffffff; --text-link: #44618a; --text-link-hover: #3a5376; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme])[data-hp-palette="slate"] { --accent: #44618a; --accent-hover: #3d577c; --accent-pressed: #374e6f; --accent-soft: rgba(68, 97, 138, 0.13); --accent-text-on-soft: #44618a; --text-on-accent: #ffffff; --text-link: #44618a; --text-link-hover: #3a5376; }
+/* >>> GENERATED THEME SURFACES — scripts/gen-themes.mjs — do not edit by hand */
+/*
+ * Generated — edit scripts/theme-tokens.mjs and re-run
+ * `node scripts/gen-themes.mjs`. `node scripts/check-contrast.mjs`
+ * enforces WCAG AA across every theme and mode in CI.
+ *
+ * A theme owns the whole surface: ground, sidebar, toolbar, the surface
+ * ramp, borders, the text ramp, elevation and the accent family. The
+ * semantic status ramp (success/info/warning/danger/critical) is shared
+ * across themes and lives in the base block above — status colour is
+ * meaning, not decoration, and must not shift with the operator's
+ * choice of theme.
+ *
+ * Mode is decided by color-scheme: :root declares `light dark`, so the
+ * system preference wins by default and [data-theme="light"|"dark"]
+ * pins it. That is why one block covers both modes.
+ *
+ * `claude` is the default; its values are byte-identical to the ones
+ * that shipped before this block became generated, and the generator
+ * asserts that identity on every run.
+ */
+
+/* Claude — The default. Warm charcoal and ivory with the copper brand accent — identity values, unchanged. */
+:root,
+[data-hp-theme="claude"],
+[data-hp-palette="claude"] {
+  --app-bg: light-dark(#f7f6f2, #20201f);
+  --sidebar-bg: light-dark(#f0efeb, #1e1e1c);
+  --toolbar-bg: light-dark(#f5f4f0, #242422);
+  --surface-0: light-dark(#fbfaf7, #242422);
+  --surface-1: light-dark(#f4f2ed, #2c2c2a);
+  --surface-2: light-dark(#ebe9e3, #343432);
+  --surface-3: light-dark(#e1dfd8, #3d3d3b);
+  --surface-hover: light-dark(#e9e7e1, #42423f);
+  --surface-raised: light-dark(#fffefa, #383835);
+  --border-subtle: light-dark(rgba(34, 31, 28, 0.07), rgba(255, 255, 255, 0.05));
+  --border-strong: light-dark(rgba(34, 31, 28, 0.14), rgba(255, 255, 255, 0.11));
+  --border-focus: light-dark(#1f5fae, rgba(109, 167, 236, 0.75));
+  --text-primary: light-dark(#2f2b27, #e9e6df);
+  --text-secondary: light-dark(#68615a, #a8a49c);
+  --text-muted: light-dark(#66615b, #a5a9a6);
+  --text-disabled: light-dark(#aaa49d, #68635e);
+  --accent: light-dark(#af593f, #d97757);
+  --accent-hover: light-dark(#a34d35, #e18768);
+  --accent-pressed: light-dark(#93422d, #c9684b);
+  --accent-soft: light-dark(rgba(199, 101, 72, 0.12), rgba(217, 119, 87, 0.14));
+  --accent-text-on-soft: light-dark(#a2472b, #e38f74);
+  --text-on-accent: light-dark(#fffaf5, #211a17);
+  --text-link: light-dark(#2a78d6, #6da7ec);
+  --text-link-hover: light-dark(#2566d0, #93bdf1);
+  --switch-on: light-dark(#2566d0, #2a78d6);
+  --btn-inverted-bg: light-dark(#262421, #f5f4ef);
+  --btn-inverted-bg-hover: light-dark(#151412, #ffffff);
+  --btn-inverted-text: light-dark(#f5f4ef, #161513);
+  --overlay-bg: light-dark(rgba(34, 31, 28, 0.36), rgba(0, 0, 0, 0.5));
+  --terminal-bg: light-dark(#474336, #181817);
+  --terminal-fg: light-dark(#e6e6e6, #e9e6df);
+  --framebuffer-bg: light-dark(#3e3b2f, #101010);
+  --diagram-plate: #ffffff;
+  --shadow-raised-near: light-dark(rgba(48, 42, 36, 0.11), rgba(0, 0, 0, 0.18));
+  --shadow-raised-far: light-dark(rgba(48, 42, 36, 0.16), rgba(0, 0, 0, 0.24));
+  --shadow-dialog-near: light-dark(rgba(48, 42, 36, 0.12), rgba(0, 0, 0, 0.3));
+  --shadow-dialog-far: light-dark(rgba(48, 42, 36, 0.19), rgba(0, 0, 0, 0.52));
+  --shadow-inset-color: light-dark(rgba(48, 42, 36, 0.12), rgba(0, 0, 0, 0.18));
+  --shadow-pill-color: light-dark(rgba(48, 42, 36, 0.16), rgba(0, 0, 0, 0.24));
 }
-:root[data-hp-palette="ocean"] { --accent: #55a7d8; --accent-hover: #6ab2dd; --accent-pressed: #409cd3; --accent-soft: rgba(85, 167, 216, 0.16); --accent-text-on-soft: #55a7d8; --text-on-accent: #1c1613; --text-link: #55a7d8; --text-link-hover: #6eb4de; }
-[data-theme="light"][data-hp-palette="ocean"] { --accent: #1f6fa8; --accent-hover: #1c6497; --accent-pressed: #195886; --accent-soft: rgba(31, 111, 168, 0.13); --accent-text-on-soft: #1f6fa8; --text-on-accent: #ffffff; --text-link: #1f6fa8; --text-link-hover: #1a5e8e; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme])[data-hp-palette="ocean"] { --accent: #1f6fa8; --accent-hover: #1c6497; --accent-pressed: #195886; --accent-soft: rgba(31, 111, 168, 0.13); --accent-text-on-soft: #1f6fa8; --text-on-accent: #ffffff; --text-link: #1f6fa8; --text-link-hover: #1a5e8e; }
+
+/* Slate — Cool zinc/slate neutrals — the dominant direction for technology products. */
+[data-hp-theme="slate"],
+[data-hp-palette="slate"] {
+  --app-bg: light-dark(#f2f4f7, #1d1f22);
+  --sidebar-bg: light-dark(#ebedf0, #171c23);
+  --toolbar-bg: light-dark(#f0f2f5, #1d2229);
+  --surface-0: light-dark(#f7f9fb, #1d2229);
+  --surface-1: light-dark(#edf0f4, #252a31);
+  --surface-2: light-dark(#e3e7eb, #2d3239);
+  --surface-3: light-dark(#d8dce1, #363b42);
+  --surface-hover: light-dark(#e1e5e9, #383f49);
+  --surface-raised: light-dark(#fafcff, #2e353f);
+  --border-subtle: light-dark(rgba(28, 31, 34, 0.07), rgba(255, 255, 255, 0.05));
+  --border-strong: light-dark(rgba(28, 31, 34, 0.14), rgba(255, 255, 255, 0.11));
+  --border-focus: light-dark(#44618a, #8aa2c0);
+  --text-primary: light-dark(#272b2f, #c9e0ff);
+  --text-secondary: light-dark(#595d64, #8eaacc);
+  --text-muted: light-dark(#5a5d62, #9fa9b4);
+  --text-disabled: light-dark(#9ea3a9, #475f7f);
+  --accent: light-dark(#44618a, #8aa2c0);
+  --accent-hover: light-dark(#3d577c, #9bafc9);
+  --accent-pressed: light-dark(#374e6f, #7995b7);
+  --accent-soft: light-dark(rgba(68, 97, 138, 0.13), rgba(138, 162, 192, 0.16));
+  --accent-text-on-soft: light-dark(#3e5b81, #9cb4cc);
+  --text-on-accent: light-dark(#ffffff, #1c1613);
+  --text-link: light-dark(#44618a, #8aa2c0);
+  --text-link-hover: light-dark(#3a5376, #9eb2cb);
+  --switch-on: light-dark(#44618a, #8aa2c0);
+  --btn-inverted-bg: light-dark(#212326, #e5f0ff);
+  --btn-inverted-bg-hover: light-dark(#121315, #ffffff);
+  --btn-inverted-text: light-dark(#eff2f5, #0c131d);
+  --overlay-bg: light-dark(rgba(28, 31, 34, 0.36), rgba(0, 0, 0, 0.5));
+  --terminal-bg: light-dark(#363d47, #13171c);
+  --terminal-fg: light-dark(#e6e6e6, #c9e0ff);
+  --framebuffer-bg: light-dark(#2f363e, #0d1013);
+  --diagram-plate: #ffffff;
+  --shadow-raised-near: light-dark(rgba(37, 41, 47, 0.11), rgba(0, 0, 0, 0.18));
+  --shadow-raised-far: light-dark(rgba(37, 41, 47, 0.16), rgba(0, 0, 0, 0.24));
+  --shadow-dialog-near: light-dark(rgba(37, 41, 47, 0.12), rgba(0, 0, 0, 0.3));
+  --shadow-dialog-far: light-dark(rgba(37, 41, 47, 0.19), rgba(0, 0, 0, 0.52));
+  --shadow-inset-color: light-dark(rgba(37, 41, 47, 0.12), rgba(0, 0, 0, 0.18));
+  --shadow-pill-color: light-dark(rgba(37, 41, 47, 0.16), rgba(0, 0, 0, 0.24));
 }
-:root[data-hp-palette="sage"] { --accent: #8fb27b; --accent-hover: #9dbb8b; --accent-pressed: #81a96b; --accent-soft: rgba(143, 178, 123, 0.16); --accent-text-on-soft: #8fb27b; --text-on-accent: #1c1613; --text-link: #8fb27b; --text-link-hover: #9fbd8e; }
-[data-theme="light"][data-hp-palette="sage"] { --accent: #4d7a42; --accent-hover: #456d3b; --accent-pressed: #3c6034; --accent-soft: rgba(77, 122, 66, 0.13); --accent-text-on-soft: #4a753f; --text-on-accent: #ffffff; --text-link: #4a753f; --text-link-hover: #3d6134; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme])[data-hp-palette="sage"] { --accent: #4d7a42; --accent-hover: #456d3b; --accent-pressed: #3c6034; --accent-soft: rgba(77, 122, 66, 0.13); --accent-text-on-soft: #4a753f; --text-on-accent: #ffffff; --text-link: #4a753f; --text-link-hover: #3d6134; }
+
+/* Sage — Olive and stone — the earth-tone direction, calm and low-fatigue. */
+[data-hp-theme="sage"],
+[data-hp-palette="sage"] {
+  --app-bg: light-dark(#f2f7f2, #1d221e);
+  --sidebar-bg: light-dark(#ebf0eb, #182219);
+  --toolbar-bg: light-dark(#f0f5f0, #1e281f);
+  --surface-0: light-dark(#f7fbf7, #1e281f);
+  --surface-1: light-dark(#edf4ed, #263027);
+  --surface-2: light-dark(#e3ebe3, #2e382f);
+  --surface-3: light-dark(#d8e1d9, #374138);
+  --surface-hover: light-dark(#e1e9e1, #39483a);
+  --surface-raised: light-dark(#fafffa, #2f3e31);
+  --border-subtle: light-dark(rgba(28, 34, 28, 0.07), rgba(255, 255, 255, 0.05));
+  --border-strong: light-dark(rgba(28, 34, 28, 0.14), rgba(255, 255, 255, 0.11));
+  --border-focus: light-dark(#4d7a42, #8fb27b);
+  --text-primary: light-dark(#272f27, #cbfdd0);
+  --text-secondary: light-dark(#566257, #84c08a);
+  --text-muted: light-dark(#59635a, #a0b3a2);
+  --text-disabled: light-dark(#9daa9e, #4a7c4f);
+  --accent: light-dark(#4d7a42, #8fb27b);
+  --accent-hover: light-dark(#456d3b, #9dbb8b);
+  --accent-pressed: light-dark(#3c6034, #81a96b);
+  --accent-soft: light-dark(rgba(77, 122, 66, 0.13), rgba(143, 178, 123, 0.16));
+  --accent-text-on-soft: light-dark(#3f6534, #a4c090);
+  --text-on-accent: light-dark(#ffffff, #1c1613);
+  --text-link: light-dark(#456e3a, #8fb27b);
+  --text-link-hover: light-dark(#385a2f, #9fbd8e);
+  --switch-on: light-dark(#456e3a, #8fb27b);
+  --btn-inverted-bg: light-dark(#212621, #e5ffe8);
+  --btn-inverted-bg-hover: light-dark(#121512, #ffffff);
+  --btn-inverted-text: light-dark(#eff5ef, #0d1c0e);
+  --overlay-bg: light-dark(rgba(28, 34, 28, 0.36), rgba(0, 0, 0, 0.5));
+  --terminal-bg: light-dark(#364738, #141b15);
+  --terminal-fg: light-dark(#e6e6e6, #cbfdd0);
+  --framebuffer-bg: light-dark(#2f3e31, #0d120e);
+  --diagram-plate: #ffffff;
+  --shadow-raised-near: light-dark(rgba(36, 48, 37, 0.11), rgba(0, 0, 0, 0.18));
+  --shadow-raised-far: light-dark(rgba(36, 48, 37, 0.16), rgba(0, 0, 0, 0.24));
+  --shadow-dialog-near: light-dark(rgba(36, 48, 37, 0.12), rgba(0, 0, 0, 0.3));
+  --shadow-dialog-far: light-dark(rgba(36, 48, 37, 0.19), rgba(0, 0, 0, 0.52));
+  --shadow-inset-color: light-dark(rgba(36, 48, 37, 0.12), rgba(0, 0, 0, 0.18));
+  --shadow-pill-color: light-dark(rgba(36, 48, 37, 0.16), rgba(0, 0, 0, 0.24));
 }
-:root[data-hp-palette="lavender"] { --accent: #ab93e3; --accent-hover: #bba7e8; --accent-pressed: #9b7fde; --accent-soft: rgba(171, 147, 227, 0.16); --accent-text-on-soft: #ab93e3; --text-on-accent: #1c1613; --text-link: #ab93e3; --text-link-hover: #beabe9; }
-[data-theme="light"][data-hp-palette="lavender"] { --accent: #6d4fc4; --accent-hover: #6040bf; --accent-pressed: #593baf; --accent-soft: rgba(109, 79, 196, 0.13); --accent-text-on-soft: #6d4fc4; --text-on-accent: #ffffff; --text-link: #6d4fc4; --text-link-hover: #5d3db7; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme])[data-hp-palette="lavender"] { --accent: #6d4fc4; --accent-hover: #6040bf; --accent-pressed: #593baf; --accent-soft: rgba(109, 79, 196, 0.13); --accent-text-on-soft: #6d4fc4; --text-on-accent: #ffffff; --text-link: #6d4fc4; --text-link-hover: #5d3db7; }
+
+/* Lavender — Digital lavender on a cool violet-grey ground. */
+[data-hp-theme="lavender"],
+[data-hp-palette="lavender"] {
+  --app-bg: light-dark(#f4f2f7, #1f1d22);
+  --sidebar-bg: light-dark(#edebf0, #1c1822);
+  --toolbar-bg: light-dark(#f2f0f5, #221e28);
+  --surface-0: light-dark(#f8f7fb, #221e28);
+  --surface-1: light-dark(#efeef3, #2a2630);
+  --surface-2: light-dark(#e6e4ea, #322e38);
+  --surface-3: light-dark(#dbd9e0, #3b3741);
+  --surface-hover: light-dark(#e4e2e8, #3e3849);
+  --surface-raised: light-dark(#fcfaff, #342e3f);
+  --border-subtle: light-dark(rgba(30, 28, 34, 0.07), rgba(255, 255, 255, 0.05));
+  --border-strong: light-dark(rgba(30, 28, 34, 0.14), rgba(255, 255, 255, 0.11));
+  --border-focus: light-dark(#6d4fc4, #ab93e3);
+  --text-primary: light-dark(#2a282e, #ddc9ff);
+  --text-secondary: light-dark(#5f5b67, #b19bd2);
+  --text-muted: light-dark(#5f5c65, #a79fb4);
+  --text-disabled: light-dark(#a19ea9, #5c487e);
+  --accent: light-dark(#6d4fc4, #ab93e3);
+  --accent-hover: light-dark(#6040bf, #bba7e8);
+  --accent-pressed: light-dark(#593baf, #9b7fde);
+  --accent-soft: light-dark(rgba(109, 79, 196, 0.13), rgba(171, 147, 227, 0.16));
+  --accent-text-on-soft: light-dark(#613fc0, #baa7e8);
+  --text-on-accent: light-dark(#ffffff, #1c1613);
+  --text-link: light-dark(#6d4fc4, #ab93e3);
+  --text-link-hover: light-dark(#5d3db7, #beabe9);
+  --switch-on: light-dark(#6d4fc4, #ab93e3);
+  --btn-inverted-bg: light-dark(#232126, #efe5ff);
+  --btn-inverted-bg-hover: light-dark(#131215, #ffffff);
+  --btn-inverted-text: light-dark(#f1eff5, #120c1d);
+  --overlay-bg: light-dark(rgba(30, 28, 34, 0.36), rgba(0, 0, 0, 0.5));
+  --terminal-bg: light-dark(#3c3845, #17141b);
+  --terminal-fg: light-dark(#e6e6e6, #ddc9ff);
+  --framebuffer-bg: light-dark(#35313d, #100d12);
+  --diagram-plate: #ffffff;
+  --shadow-raised-near: light-dark(rgba(40, 37, 47, 0.11), rgba(0, 0, 0, 0.18));
+  --shadow-raised-far: light-dark(rgba(40, 37, 47, 0.16), rgba(0, 0, 0, 0.24));
+  --shadow-dialog-near: light-dark(rgba(40, 37, 47, 0.12), rgba(0, 0, 0, 0.3));
+  --shadow-dialog-far: light-dark(rgba(40, 37, 47, 0.19), rgba(0, 0, 0, 0.52));
+  --shadow-inset-color: light-dark(rgba(40, 37, 47, 0.12), rgba(0, 0, 0, 0.18));
+  --shadow-pill-color: light-dark(rgba(40, 37, 47, 0.16), rgba(0, 0, 0, 0.24));
 }
-:root[data-hp-palette="lime"] { --accent: #b3cf5a; --accent-hover: #bcd56e; --accent-pressed: #aac946; --accent-soft: rgba(179, 207, 90, 0.16); --accent-text-on-soft: #b3cf5a; --text-on-accent: #1c1613; --text-link: #b3cf5a; --text-link-hover: #bed672; }
-[data-theme="light"][data-hp-palette="lime"] { --accent: #5f7d1f; --accent-hover: #536d1b; --accent-pressed: #465c17; --accent-soft: rgba(95, 125, 31, 0.13); --accent-text-on-soft: #5a771d; --text-on-accent: #ffffff; --text-link: #5a771d; --text-link-hover: #475e17; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme])[data-hp-palette="lime"] { --accent: #5f7d1f; --accent-hover: #536d1b; --accent-pressed: #465c17; --accent-soft: rgba(95, 125, 31, 0.13); --accent-text-on-soft: #5a771d; --text-on-accent: #ffffff; --text-link: #5a771d; --text-link-hover: #475e17; }
+
+/* Lime — Fintech lime against cool whites — bright and dashboard-first, the ground stays crisp. */
+[data-hp-theme="lime"],
+[data-hp-palette="lime"] {
+  --app-bg: light-dark(#f7f8f1, #21221d);
+  --sidebar-bg: light-dark(#f0f1ea, #1f2218);
+  --toolbar-bg: light-dark(#f5f6ef, #25281e);
+  --surface-0: light-dark(#fbfcf6, #25281e);
+  --surface-1: light-dark(#f3f5ec, #2d3026);
+  --surface-2: light-dark(#eaede1, #35382e);
+  --surface-3: light-dark(#e0e3d6, #3e4137);
+  --surface-hover: light-dark(#e8ebdf, #444839);
+  --surface-raised: light-dark(#fefffa, #3a3e2f);
+  --border-subtle: light-dark(rgba(34, 35, 27, 0.07), rgba(255, 255, 255, 0.05));
+  --border-strong: light-dark(rgba(34, 35, 27, 0.14), rgba(255, 255, 255, 0.11));
+  --border-focus: light-dark(#5f7d1f, #b3cf5a);
+  --text-primary: light-dark(#2e3125, #f0feca);
+  --text-secondary: light-dark(#5e6251, #b1c183);
+  --text-muted: light-dark(#5f6255, #aeb3a0);
+  --text-disabled: light-dark(#a9ad9a, #6f7d49);
+  --accent: light-dark(#5f7d1f, #b3cf5a);
+  --accent-hover: light-dark(#536d1b, #bcd56e);
+  --accent-pressed: light-dark(#465c17, #aac946);
+  --accent-soft: light-dark(rgba(95, 125, 31, 0.13), rgba(179, 207, 90, 0.16));
+  --accent-text-on-soft: light-dark(#4d6519, #b3cf5a);
+  --text-on-accent: light-dark(#ffffff, #1c1613);
+  --text-link: light-dark(#536d1b, #b3cf5a);
+  --text-link-hover: light-dark(#405415, #bed672);
+  --switch-on: light-dark(#536d1b, #b3cf5a);
+  --btn-inverted-bg: light-dark(#262720, #f8ffe5);
+  --btn-inverted-bg-hover: light-dark(#151611, #ffffff);
+  --btn-inverted-text: light-dark(#f5f6ee, #181c0d);
+  --overlay-bg: light-dark(rgba(34, 35, 27, 0.36), rgba(0, 0, 0, 0.5));
+  --terminal-bg: light-dark(#454a33, #191b14);
+  --terminal-fg: light-dark(#e6e6e6, #f0feca);
+  --framebuffer-bg: light-dark(#3d412d, #11120d);
+  --diagram-plate: #ffffff;
+  --shadow-raised-near: light-dark(rgba(47, 50, 34, 0.11), rgba(0, 0, 0, 0.18));
+  --shadow-raised-far: light-dark(rgba(47, 50, 34, 0.16), rgba(0, 0, 0, 0.24));
+  --shadow-dialog-near: light-dark(rgba(47, 50, 34, 0.12), rgba(0, 0, 0, 0.3));
+  --shadow-dialog-far: light-dark(rgba(47, 50, 34, 0.19), rgba(0, 0, 0, 0.52));
+  --shadow-inset-color: light-dark(rgba(47, 50, 34, 0.12), rgba(0, 0, 0, 0.18));
+  --shadow-pill-color: light-dark(rgba(47, 50, 34, 0.16), rgba(0, 0, 0, 0.24));
 }
-:root[data-hp-palette="amber"] { --accent: #d9a842; --accent-hover: #ddb257; --accent-pressed: #d59e2d; --accent-soft: rgba(217, 168, 66, 0.16); --accent-text-on-soft: #d9a842; --text-on-accent: #1c1613; --text-link: #d9a842; --text-link-hover: #deb45b; }
-[data-theme="light"][data-hp-palette="amber"] { --accent: #96690e; --accent-hover: #835c0c; --accent-pressed: #714f0b; --accent-soft: rgba(150, 105, 14, 0.13); --accent-text-on-soft: #8f640d; --text-on-accent: #ffffff; --text-link: #8f640d; --text-link-hover: #73500a; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme])[data-hp-palette="amber"] { --accent: #96690e; --accent-hover: #835c0c; --accent-pressed: #714f0b; --accent-soft: rgba(150, 105, 14, 0.13); --accent-text-on-soft: #8f640d; --text-on-accent: #ffffff; --text-link: #8f640d; --text-link-hover: #73500a; }
+
+/* Amber — Sandstone and warm sand — pushed distinctly warmer and drier than the default. */
+[data-hp-theme="amber"],
+[data-hp-palette="amber"] {
+  --app-bg: light-dark(#faf5ef, #23201c);
+  --sidebar-bg: light-dark(#f3efe8, #231e17);
+  --toolbar-bg: light-dark(#f8f3ed, #2a241d);
+  --surface-0: light-dark(#fdfaf5, #2a241d);
+  --surface-1: light-dark(#f8f2ea, #322c25);
+  --surface-2: light-dark(#efe9df, #3a342d);
+  --surface-3: light-dark(#e5ded4, #433d35);
+  --surface-hover: light-dark(#ede7dd, #4a4137);
+  --surface-raised: light-dark(#fffdfa, #40372d);
+  --border-subtle: light-dark(rgba(37, 32, 25, 0.07), rgba(255, 255, 255, 0.05));
+  --border-strong: light-dark(rgba(37, 32, 25, 0.14), rgba(255, 255, 255, 0.11));
+  --border-focus: light-dark(#96690e, #d9a842);
+  --text-primary: light-dark(#332d23, #ffe7c9);
+  --text-secondary: light-dark(#695e4f, #c9a67b);
+  --text-muted: light-dark(#686054, #b6ab9d);
+  --text-disabled: light-dark(#b0a697, #846643);
+  --accent: light-dark(#96690e, #d9a842);
+  --accent-hover: light-dark(#835c0c, #ddb257);
+  --accent-pressed: light-dark(#714f0b, #d59e2d);
+  --accent-soft: light-dark(rgba(150, 105, 14, 0.13), rgba(217, 168, 66, 0.16));
+  --accent-text-on-soft: light-dark(#73540d, #deb256);
+  --text-on-accent: light-dark(#ffffff, #1c1613);
+  --text-link: light-dark(#825d0e, #d9a842);
+  --text-link-hover: light-dark(#66490b, #deb45b);
+  --switch-on: light-dark(#825d0e, #d9a842);
+  --btn-inverted-bg: light-dark(#29251f, #fff3e5);
+  --btn-inverted-bg-hover: light-dark(#171411, #ffffff);
+  --btn-inverted-text: light-dark(#f8f3ec, #1e150b);
+  --overlay-bg: light-dark(rgba(37, 32, 25, 0.36), rgba(0, 0, 0, 0.5));
+  --terminal-bg: light-dark(#4e412f, #1c1814);
+  --terminal-fg: light-dark(#e6e6e6, #ffe7c9);
+  --framebuffer-bg: light-dark(#443929, #13100e);
+  --diagram-plate: #ffffff;
+  --shadow-raised-near: light-dark(rgba(54, 44, 30, 0.11), rgba(0, 0, 0, 0.18));
+  --shadow-raised-far: light-dark(rgba(54, 44, 30, 0.16), rgba(0, 0, 0, 0.24));
+  --shadow-dialog-near: light-dark(rgba(54, 44, 30, 0.12), rgba(0, 0, 0, 0.3));
+  --shadow-dialog-far: light-dark(rgba(54, 44, 30, 0.19), rgba(0, 0, 0, 0.52));
+  --shadow-inset-color: light-dark(rgba(54, 44, 30, 0.12), rgba(0, 0, 0, 0.18));
+  --shadow-pill-color: light-dark(rgba(54, 44, 30, 0.16), rgba(0, 0, 0, 0.24));
 }
-:root[data-hp-palette="rose"] { --accent: #d98298; --accent-hover: #df96a8; --accent-pressed: #d36e88; --accent-soft: rgba(217, 130, 152, 0.16); --accent-text-on-soft: #d98298; --text-on-accent: #1c1613; --text-link: #d98298; --text-link-hover: #e099ab; }
-[data-theme="light"][data-hp-palette="rose"] { --accent: #b04a66; --accent-hover: #a2445e; --accent-pressed: #933e55; --accent-soft: rgba(176, 74, 102, 0.13); --accent-text-on-soft: #b04a66; --text-on-accent: #ffffff; --text-link: #b04a66; --text-link-hover: #9a415a; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme])[data-hp-palette="rose"] { --accent: #b04a66; --accent-hover: #a2445e; --accent-pressed: #933e55; --accent-soft: rgba(176, 74, 102, 0.13); --accent-text-on-soft: #b04a66; --text-on-accent: #ffffff; --text-link: #b04a66; --text-link-hover: #9a415a; }
+
+/* Neon — Restrained neon on near-black — micro-glow accents against a deep ground. */
+[data-hp-theme="neon"],
+[data-hp-palette="neon"] {
+  --app-bg: light-dark(#f2f7f6, #121615);
+  --sidebar-bg: light-dark(#ebf0ef, #0f1514);
+  --toolbar-bg: light-dark(#f0f5f4, #141b1a);
+  --surface-0: light-dark(#f7fbfa, #141b1a);
+  --surface-1: light-dark(#eef3f3, #1c2322);
+  --surface-2: light-dark(#e4eae9, #242b2a);
+  --surface-3: light-dark(#d9e0df, #2c3533);
+  --surface-hover: light-dark(#e2e8e7, #2f3b3a);
+  --surface-raised: light-dark(#fbfffe, #25312f);
+  --border-subtle: light-dark(rgba(29, 33, 33, 0.07), rgba(244, 244, 244, 0.05));
+  --border-strong: light-dark(rgba(29, 33, 33, 0.14), rgba(244, 244, 244, 0.11));
+  --border-focus: light-dark(#0e806e, #3ee6c8);
+  --text-primary: light-dark(#282e2d, #b5fcf3);
+  --text-secondary: light-dark(#57615f, #75b8af);
+  --text-muted: light-dark(#5a6261, #90a7a4);
+  --text-disabled: light-dark(#9ea9a7, #416e68);
+  --accent: light-dark(#0f8f7a, #3ee6c8);
+  --accent-hover: light-dark(#0d7d6a, #55e9ce);
+  --accent-pressed: light-dark(#0b6a5a, #27e3c2);
+  --accent-soft: light-dark(rgba(15, 143, 122, 0.13), rgba(62, 230, 200, 0.16));
+  --accent-text-on-soft: light-dark(#0b675a, #3ee6c8);
+  --text-on-accent: light-dark(#040303, #1c1613);
+  --text-link: light-dark(#0c7162, #3ee6c8);
+  --text-link-hover: light-dark(#09554a, #59ead0);
+  --switch-on: light-dark(#0c7162, #3ee6c8);
+  --btn-inverted-bg: light-dark(#222625, #cefff8);
+  --btn-inverted-bg-hover: light-dark(#121514, #f4f4f4);
+  --btn-inverted-text: light-dark(#f0f4f4, #060c0b);
+  --overlay-bg: light-dark(rgba(29, 33, 33, 0.36), rgba(0, 0, 0, 0.5));
+  --terminal-bg: light-dark(#384543, #0a0e0d);
+  --terminal-fg: light-dark(#e6e6e6, #b5fcf3);
+  --framebuffer-bg: light-dark(#313d3b, #040505);
+  --diagram-plate: #ffffff;
+  --shadow-raised-near: light-dark(rgba(37, 47, 46, 0.11), rgba(0, 0, 0, 0.18));
+  --shadow-raised-far: light-dark(rgba(37, 47, 46, 0.16), rgba(0, 0, 0, 0.24));
+  --shadow-dialog-near: light-dark(rgba(37, 47, 46, 0.12), rgba(0, 0, 0, 0.3));
+  --shadow-dialog-far: light-dark(rgba(37, 47, 46, 0.19), rgba(0, 0, 0, 0.52));
+  --shadow-inset-color: light-dark(rgba(37, 47, 46, 0.12), rgba(0, 0, 0, 0.18));
+  --shadow-pill-color: light-dark(rgba(37, 47, 46, 0.16), rgba(0, 0, 0, 0.24));
 }
-:root[data-hp-palette="neon"] { --accent: #3ee6c8; --accent-hover: #55e9ce; --accent-pressed: #27e3c2; --accent-soft: rgba(62, 230, 200, 0.16); --accent-text-on-soft: #3ee6c8; --text-on-accent: #1c1613; --text-link: #3ee6c8; --text-link-hover: #59ead0; }
-[data-theme="light"][data-hp-palette="neon"] { --accent: #0f8f7a; --accent-hover: #0d7d6a; --accent-pressed: #0b6a5a; --accent-soft: rgba(15, 143, 122, 0.13); --accent-text-on-soft: #0c7a68; --text-on-accent: #171210; --text-link: #0c7a68; --text-link-hover: #095e50; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme])[data-hp-palette="neon"] { --accent: #0f8f7a; --accent-hover: #0d7d6a; --accent-pressed: #0b6a5a; --accent-soft: rgba(15, 143, 122, 0.13); --accent-text-on-soft: #0c7a68; --text-on-accent: #171210; --text-link: #0c7a68; --text-link-hover: #095e50; }
+
+/* Legacy accent-only presets — deprecated, kept so stored preferences
+   do not silently lose their accent. Not full themes. */
+[data-hp-theme="ocean"],
+[data-hp-palette="ocean"] {
+  --accent: light-dark(#1f6fa8, #55a7d8);
+  --accent-hover: light-dark(#1c6497, #6ab2dd);
+  --accent-pressed: light-dark(#195886, #409cd3);
+  --accent-soft: light-dark(rgba(31, 111, 168, 0.13), rgba(85, 167, 216, 0.16));
+  --accent-text-on-soft: light-dark(#195d90, #7dbbe2);
+  --text-on-accent: light-dark(#ffffff, #1c1613);
+  --text-link: light-dark(#1d69a0, #55a7d8);
+  --text-link-hover: light-dark(#185886, #6eb4de);
+  --switch-on: light-dark(#1d69a0, #55a7d8);
+  --border-focus: light-dark(#1f6fa8, #55a7d8);
 }
+
+[data-hp-theme="rose"],
+[data-hp-palette="rose"] {
+  --accent: light-dark(#b04a66, #d98298);
+  --accent-hover: light-dark(#a2445e, #df96a8);
+  --accent-pressed: light-dark(#933e55, #d36e88);
+  --accent-soft: light-dark(rgba(176, 74, 102, 0.13), rgba(217, 130, 152, 0.16));
+  --accent-text-on-soft: light-dark(#943e58, #e1a2b0);
+  --text-on-accent: light-dark(#ffffff, #1c1613);
+  --text-link: light-dark(#a44560, #da869b);
+  --text-link-hover: light-dark(#8e3c53, #e19dae);
+  --switch-on: light-dark(#a44560, #da869b);
+  --border-focus: light-dark(#b04a66, #d98298);
+}
+
+/* <<< END GENERATED THEME SURFACES */
+
 
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -719,7 +926,7 @@ select.form-input { cursor: pointer; }
   border: 0;
   border-radius: 20px;
   background: var(--surface-1);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .10), 0 8px 28px rgba(0, 0, 0, .12);
+  box-shadow: var(--shadow-raised);
 }
 .card--raised { background: var(--surface-raised); border-color: var(--border-strong); box-shadow: var(--shadow-raised); }
 .card__title { margin-bottom: 4px; color: var(--text-primary); font-size: var(--font-size-body); font-weight: 600; }
@@ -996,7 +1203,7 @@ select.form-input { cursor: pointer; }
 .tab.active, .tab[aria-selected="true"] {
   background: var(--surface-raised);
   color: var(--text-primary);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
+  box-shadow: var(--shadow-inset);
 }
 
 .data-table {
@@ -1632,7 +1839,7 @@ pre {
   z-index: -1;
   border-radius: var(--radius-pill);
   background: var(--surface-1);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .10), 0 6px 20px rgba(0, 0, 0, .12);
+  box-shadow: var(--shadow-raised);
 }
 /* 11E breadcrumb: section / page, left-aligned in the pill. min-width:0 +
    ellipsis on both halves: the crumb is the toolbar's only variable-width
@@ -1695,7 +1902,7 @@ pre {
 .sidebar__item.active {
   background: var(--surface-raised);
   color: var(--text-primary);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .16);
+  box-shadow: var(--shadow-inset);
 }
 .sidebar__item svg { width: 15px; height: 15px; opacity: 0.72; }
 .sidebar__profile {
@@ -2211,23 +2418,11 @@ body [hidden] { display: none !important; }
   height: 100%;
 }
 .hp-brand-mark img { object-fit: contain; border-radius: inherit; }
-.theme-art--light { display: none; }
-[data-theme="light"] .theme-art--dark { display: none; }
-[data-theme="light"] .theme-art--light { display: block; }
-/* .theme-art--light's own base-hide rule above (specificity 0,1,0) loses to
-   any container that also styles its own <img>/<picture> children directly
-   (e.g. .hp-brand-mark img, specificity 0,1,1) -- .theme-art--dark's
-   equivalent case is covered by the [data-theme="light"] override two
-   lines up (specificity 0,2,1, high enough to win), but nothing
-   symmetric existed for dark mode, so both images stayed visible there. */
-[data-theme="dark"] .theme-art--light { display: none; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme]) .theme-art--dark { display: none; }
-  :root:not([data-theme]) .theme-art--light { display: block; }
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) .theme-art--light { display: none; }
-}
+/* Theme-aware artwork. Both images are emitted and the theme picks one via
+   its own intent tokens, so a third theme cannot fall through to the
+   dark-optimised asset the way the old light/dark selector list did. */
+.theme-art--dark { display: var(--theme-art-dark-display); }
+.theme-art--light { display: var(--theme-art-light-display); }
 .hp-brand-text { line-height: 1.25; }
 .hp-brand-text strong { display: block; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; }
 .hp-brand-accent { color: var(--accent); }
@@ -3041,10 +3236,11 @@ a.project-card { display: block; color: inherit; text-decoration: none; }
   color: var(--danger); font: 11px var(--hp-mono);
 }
 .leaflet-container { font-family: var(--hp-font); color: var(--text-primary); background: var(--app-bg); }
-[data-theme="dark"] .leaflet-tile-pane { filter: brightness(0.62) invert(1) contrast(1.25) hue-rotate(180deg) saturate(0.35); }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) .leaflet-tile-pane { filter: brightness(0.62) invert(1) contrast(1.25) hue-rotate(180deg) saturate(0.35); }
-}
+/* Raster basemap tiles ship bright; a dark ground needs them filtered. The
+   theme declares that intent (--basemap-filter) rather than this rule
+   matching on [data-theme="dark"], which silently did nothing for any theme
+   whose attribute value was not literally "dark". */
+.leaflet-tile-pane { filter: var(--basemap-filter); }
 .leaflet-control-zoom a, .leaflet-control-home {
   background: var(--surface-1) !important;
   color: var(--text-primary) !important;
@@ -3549,7 +3745,7 @@ div.hp-skel-batch .skeleton-line:nth-child(3) { width: 38%; }
   display: inline-flex; gap: 2px; opacity: 0;
   padding: 3px 5px; border-radius: var(--radius-pill);
   background: var(--surface-raised);
-  box-shadow: 0 3px 12px rgba(0, 0, 0, .24);
+  box-shadow: var(--shadow-pill);
   transition: opacity var(--transition-fast);
 }
 tr:hover .hp-row-actions, tr.selected .hp-row-actions { opacity: 1; }
@@ -3685,7 +3881,7 @@ tr:hover .hp-row-actions, tr.selected .hp-row-actions { opacity: 1; }
   margin: -34px auto 6px;
   border: 1px solid var(--border-subtle); border-radius: 50%;
   padding: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .22);
+  box-shadow: var(--shadow-pill);
   background: var(--surface-raised);
   color: var(--text-primary); /* a11y: secondary measured 4.38:1 on surface-3 */
   font-size: 11px;
@@ -3822,6 +4018,13 @@ tr:hover .hp-row-actions, tr.selected .hp-row-actions { opacity: 1; }
 .tw\:bg-red-subtle { background-color: var(--danger-soft); }
 .tw\:bg-surface-1 { background-color: var(--surface-1); }
 .tw\:bg-white { background-color: #fff; }
+
+/* Plate for black-on-transparent generated diagrams (graphviz call graphs
+   and the like), which carry no background of their own and are illegible
+   on a dark ground. Themed rather than a literal white so a theme can move
+   it; .tw\:bg-white above stays literally white, because it is a generic
+   utility whose name promises exactly that. */
+.diagram-plate { background: var(--diagram-plate); }
 .tw\:px-4 { padding-inline: 16px; }
 .tw\:px-6 { padding-inline: 24px; }
 .tw\:py-2 { padding-block: 8px; }
@@ -3862,7 +4065,7 @@ tr:hover .hp-row-actions, tr.selected .hp-row-actions { opacity: 1; }
 .hp-rp-templates{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:4px 0 18px}.hp-rp-template{padding:12px 14px;border:1px solid var(--border-subtle);border-radius:var(--radius-panel);background:var(--surface-1);color:var(--text-primary);text-align:left;cursor:pointer;transition:border-color var(--transition-fast),background var(--transition-fast)}.hp-rp-template:hover{border-color:var(--border-strong);background:var(--surface-hover)}.hp-rp-template[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}.hp-rp-template strong{display:block;margin-bottom:4px;font-size:var(--font-size-footnote)}.hp-rp-template span{display:block;color:var(--text-muted);font-size:11.5px;line-height:1.45}.hp-rp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px 16px}.hp-rp-field label{display:block;margin-bottom:5px;color:var(--text-muted);font-size:var(--font-size-xs);letter-spacing:.06em;text-transform:uppercase}.hp-rp-field input,.hp-rp-field select{width:100%;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--radius-control);background:var(--surface-0);color:var(--text-primary);font-size:var(--font-size-footnote)}.hp-rp-field input:focus,.hp-rp-field select:focus{outline:none;border-color:var(--border-focus)}.hp-rp-elements{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 16px}.hp-rp-elements label{display:flex;align-items:baseline;gap:8px;padding:5px 0;color:var(--text-secondary);font-size:12.5px;cursor:pointer}.hp-rp-elements input{margin-top:2px;accent-color:var(--accent)}.hp-rp-elements small{display:block;color:var(--text-muted);font-size:var(--font-size-xs)}.hp-rp-theme{display:flex;gap:10px}.hp-rp-theme button{display:flex;max-width:220px;flex:1;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-panel);background:var(--surface-1);color:var(--text-primary);font-size:var(--font-size-footnote);cursor:pointer}.hp-rp-theme button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}.hp-rp-swatch{width:30px;height:22px;flex:none;border:1px solid var(--border-strong);border-radius:var(--radius-xs)}.hp-rp-swatch--dark{background:#20201f;box-shadow:inset 0 -7px 0 #d97757}.hp-rp-swatch--light{background:#f7f6f2;box-shadow:inset 0 -7px 0 #c76548}.hp-rp-section{margin-top:0}.hp-rp-section[hidden]{display:none}.hp-rp-actions{position:sticky;z-index:5;bottom:0;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px;padding:12px 14px;border:1px solid var(--border-subtle);border-radius:var(--radius-panel);background:var(--surface-raised);box-shadow:var(--shadow-raised)}[data-hp-reports]:has([data-dashboard-panel="library"]:not([hidden])) .hp-rp-actions{display:none}.dashboard-panel>.card+.card{margin-top:14px}.hp-rp-status{color:var(--text-muted);font-size:var(--font-size-caption)}.hp-rp-status[data-state="error"]{color:var(--danger)}.hp-rp-status[data-state="ok"]{color:var(--success)}.hp-rp-tag{display:inline-block;padding:2px 8px;border-radius:var(--radius-pill);background:var(--surface-2);color:var(--text-secondary);font-size:var(--font-size-xs)}.hp-rp-payload-results{display:flex;max-height:280px;flex-direction:column;gap:4px;overflow-y:auto;margin:10px 0}.hp-rp-payload-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--radius-control);background:var(--surface-1);color:var(--text-primary);font-size:12.5px;text-align:left;cursor:pointer}.hp-rp-payload-row:hover{border-color:var(--border-strong);background:var(--surface-hover)}.hp-rp-payload-row[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}.hp-rp-payload-row code{flex:none;color:var(--text-secondary);font-size:11.5px}.hp-rp-payload-row>span:nth-child(2){flex:1;color:var(--text-muted)}.hp-rp-payload-badges{display:flex;flex:none;gap:4px}.hp-rp-toggle-row{display:flex;align-items:center;gap:8px;color:var(--text-secondary);font-size:var(--font-size-footnote);letter-spacing:0;text-transform:none}.hp-rp-toggle-row input[type="checkbox"]{accent-color:var(--accent)}.hp-rp-tag--light{background:var(--info-soft);color:var(--info-text-on-soft,var(--info))}.hp-rp-row-actions{display:flex;flex-wrap:wrap;gap:6px}
 .pdf-viewer-modal{flex-direction:column;width:min(1000px,calc(100vw - 40px));height:min(860px,calc(100dvh - 48px));padding:20px 20px 0}.pdf-viewer-title{flex:none;margin:0 40px 12px 0;font-size:var(--font-size-lg)}.pdf-viewer-frame{flex:1;width:100%;min-height:0;margin:0 -20px;border:0;background:var(--surface-0)}@media(max-width:720px){.pdf-viewer-modal{width:100vw;height:100dvh;border-radius:0}}
 .hp-pl-info-popover,.hp-sb-info-popover{width:300px}.hp-pl-info-row,.hp-sb-info-row{display:flex;flex-direction:column;gap:2px;padding:6px 10px;font-size:var(--font-size-caption)}.hp-pl-info-row .k,.hp-sb-info-row .k{color:var(--text-muted);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase}.hp-pl-info-row .v,.hp-sb-info-row .v{color:var(--text-primary);font-family:var(--hp-mono);word-break:break-all}.hp-pl-label-trigger.action-menu>summary{width:auto;height:auto;min-height:32px;padding:6px 14px;border-radius:var(--radius-pill);font-size:12.5px}#panel-identity h2 .hp-pl-label-trigger,.hp-sb-label-trigger.action-menu{margin-left:8px;vertical-align:middle}#panel-identity h2 .hp-pl-label-trigger>summary,.hp-sb-label-trigger.action-menu>summary{width:auto;height:auto;min-height:24px;padding:3px 10px;border-radius:var(--radius-pill);font-size:var(--font-size-xs)}
-.hp-vnc-canvas-wrap{overflow:hidden;border:1px solid var(--border-subtle);border-radius:var(--radius-panel);background:#000}.hp-vnc-canvas-wrap canvas{display:block;width:100%;height:auto}.hp-vnc-status{margin:10px 0;color:var(--text-muted);font-size:var(--font-size-caption)}.hp-tty-term{min-height:420px;overflow-x:auto;padding:14px 16px;border:1px solid var(--border-subtle);border-radius:var(--radius-panel);background:#16181d;color:#e6e6e6;font-family:var(--font-mono);font-size:var(--font-size-footnote);line-height:1.35;white-space:pre}.hp-tty-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:12px 0}.hp-tty-controls input[type="range"]{min-width:160px;flex:1 1 260px}.hp-tty-status{color:var(--text-muted);font-size:var(--font-size-caption)}
+.hp-vnc-canvas-wrap{overflow:hidden;border:1px solid var(--border-subtle);border-radius:var(--radius-panel);background:var(--framebuffer-bg)}.hp-vnc-canvas-wrap canvas{display:block;width:100%;height:auto}.hp-vnc-status{margin:10px 0;color:var(--text-muted);font-size:var(--font-size-caption)}.hp-tty-term{min-height:420px;overflow-x:auto;padding:14px 16px;border:1px solid var(--border-subtle);border-radius:var(--radius-panel);background:var(--terminal-bg);color:var(--terminal-fg);font-family:var(--font-mono);font-size:var(--font-size-footnote);line-height:1.35;white-space:pre}.hp-tty-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:12px 0}.hp-tty-controls input[type="range"]{min-width:160px;flex:1 1 260px}.hp-tty-status{color:var(--text-muted);font-size:var(--font-size-caption)}
 .hp-dash-settings > .settings-layout{width:100%;height:100%;min-height:0}
 .hp-dash-settings .settings-layout__sidebar{overflow-y:auto}
 .hp-dash-settings .settings-layout__content{height:100%;overflow-y:auto}

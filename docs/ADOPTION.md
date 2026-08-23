@@ -6,6 +6,8 @@ Copy `theme.css` into the project's static asset directory and link it before
 application-specific CSS:
 
 ```html
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/static/theme.css">
 <link rel="stylesheet" href="/static/application.css">
 ```
@@ -72,6 +74,16 @@ height, a progress fill, a positioned tooltip. The obvious inline
 CSP-enforcing browser; `CSP.md` has the pattern that actually works. The policy
 must also allow `fonts.googleapis.com` in `style-src` and `fonts.gstatic.com` in
 `font-src` for the theme's web typography.
+
+The font stylesheet is a `<link>` in your page's `<head>`, not an `@import`
+inside `theme.css`. That is deliberate: an `@import` at the top of the main
+stylesheet forces the browser to fetch and parse `theme.css` before it even
+discovers the font request, then fetch the font CSS, then the font files —
+three serial round trips blocking first paint, on every page load. As a
+`<link>` the font CSS is discovered immediately and resolves in parallel.
+The `--font-*` stacks carry platform-native fallbacks, so a blocked or
+offline font host degrades rather than breaks; omit the two lines entirely
+and the theme still renders in the fallback faces.
 
 ## Validation checklist
 

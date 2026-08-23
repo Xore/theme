@@ -4,6 +4,84 @@ All shared components must use custom properties from `theme.css`. Downstream
 applications may override tokens at `:root` or on an application container,
 but should not redefine component internals.
 
+## Themes and modes are separate axes
+
+Two independent attributes on `<html>`:
+
+| attribute | values | meaning |
+|---|---|---|
+| `data-hp-theme` | `claude` (default), `slate`, `sage`, `lavender`, `lime`, `amber`, `neon` | the whole surface family — ground, chrome, surfaces, borders, text ramp, accent |
+| `data-theme` | `light`, `dark`, or absent | pins the mode; absent follows the operating system |
+
+They compose: `data-hp-theme="slate" data-theme="light"` is slate in light
+mode. Setting neither gives the default theme following the system.
+
+`data-hp-palette` is accepted as an alias for `data-hp-theme` so consumers
+that already write it keep working. Prefer `data-hp-theme` in new code.
+
+### What a theme owns
+
+Three tiers. A theme **must** define the first, **may** retune the second,
+and must **not** touch the third.
+
+**Theme-scoped — the surface family.** Grounds (`--app-bg`, `--sidebar-bg`,
+`--toolbar-bg`), the surface ramp (`--surface-0..3`, `--surface-hover`,
+`--surface-raised`), borders (`--border-subtle`, `--border-strong`,
+`--border-focus`), the text ramp (`--text-primary`, `--text-secondary`,
+`--text-muted`, `--text-disabled`), the accent family, `--overlay-bg`, the
+inverted-button pair, elevation colours, and the terminal/framebuffer
+surfaces.
+
+**Shared and semantic — not a theme's to repurpose.**
+`--success`/`--info`/`--warning`/`--danger`/`--critical` and their `-soft`,
+`-text-on-soft` and `-badge-fill` families. Status colour is meaning, not
+decoration: danger must read as danger whichever theme is active. A theme may
+retune a status colour for its own ground, but may not reassign what it
+means.
+
+**Not theme-scoped — proportions, not palette.** The spacing scale
+(`--space-*`), radii (`--radius-*`), type scale (`--font-size-*`,
+`--font-*`), motion (`--ease-out`, `--transition*`) and layout dimensions
+(`--toolbar-height`, `--sidebar-width*`, `--content-width`). These are the
+product's proportions and are identical across every theme.
+
+### How a theme is authored
+
+Theme values are **generated, not hand-written**. Edit
+`scripts/theme-tokens.mjs` — which holds the ground hue, saturation profile
+and accent seeds per theme — then run:
+
+```sh
+node scripts/gen-themes.mjs      # rewrite the generated block in theme.css
+node scripts/check-contrast.mjs  # WCAG AA across every theme and mode
+```
+
+Each theme is emitted as **one block covering both modes** using
+`light-dark()`, rather than the three near-identical blocks (`:root`,
+`[data-theme="light"]`, and a `prefers-color-scheme` copy) the stylesheet
+previously needed per token set. Mode is decided by `color-scheme`: `:root`
+declares `light dark` so the system preference wins by default, and
+`[data-theme]` pins it.
+
+`claude` is the default and is **pinned, not derived** — its values are
+hand-tuned (links are blue rather than accent-derived, `--accent-soft` sits
+at 0.14/0.12 where generated themes use 0.16/0.13) and the generator asserts
+byte identity on every run.
+
+Values that are not colours cannot use `light-dark()`, so the few that vary
+by mode are exposed as intent tokens instead: `--basemap-filter` and
+`--theme-art-dark-display` / `--theme-art-light-display`. Rules read the
+token rather than matching `[data-theme="dark"]` themselves, so a theme
+beyond light/dark cannot silently miss them.
+
+### Contrast
+
+`scripts/check-contrast.mjs` runs in CI and enforces WCAG AA (4.5:1 text,
+3:1 non-text) across every theme and mode, compositing alpha so a `-soft`
+token is measured as it actually renders. Deliberate exceptions are listed
+in `KNOWN_EXCEPTIONS` with a reason and printed on every run — the checker
+never silently tolerates a failure.
+
 ## Surface hierarchy
 
 | Token | Purpose |

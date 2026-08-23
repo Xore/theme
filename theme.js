@@ -2,6 +2,10 @@
   'use strict';
 
   var storageKey = 'xore-theme';
+  /* The named theme is a separate axis from light/dark: a theme owns the
+     whole surface family, the mode picks which half of it renders. */
+  var themeStorageKey = 'xore-hp-theme';
+  var defaultHpTheme = 'claude';
   var root = document.documentElement;
 
   function applyTheme(value) {
@@ -28,6 +32,29 @@
   function savedTheme() {
     try { return localStorage.getItem(storageKey) || 'system'; }
     catch (_) { return 'system'; }
+  }
+
+  function applyHpTheme(value) {
+    if (value && value !== defaultHpTheme) root.setAttribute('data-hp-theme', value);
+    else root.removeAttribute('data-hp-theme');
+    document.querySelectorAll('[data-hp-theme-value]').forEach(function (button) {
+      button.setAttribute('aria-pressed', String(button.getAttribute('data-hp-theme-value') === value));
+    });
+  }
+
+  function setHpTheme(value) {
+    try {
+      if (value === defaultHpTheme) localStorage.removeItem(themeStorageKey);
+      else localStorage.setItem(themeStorageKey, value);
+    } catch (_) {
+      // Storage is optional; the visible theme still changes.
+    }
+    applyHpTheme(value);
+  }
+
+  function savedHpTheme() {
+    try { return localStorage.getItem(themeStorageKey) || defaultHpTheme; }
+    catch (_) { return defaultHpTheme; }
   }
 
   function dialogBackdrop(id) {
@@ -111,6 +138,7 @@
   }
 
   applyTheme(savedTheme());
+  applyHpTheme(savedHpTheme());
 
   document.addEventListener('click', function (event) {
     if (!event.target.closest('.action-menu, .popover')) {
@@ -147,6 +175,12 @@
     var themeButton = event.target.closest('[data-theme-value]');
     if (themeButton) {
       setTheme(themeButton.getAttribute('data-theme-value'));
+      return;
+    }
+
+    var hpThemeButton = event.target.closest('[data-hp-theme-value]');
+    if (hpThemeButton) {
+      setHpTheme(hpThemeButton.getAttribute('data-hp-theme-value'));
       return;
     }
 

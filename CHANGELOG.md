@@ -7,6 +7,86 @@ change, not as a follow-up.
 
 ## Unreleased
 
+- **Themes are now full surface families, not accent swaps.** `data-hp-theme`
+  selects one of seven themes -- `claude` (default), `slate`, `sage`,
+  `lavender`, `lime`, `amber`, `neon` -- and each one owns the whole surface:
+  ground, sidebar, toolbar, the `--surface-*` ramp, borders, the text ramp,
+  elevation and the accent family, in both light and dark. Previously a
+  preset could only reach eight accent/link tokens, so switching "theme"
+  recoloured buttons on an identical warm-grey shell. Ground hues follow the
+  same 2026 dashboard colour research the original presets were derived from
+  -- the half of it (elevated neutrals, zinc/slate grounds, cool whites,
+  "avoid grey-on-grey fatigue") that the old token contract made
+  unreachable. `data-theme` (`light`/`dark`/absent) stays a separate,
+  orthogonal axis, and `data-hp-palette` is accepted as an alias for
+  `data-hp-theme` so existing consumers keep working.
+
+- **One block per theme instead of three.** Token sets used to be written
+  three times -- `:root` for dark, `[data-theme="light"]`, and a
+  `prefers-color-scheme: light` copy of the second, with a comment asking
+  the next editor to keep them in sync (they had already drifted:
+  `--border-subtle`/`--border-strong` differed between the two light
+  blocks). Both modes now live in one `light-dark()` declaration, resolved
+  by `color-scheme`. Seven themes in two modes would have been 42 blocks
+  under the old shape.
+
+- **Theme values are generated and contrast is enforced in CI.**
+  `scripts/theme-tokens.mjs` holds the ground hue, saturation profile and
+  accent seeds per theme; `scripts/gen-themes.mjs` emits the block and
+  `scripts/check-contrast.mjs` asserts WCAG AA (4.5:1 text, 3:1 non-text)
+  across every theme and mode, compositing alpha so a `-soft` token is
+  measured as it actually renders. 422 pairs are checked on every run.
+  Contrast used to be verified by hand and recorded as prose next to the
+  tokens; that does not scale past two token sets, and it had already let
+  regressions ship. `claude` is pinned rather than derived -- its values are
+  hand-tuned in ways a generator should not second-guess -- and the
+  generator asserts byte identity for all 29 of its tokens on every run.
+
+  One pre-existing failure is recorded in `KNOWN_EXCEPTIONS` rather than
+  silently fixed or silently tolerated: the default theme's light link blue
+  (`#2a78d6`) measures 3.95:1 against `--surface-1`, below the AA floor.
+  Moving a brand colour is a design decision, so it is tracked and printed
+  on every run.
+
+- **Six hardcoded black box-shadows now follow the theme.** `.card`,
+  `.tab.active`, `.app-toolbar::before`, `.sidebar__item.active`,
+  `.hp-row-actions` and `.hp-scroll-more` hardcoded `rgba(0, 0, 0, ...)`
+  and so ignored the mode-aware shadow tokens sitting right next to them --
+  visibly wrong in light mode long before themes existed. Adds
+  `--shadow-inset` and `--shadow-pill` for the tighter elevations those
+  rules needed.
+
+- **The basemap filter and the brand-mark swap read intent tokens.**
+  `.leaflet-tile-pane`'s dark-tile inversion and the `.theme-art--*` image
+  swap both enumerated the literal strings `light` and `dark`, so any third
+  theme silently got bright white map tiles inside a dark shell and the
+  wrong brand mark on every page. They now read `--basemap-filter` and
+  `--theme-art-*-display`, which the theme declares.
+
+- Adds `.diagram-plate` / `--diagram-plate`, a themed plate for
+  black-on-transparent generated diagrams (graphviz call graphs) that carry
+  no background of their own and are illegible on a dark ground.
+  `.tw\:bg-white` stays literally white -- it is a generic utility whose
+  name promises exactly that.
+
+- **The terminal and framebuffer surfaces are tokens.** `.hp-tty-term` was a
+  fixed `#16181d`/`#e6e6e6` slab and `.hp-vnc-canvas-wrap` a fixed `#000`,
+  both outside the token system entirely. Now `--terminal-bg`,
+  `--terminal-fg` and `--framebuffer-bg`, so a light-grounded theme does not
+  get a black slab dropped into a paper-white page.
+
+- **Fonts load via `<link>`, not `@import`.** The `@import` on line 7 put
+  three serial round trips to a third-party host on the critical path for
+  first paint, on every page load. Consumers now add two lines to `<head>`
+  (see `docs/ADOPTION.md`); `examples/` carry them, and `check-css.mjs`
+  rejects any `@import` in the stylesheet.
+
+- `ocean` and `rose` are no longer offered as themes. They were fillers
+  added to reach the original brief's "at least 8" and carry no
+  colour-research backing, so they were not promoted to full surface
+  families. They remain as deprecated accent-only presets so stored
+  operator preferences do not silently lose their accent.
+
 - Gave `.chip` a selected state (`background: var(--accent-soft)`,
   `border-color: var(--accent)`), the same accent-outline treatment
   `.segmented button[aria-pressed="true"]` and the reports gallery's
