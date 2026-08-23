@@ -7,6 +7,21 @@ change, not as a follow-up.
 
 ## Unreleased
 
+- Gave `.chip` a selected state (`background: var(--accent-soft)`,
+  `border-color: var(--accent)`), the same accent-outline treatment
+  `.segmented button[aria-pressed="true"]` and the reports gallery's
+  `.hp-rp-template[aria-pressed="true"]` already use. It matches on both
+  `[aria-pressed="true"]` and `.is-active`, because chips carry this state
+  for two different reasons: a real toggle sets `aria-pressed`, while a chip
+  that only *represents* something already applied -- an active filter
+  scope, a non-zero count -- is not a toggle and should not claim to be one
+  in the accessibility tree, so it opts in with `.is-active` instead. Hover
+  is pinned to the same colours so a selected chip does not appear to
+  deselect under the cursor. Found live in `Xore/APIARY`'s dashboard, where
+  nine controls (analyzer selection in the payload workbench, report element
+  selection, the live-tail toggle, applied filter scopes) rendered their
+  selected state identically to their unselected one.
+
 - Added reusable render-first data-surface primitives for shaped card, table,
   project-grid, and code placeholders; made `.skeleton-line` work on inline
   elements; and gave `.card__scroll` matching horizontal overflow and
