@@ -15,14 +15,14 @@ usability when that request is unavailable.
 
 **Themes and modes are separate axes.** `data-hp-theme` selects one of seven
 full surface families -- `claude` (default), `slate`, `sage`, `lavender`,
-`lime`, `amber`, `neon` -- each owning the ground, chrome, surface ramp,
+`lime`, `amber`, `ocean`, `rose`, `neon` -- each owning the ground, chrome, surface ramp,
 borders, text ramp and accent. `data-theme` (`light`/`dark`/absent) picks the
 mode independently. Theme values are generated and every text/background pair
 is checked against WCAG AA in CI; see [`docs/TOKENS.md`](docs/TOKENS.md).
 
 ## What is included
 
-- `theme.css` — tokens, seven themes across dark/light/system modes, controls,
+- `theme.css` — tokens, nine themes across dark/light/system modes, controls,
   cards, tables, status components, application shell, settings layout,
   dialogs, and auth layout.
 - `scripts/theme-tokens.mjs` — the theme definitions (ground hue, saturation

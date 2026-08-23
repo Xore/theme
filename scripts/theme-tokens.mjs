@@ -130,6 +130,12 @@ export function shiftLightness(hex, delta) {
    is what the original a11y pass called "a thin pass… one shade from
    failing", and it retuned for roughly a 5.3:1 margin instead. Same idea
    here: the checker asserts 4.5, the generator aims past it. */
+/* How far a status colour is pulled toward the theme's ground hue. Small on
+   purpose -- see the STATUS block in buildMode(). */
+export const HUE_PULL = 0.14;
+/* The near-black ink solid status badges are drawn with. */
+export const BADGE_INK = '#0d2417';
+
 export const AIM = 5.1;
 export const AIM_NONTEXT = 3.4;
 
@@ -151,19 +157,19 @@ export function tune(color, bg, { target = AIM, direction = 1, maxSteps = 90, st
    how the borders read) are preserved across the whole set. */
 export const REFERENCE = {
   dark: {
-    'app-bg': '#20201f',
-    'sidebar-bg': '#1e1e1c',
-    'toolbar-bg': '#242422',
-    'surface-0': '#242422',
-    'surface-1': '#2c2c2a',
-    'surface-2': '#343432',
-    'surface-3': '#3d3d3b',
-    'surface-hover': '#42423f',
-    'surface-raised': '#383835',
-    'text-primary': '#e9e6df',
-    'text-secondary': '#a8a49c',
-    'text-muted': '#a5a9a6',
-    'text-disabled': '#68635e',
+    'bg-000': '#20201f',
+    'bg-sidebar': '#1e1e1c',
+    'bg-toolbar': '#242422',
+    'bg-100': '#242422',
+    'bg-200': '#2c2c2a',
+    'bg-300': '#343432',
+    'bg-400': '#3d3d3b',
+    'bg-500': '#42423f',
+    'bg-raised': '#383835',
+    'text-000': '#e9e6df',
+    'text-100': '#a8a49c',
+    'text-200': '#a5a9a6',
+    'text-300': '#68635e',
     'btn-inverted-bg': '#f5f4ef',
     'btn-inverted-bg-hover': '#ffffff',
     'btn-inverted-text': '#161513',
@@ -175,19 +181,19 @@ export const REFERENCE = {
     'shadow-rgb': '#000000',
   },
   light: {
-    'app-bg': '#f7f6f2',
-    'sidebar-bg': '#f0efeb',
-    'toolbar-bg': '#f5f4f0',
-    'surface-0': '#fbfaf7',
-    'surface-1': '#f4f2ed',
-    'surface-2': '#ebe9e3',
-    'surface-3': '#e1dfd8',
-    'surface-hover': '#e9e7e1',
-    'surface-raised': '#fffefa',
-    'text-primary': '#2f2b27',
-    'text-secondary': '#68615a',
-    'text-muted': '#66615b',
-    'text-disabled': '#aaa49d',
+    'bg-000': '#f7f6f2',
+    'bg-sidebar': '#f0efeb',
+    'bg-toolbar': '#f5f4f0',
+    'bg-100': '#fbfaf7',
+    'bg-200': '#f4f2ed',
+    'bg-300': '#ebe9e3',
+    'bg-400': '#e1dfd8',
+    'bg-500': '#e9e7e1',
+    'bg-raised': '#fffefa',
+    'text-000': '#2f2b27',
+    'text-100': '#68615a',
+    'text-200': '#66615b',
+    'text-300': '#aaa49d',
     'btn-inverted-bg': '#262421',
     'btn-inverted-bg-hover': '#151412',
     'btn-inverted-text': '#f5f4ef',
@@ -210,68 +216,66 @@ export const REFERENCE = {
  * button family all carry values that were measured against real rendered
  * pages. Those are decisions, not derivations.
  *
- * So claude is pinned here rather than generated, and assertIdentity()
- * fails the build if anything drifts. Every other theme is generated from
+ * The link family (--text-link, --text-link-hover, --switch-on,
+ * --border-focus) is deliberately NOT pinned: those values were blue rather
+ * than accent-derived, and the light one measured 3.95:1 against
+ * --bg-200, failing AA on every link on every page (#103). They are now
+ * derived and AA-tuned like every other theme's.
+ *
+ * So the rest of claude is pinned here rather than generated, and
+ * assertIdentity() fails the build if anything drifts. Every other theme is generated from
  * the reference ramp and tuned.
  */
 export const CLAUDE_IDENTITY = {
   light: {
-    'app-bg': '#f7f6f2',
-    'sidebar-bg': '#f0efeb',
-    'toolbar-bg': '#f5f4f0',
-    'surface-0': '#fbfaf7',
-    'surface-1': '#f4f2ed',
-    'surface-2': '#ebe9e3',
-    'surface-3': '#e1dfd8',
-    'surface-hover': '#e9e7e1',
-    'surface-raised': '#fffefa',
-    'border-subtle': 'rgba(34, 31, 28, 0.07)',
-    'border-strong': 'rgba(34, 31, 28, 0.14)',
-    'border-focus': '#1f5fae',
-    'text-primary': '#2f2b27',
-    'text-secondary': '#68615a',
-    'text-muted': '#66615b',
-    'text-disabled': '#aaa49d',
+    'bg-000': '#f7f6f2',
+    'bg-sidebar': '#f0efeb',
+    'bg-toolbar': '#f5f4f0',
+    'bg-100': '#fbfaf7',
+    'bg-200': '#f4f2ed',
+    'bg-300': '#ebe9e3',
+    'bg-400': '#e1dfd8',
+    'bg-500': '#e9e7e1',
+    'bg-raised': '#fffefa',
+    'border-100': 'rgba(34, 31, 28, 0.07)',
+    'border-200': 'rgba(34, 31, 28, 0.14)',
+    'text-000': '#2f2b27',
+    'text-100': '#68615a',
+    'text-200': '#66615b',
+    'text-300': '#aaa49d',
     'accent': '#af593f',
     'accent-hover': '#a34d35',
     'accent-pressed': '#93422d',
     'accent-soft': 'rgba(199, 101, 72, 0.12)',
     'accent-text-on-soft': '#a2472b',
     'text-on-accent': '#fffaf5',
-    'text-link': '#2a78d6',
-    'text-link-hover': '#2566d0',
-    'switch-on': '#2566d0',
     'btn-inverted-bg': '#262421',
     'btn-inverted-bg-hover': '#151412',
     'btn-inverted-text': '#f5f4ef',
     'overlay-bg': 'rgba(34, 31, 28, 0.36)',
   },
   dark: {
-    'app-bg': '#20201f',
-    'sidebar-bg': '#1e1e1c',
-    'toolbar-bg': '#242422',
-    'surface-0': '#242422',
-    'surface-1': '#2c2c2a',
-    'surface-2': '#343432',
-    'surface-3': '#3d3d3b',
-    'surface-hover': '#42423f',
-    'surface-raised': '#383835',
-    'border-subtle': 'rgba(255, 255, 255, 0.05)',
-    'border-strong': 'rgba(255, 255, 255, 0.11)',
-    'border-focus': 'rgba(109, 167, 236, 0.75)',
-    'text-primary': '#e9e6df',
-    'text-secondary': '#a8a49c',
-    'text-muted': '#a5a9a6',
-    'text-disabled': '#68635e',
+    'bg-000': '#20201f',
+    'bg-sidebar': '#1e1e1c',
+    'bg-toolbar': '#242422',
+    'bg-100': '#242422',
+    'bg-200': '#2c2c2a',
+    'bg-300': '#343432',
+    'bg-400': '#3d3d3b',
+    'bg-500': '#42423f',
+    'bg-raised': '#383835',
+    'border-100': 'rgba(255, 255, 255, 0.05)',
+    'border-200': 'rgba(255, 255, 255, 0.11)',
+    'text-000': '#e9e6df',
+    'text-100': '#a8a49c',
+    'text-200': '#a5a9a6',
+    'text-300': '#68635e',
     'accent': '#d97757',
     'accent-hover': '#e18768',
     'accent-pressed': '#c9684b',
     'accent-soft': 'rgba(217, 119, 87, 0.14)',
     'accent-text-on-soft': '#e38f74',
     'text-on-accent': '#211a17',
-    'text-link': '#6da7ec',
-    'text-link-hover': '#93bdf1',
-    'switch-on': '#2a78d6',
     'btn-inverted-bg': '#f5f4ef',
     'btn-inverted-bg-hover': '#ffffff',
     'btn-inverted-text': '#161513',
@@ -283,11 +287,11 @@ export const CLAUDE_IDENTITY = {
    motion, layout dimensions, the semantic status ramp — is shared and
    lives outside the theme blocks. */
 export const SURFACE_KEYS = [
-  'app-bg', 'sidebar-bg', 'toolbar-bg',
-  'surface-0', 'surface-1', 'surface-2', 'surface-3',
-  'surface-hover', 'surface-raised',
+  'bg-000', 'bg-sidebar', 'bg-toolbar',
+  'bg-100', 'bg-200', 'bg-300', 'bg-400',
+  'bg-500', 'bg-raised',
 ];
-export const TEXT_KEYS = ['text-primary', 'text-secondary', 'text-muted', 'text-disabled'];
+export const TEXT_KEYS = ['text-000', 'text-100', 'text-200', 'text-300'];
 
 /* ── the themes ───────────────────────────────────────────────────── */
 
@@ -341,6 +345,18 @@ export const THEMES = {
     ground: { dark: { hue: 33, satMul: 6.5 }, light: { hue: 36, satMul: 2.0 } },
     accent: ['#d9a842', '#96690e'],
   },
+  ocean: {
+    label: 'Ocean',
+    note: 'Cool marine blue on a crisp blue-grey ground.',
+    ground: { dark: { hue: 200, satMul: 5.6 }, light: { hue: 202, satMul: 0.9 } },
+    accent: ['#55a7d8', '#1f6fa8'],
+  },
+  rose: {
+    label: 'Rose',
+    note: 'Muted rose against a warm blush-grey ground.',
+    ground: { dark: { hue: 345, satMul: 5.2 }, light: { hue: 345, satMul: 0.9 } },
+    accent: ['#d98298', '#b04a66'],
+  },
   neon: {
     label: 'Neon',
     note: 'Restrained neon on near-black — micro-glow accents against a deep ground.',
@@ -354,44 +370,7 @@ export const THEMES = {
 
 export const DEFAULT_THEME = 'claude';
 
-/*
- * Not promoted to full themes. `ocean` and `rose` were fillers added to
- * reach the original brief's "at least 8" and carry no colour-research
- * backing, so they do not get a surface family. They stay here as
- * accent-only presets, exactly as they shipped, so an operator who already
- * picked one keeps the accent they chose instead of silently reverting to
- * the default. Deprecated: do not offer them in new pickers.
- */
-export const LEGACY_ACCENTS = {
-  ocean: ['#55a7d8', '#1f6fa8'],
-  rose: ['#d98298', '#b04a66'],
-};
 
-/* The accent half of buildMode(), for the presets above. */
-export function buildLegacyAccent(name, mode) {
-  const seeds = LEGACY_ACCENTS[name];
-  if (!seeds) throw new Error(`unknown legacy accent: ${name}`);
-  const dark = mode === 'dark';
-  const ref = REFERENCE[mode];
-  const accent = seeds[dark ? 0 : 1];
-  const s1 = ref['surface-1'];
-  const softAlpha = dark ? 0.16 : 0.13;
-  const away = dark ? 1 : -1;
-  const t = {};
-  t.accent = accent;
-  t['accent-hover'] = shiftLightness(accent, dark ? 0.05 : -0.04);
-  t['accent-pressed'] = shiftLightness(accent, dark ? -0.05 : -0.08);
-  t['accent-soft'] = `rgba(${hexToRgb(accent).join(', ')}, ${softAlpha})`;
-  t['accent-text-on-soft'] = tune(accent, composite(accent, softAlpha, s1), { direction: away });
-  t['text-link'] = tune(accent, s1, { direction: away });
-  t['text-link-hover'] = shiftLightness(t['text-link'], dark ? 0.06 : -0.06);
-  const darkInk = tune('#1c1613', accent, { direction: -1 });
-  const lightInk = tune('#ffffff', accent, { direction: 1 });
-  t['text-on-accent'] = contrast(darkInk, accent) >= contrast(lightInk, accent) ? darkInk : lightInk;
-  t['switch-on'] = t['text-link'];
-  t['border-focus'] = tune(accent, ref['surface-1'], { target: AIM_NONTEXT, direction: away });
-  return t;
-}
 
 /* ── generation ───────────────────────────────────────────────────── */
 
@@ -419,10 +398,26 @@ export function buildMode(themeName, mode) {
      last so nothing can overwrite it. */
   const pinned = themeName === DEFAULT_THEME ? CLAUDE_IDENTITY[mode] : null;
 
+  /* Two different tint strengths, and the difference matters.
+
+     Grounds start almost neutral (claude's --bg-000 is 1.6% saturation), so
+     they need a multiplier to pick up any of the theme's hue at all.
+
+     Text does not: claude's --text-000 is already 19% saturation, and
+     putting the ground's multiplier through it drives every theme's body
+     text to fully saturated pastel -- #c9e0ff for slate, #cbfdd0 for sage.
+     Those still clear AA against a dark ground, so contrast checks do not
+     catch it; it simply looks wrong. Text is re-hued at the reference
+     saturation instead, which is what makes it read as an off-white that
+     belongs to the theme rather than as coloured text.
+
+     The same applies to anything whose reference value already carries
+     saturation: the inverted-button pair, the light-mode shadow tint. */
+  const subtle = { hue: tint.hue, satMul: 1, lightShift: tint.lightShift };
   for (const key of SURFACE_KEYS) tokens[key] = retint(ref[key], tint);
-  for (const key of TEXT_KEYS) tokens[key] = retint(ref[key], tint);
+  for (const key of TEXT_KEYS) tokens[key] = retint(ref[key], subtle);
   for (const key of ['btn-inverted-bg', 'btn-inverted-bg-hover', 'btn-inverted-text']) {
-    tokens[key] = retint(ref[key], tint);
+    tokens[key] = retint(ref[key], subtle);
   }
 
   /* Text is tuned against the worst backdrop it actually lands on, which is
@@ -436,21 +431,21 @@ export function buildMode(themeName, mode) {
          This is the scope #46 settled; holding them to surface-hover would
          move claude's shipped values, which are identity. */
   const all = SURFACE_KEYS.map((k) => tokens[k]);
-  const content = ['app-bg', 'sidebar-bg', 'toolbar-bg', 'surface-0', 'surface-1', 'surface-2', 'surface-raised']
+  const content = ['bg-000', 'bg-sidebar', 'bg-toolbar', 'bg-100', 'bg-200', 'bg-300', 'bg-raised']
     .map((k) => tokens[k]);
   const worstOf = (color, set) =>
     set.reduce((worst, bg) => (contrast(color, bg) < contrast(color, worst) ? bg : worst), set[0]);
 
   const away = dark ? 1 : -1;
-  tokens['text-primary'] = tune(tokens['text-primary'], worstOf(tokens['text-primary'], all), { direction: away });
-  tokens['text-secondary'] = tune(tokens['text-secondary'], worstOf(tokens['text-secondary'], content), { direction: away });
-  tokens['text-muted'] = tune(tokens['text-muted'], worstOf(tokens['text-muted'], content), { direction: away });
+  tokens['text-000'] = tune(tokens['text-000'], worstOf(tokens['text-000'], all), { direction: away });
+  tokens['text-100'] = tune(tokens['text-100'], worstOf(tokens['text-100'], content), { direction: away });
+  tokens['text-200'] = tune(tokens['text-200'], worstOf(tokens['text-200'], content), { direction: away });
   /* text-disabled is intentionally below AA — it signals unavailability and
      WCAG exempts disabled controls. Left as tinted, not tuned. */
   const worstFor = (color) => worstOf(color, all);
 
   const accent = retint(theme.accent[dark ? 0 : 1], { hue: null });
-  const s1 = tokens['surface-1'];
+  const s1 = tokens['bg-200'];
   const softAlpha = dark ? 0.16 : 0.13;
 
   tokens.accent = accent;
@@ -471,10 +466,10 @@ export function buildMode(themeName, mode) {
   tokens['border-focus'] = tune(accent, worstFor(accent), { target: AIM_NONTEXT, direction: away });
   tokens['switch-on'] = tokens['text-link'];
 
-  const borderBase = retint(ref['border-rgb'], tint);
-  tokens['border-subtle'] = rgbaString(borderBase, ref['border-subtle-a']);
-  tokens['border-strong'] = rgbaString(borderBase, ref['border-strong-a']);
-  tokens['overlay-bg'] = rgbaString(retint(ref['overlay-rgb'], tint), ref['overlay-a']);
+  const borderBase = retint(ref['border-rgb'], subtle);
+  tokens['border-100'] = rgbaString(borderBase, ref['border-subtle-a']);
+  tokens['border-200'] = rgbaString(borderBase, ref['border-strong-a']);
+  tokens['overlay-bg'] = rgbaString(retint(ref['overlay-rgb'], subtle), ref['overlay-a']);
 
   /* Shadow colours, not whole shadow values: light-dark() takes <color>
      only, so the geometry is shared in the base block and just the tint and
@@ -482,7 +477,7 @@ export function buildMode(themeName, mode) {
      hand-written values is the dialog's ambient blur, normalised from
      70px (light) / 80px (dark) to a single 80px — imperceptible at that
      radius, and it buys one block per theme instead of three. */
-  const sh = retint(ref['shadow-rgb'], tint);
+  const sh = retint(ref['shadow-rgb'], subtle);
   const a = (alpha) => rgbaString(sh, alpha);
   tokens['shadow-raised-near'] = a(dark ? 0.18 : 0.11);
   tokens['shadow-raised-far'] = a(dark ? 0.24 : 0.16);
@@ -494,11 +489,50 @@ export function buildMode(themeName, mode) {
   tokens['shadow-inset-color'] = a(dark ? 0.18 : 0.12);
   tokens['shadow-pill-color'] = a(dark ? 0.24 : 0.16);
 
+  /* Semantic status ramp, theme-scoped.
+     Each status keeps its meaning-bearing hue family -- green reads as
+     success, red as danger -- but is nudged a little toward the theme's own
+     ground hue so it sits in the theme rather than on top of it, then tuned
+     against that theme's surfaces. The hue pull is deliberately small: a
+     security console's severity colours have to stay learnable across
+     themes, so this harmonises them, it does not reassign them. */
+  const STATUS = {
+    success: { light: '#3f8764', dark: '#79c99e' },
+    info: { light: '#487eaa', dark: '#78a9d4' },
+    warning: { light: '#9b6b25', dark: '#deb36a' },
+    danger: { light: '#b34f4c', dark: '#dc7774' },
+    critical: { light: '#c53030', dark: '#ff5c5c' },
+  };
+  const STATUS_SOFT_ALPHA = { success: dark ? 0.20 : 0.18, info: dark ? 0.20 : 0.18, warning: dark ? 0.21 : 0.19, danger: dark ? 0.21 : 0.20, critical: dark ? 0.16 : 0.13 };
+  const groundHue = tint.hue;
+  for (const [name, pair] of Object.entries(STATUS)) {
+    const base = pair[mode];
+    const [bh, bs, bl] = rgbToHsl(...hexToRgb(base));
+    /* Pull HUE_PULL of the way toward the theme's ground, along the short
+       way round the wheel so red never travels through green to get there. */
+    let hue = bh;
+    if (groundHue !== null && groundHue !== undefined) {
+      let delta = ((groundHue - bh + 540) % 360) - 180;
+      hue = (bh + delta * HUE_PULL + 360) % 360;
+    }
+    const tinted = rgbToHex(...hslToRgb(hue, bs, bl));
+    tokens[name] = tinted;
+    const alpha = STATUS_SOFT_ALPHA[name];
+    tokens[`${name}-soft`] = rgbaString(tinted, alpha);
+    tokens[`${name}-text-on-soft`] = tune(tinted, composite(tinted, alpha, tokens['bg-200']), { direction: away });
+    /* Badges are a solid fill under fixed near-black ink; the fill has to
+       clear AA against that ink, which is what the original --*-badge-fill
+       family was added for. Not applicable to critical, which has no badge. */
+    if (name !== 'critical') {
+      tokens[`${name}-badge-fill`] = tune(tinted, BADGE_INK, { direction: 1 });
+    }
+  }
+
   /* Terminal and framebuffer surfaces. A terminal stays a terminal, but it
      should sit in its theme's family rather than being a fixed #16181d
      slab dropped onto a paper-white page. */
-  tokens['terminal-bg'] = dark ? shiftLightness(tokens['surface-0'], -0.045) : shiftLightness(tokens['surface-3'], -0.62);
-  tokens['terminal-fg'] = tune(dark ? tokens['text-primary'] : '#e6e6e6', tokens['terminal-bg'], { direction: 1 });
+  tokens['terminal-bg'] = dark ? shiftLightness(tokens['bg-100'], -0.045) : shiftLightness(tokens['bg-400'], -0.62);
+  tokens['terminal-fg'] = tune(dark ? tokens['text-000'] : '#e6e6e6', tokens['terminal-bg'], { direction: 1 });
   tokens['framebuffer-bg'] = shiftLightness(tokens['terminal-bg'], -0.03);
   tokens['diagram-plate'] = '#ffffff';
 
@@ -525,12 +559,12 @@ export function auditMode(built) {
   const push = (label, fg, bg, target) =>
     rows.push({ label, ratio: contrast(fg, bg), target, pass: contrast(fg, bg) >= target });
 
-  const CONTENT = new Set(['app-bg', 'sidebar-bg', 'toolbar-bg', 'surface-0', 'surface-1', 'surface-2', 'surface-raised']);
+  const CONTENT = new Set(['bg-000', 'bg-sidebar', 'bg-toolbar', 'bg-100', 'bg-200', 'bg-300', 'bg-raised']);
   for (const [name, bg] of surfaces) {
-    push(`text-primary vs ${name}`, t['text-primary'], bg, 4.5);
+    push(`text-primary vs ${name}`, t['text-000'], bg, 4.5);
     if (CONTENT.has(name)) {
-      push(`text-secondary vs ${name}`, t['text-secondary'], bg, 4.5);
-      push(`text-muted vs ${name}`, t['text-muted'], bg, 4.5);
+      push(`text-secondary vs ${name}`, t['text-100'], bg, 4.5);
+      push(`text-muted vs ${name}`, t['text-200'], bg, 4.5);
     }
   }
   /* Read the alpha off the token rather than assuming the preset value —
@@ -538,14 +572,25 @@ export function auditMode(built) {
      0.16/0.13, and measuring at the wrong alpha reports a colour that is
      never painted. */
   const softAlpha = parseColor(t['accent-soft'])[3];
-  const softBg = composite(t.accent, softAlpha, t['surface-1']);
+  const softBg = composite(t.accent, softAlpha, t['bg-200']);
   push('accent-text-on-soft vs accent-soft over surface-1', t['accent-text-on-soft'], softBg, 4.5);
-  push('text-link vs surface-1', t['text-link'], t['surface-1'], 4.5);
+  push('text-link vs surface-1', t['text-link'], t['bg-200'], 4.5);
   push('text-on-accent vs accent', t['text-on-accent'], t.accent, 4.5);
   /* WCAG 1.4.11: non-text contrast floor is 3:1, not 4.5. */
-  push('border-focus vs surface-1', t['border-focus'], t['surface-1'], 3);
-  push('border-focus vs app-bg', t['border-focus'], t['app-bg'], 3);
+  push('border-focus vs surface-1', t['border-focus'], t['bg-200'], 3);
+  push('border-focus vs app-bg', t['border-focus'], t['bg-000'], 3);
   push('terminal-fg vs terminal-bg', t['terminal-fg'], t['terminal-bg'], 4.5);
+
+  /* The status ramp is theme-scoped now, so each theme's own statuses are
+     measured against its own surfaces rather than assumed shared. */
+  for (const name of ['success', 'info', 'warning', 'danger', 'critical']) {
+    const alpha = parseColor(t[`${name}-soft`])[3];
+    push(`${name}-text-on-soft vs ${name}-soft over surface-1`,
+      t[`${name}-text-on-soft`], composite(t[name], alpha, t['bg-200']), 4.5);
+    if (t[`${name}-badge-fill`]) {
+      push(`${name}-badge-fill vs badge ink`, BADGE_INK, t[`${name}-badge-fill`], 4.5);
+    }
+  }
   return rows;
 }
 
@@ -581,17 +626,10 @@ export function assertIdentity() {
  * checker prints them on every run so they stay visible.
  */
 export const KNOWN_EXCEPTIONS = [
-  {
-    theme: 'claude',
-    mode: 'light',
-    label: 'text-link vs surface-1',
-    measured: 3.95,
-    reason:
-      'Pre-existing. The default theme\'s light link blue (#2a78d6) measures 3.95:1 on a card '
-      + 'surface, below the 4.5:1 AA floor — found when this checker started compositing alpha '
-      + 'correctly. Fixing it means moving a brand colour, which is a design decision, not a '
-      + 'generator change, so it is tracked rather than silently retuned here.',
-  },
+  /* Empty, and worth keeping that way. The one entry this list used to hold
+     -- claude's light link blue at 3.95:1 -- is fixed rather than excused:
+     links now derive from the accent and are AA-tuned like every other
+     theme's (#103). */
 ];
 
 export function isKnownException(row) {

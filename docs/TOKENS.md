@@ -10,7 +10,7 @@ Two independent attributes on `<html>`:
 
 | attribute | values | meaning |
 |---|---|---|
-| `data-hp-theme` | `claude` (default), `slate`, `sage`, `lavender`, `lime`, `amber`, `neon` | the whole surface family — ground, chrome, surfaces, borders, text ramp, accent |
+| `data-hp-theme` | `claude` (default), `slate`, `sage`, `lavender`, `lime`, `amber`, `ocean`, `rose`, `neon` | the whole surface family — ground, chrome, surfaces, borders, text ramp, accent |
 | `data-theme` | `light`, `dark`, or absent | pins the mode; absent follows the operating system |
 
 They compose: `data-hp-theme="slate" data-theme="light"` is slate in light
@@ -24,11 +24,11 @@ that already write it keep working. Prefer `data-hp-theme` in new code.
 Three tiers. A theme **must** define the first, **may** retune the second,
 and must **not** touch the third.
 
-**Theme-scoped — the surface family.** Grounds (`--app-bg`, `--sidebar-bg`,
-`--toolbar-bg`), the surface ramp (`--surface-0..3`, `--surface-hover`,
-`--surface-raised`), borders (`--border-subtle`, `--border-strong`,
-`--border-focus`), the text ramp (`--text-primary`, `--text-secondary`,
-`--text-muted`, `--text-disabled`), the accent family, `--overlay-bg`, the
+**Theme-scoped — the surface family.** Grounds (`--bg-000`, `--bg-sidebar`,
+`--bg-toolbar`), the surface ramp (`--bg-100..3`, `--bg-500`,
+`--bg-raised`), borders (`--border-100`, `--border-200`,
+`--border-focus`), the text ramp (`--text-000`, `--text-100`,
+`--text-200`, `--text-300`), the accent family, `--overlay-bg`, the
 inverted-button pair, elevation colours, and the terminal/framebuffer
 surfaces.
 
@@ -84,23 +84,47 @@ never silently tolerates a failure.
 
 ## Surface hierarchy
 
-| Token | Purpose |
-|---|---|
-| `--app-bg` | Main canvas |
-| `--sidebar-bg` | Navigation and recessed regions |
-| `--toolbar-bg` | Compact global toolbar |
-| `--surface-0` | Dialogs and primary floating surfaces |
-| `--surface-1` | Cards and form controls |
-| `--surface-2` | Hover, search, and selected navigation |
-| `--surface-3` | Pressed controls and stronger selection |
-| `--surface-raised` | Menus, command bars, and toasts |
+Backgrounds are a numbered ramp. The number is elevation: `000` is the page
+ground, and each step sits one level above it. Two chrome regions sit outside
+the ladder because they are places, not elevations.
+
+| Token | Purpose | Previously |
+|---|---|---|
+| `--bg-000` | Main canvas | `--app-bg` |
+| `--bg-100` | Dialogs and primary floating surfaces | `--surface-0` |
+| `--bg-200` | Cards and form controls | `--surface-1` |
+| `--bg-300` | Hover, search, and selected navigation | `--surface-2` |
+| `--bg-400` | Pressed controls and stronger selection | `--surface-3` |
+| `--bg-500` | Hover fill | `--surface-hover` |
+| `--bg-raised` | Menus, command bars, and toasts | `--surface-raised` |
+| `--bg-sidebar` | Navigation and recessed regions | `--sidebar-bg` |
+| `--bg-toolbar` | Compact global toolbar | `--toolbar-bg` |
+
+Text and borders follow the same shape — `000` is the most prominent:
+
+| Token | Purpose | Previously |
+|---|---|---|
+| `--text-000` | Headings, values, active controls | `--text-primary` |
+| `--text-100` | Body copy, labels, inactive navigation | `--text-secondary` |
+| `--text-200` | Metadata, placeholders, section labels | `--text-muted` |
+| `--text-300` | Unavailable controls only | `--text-disabled` |
+| `--border-100` | Hairlines | `--border-subtle` |
+| `--border-200` | Emphasised separation | `--border-strong` |
+
+**This rename is breaking, with no compatibility aliases.** Consumers reading
+the old names must migrate; the mapping above is the whole of it.
+
+The one-off `tw:*` utility classes are also gone. They were the residue of a
+Tailwind build dropped in an earlier issue, kept as hand-written CSS; they are
+not part of a design system and consumers should use real classes or their own
+layout CSS.
 
 ## Text hierarchy
 
-- `--text-primary` for headings, values, and active controls.
-- `--text-secondary` for body copy, labels, and inactive navigation.
-- `--text-muted` for metadata, placeholders, and section labels.
-- `--text-disabled` only for unavailable controls.
+See the table above. In short: `--text-000` for anything that must be read
+first, `--text-100` for body copy, `--text-200` for metadata, and `--text-300`
+only for controls that are unavailable — it is deliberately below the AA
+contrast floor, which WCAG permits for disabled controls and nothing else.
 
 ## Semantic color
 

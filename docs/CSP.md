@@ -136,7 +136,7 @@ the same way as `.mini-chart` above, addressed by row then column:
 .heatmap { display: flex; flex-direction: column; gap: 3px; }
 .heatmap__row { display: flex; align-items: center; gap: 8px; }
 .heatmap__cells { display: flex; flex: 1; gap: 3px; }
-.heatmap__cell { --v: 0; flex: 1; aspect-ratio: 1; background: color-mix(in srgb, var(--accent) calc(var(--v) * 1%), var(--surface-2)); }
+.heatmap__cell { --v: 0; flex: 1; aspect-ratio: 1; background: color-mix(in srgb, var(--accent) calc(var(--v) * 1%), var(--bg-300)); }
 ```
 
 ```html
@@ -167,7 +167,7 @@ A single-value fill bar (see `examples/components.html`). Width comes from
 `--v` (0–100) on the fill `<span>`, set the same way as `.mini-chart` above:
 
 ```css
-.progress { height: 6px; overflow: hidden; border-radius: var(--radius-pill); background: var(--surface-3); }
+.progress { height: 6px; overflow: hidden; border-radius: var(--radius-pill); background: var(--bg-400); }
 .progress > span { --v: 0; display: block; width: calc(var(--v) * 1%); height: 100%; background: var(--accent); }
 ```
 

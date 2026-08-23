@@ -14,20 +14,25 @@
  * block, because light-dark() takes <color> only.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
-import { THEMES, DEFAULT_THEME, LEGACY_ACCENTS, buildMode, buildLegacyAccent, auditMode, isKnownException, assertIdentity } from './theme-tokens.mjs';
+import { THEMES, DEFAULT_THEME, buildMode, auditMode, isKnownException, assertIdentity } from './theme-tokens.mjs';
 
 const BEGIN = '/* >>> GENERATED THEME SURFACES — scripts/gen-themes.mjs — do not edit by hand */';
 const END = '/* <<< END GENERATED THEME SURFACES */';
 
 const EMIT_ORDER = [
-  'app-bg', 'sidebar-bg', 'toolbar-bg',
-  'surface-0', 'surface-1', 'surface-2', 'surface-3', 'surface-hover', 'surface-raised',
-  'border-subtle', 'border-strong', 'border-focus',
-  'text-primary', 'text-secondary', 'text-muted', 'text-disabled',
+  'bg-000', 'bg-sidebar', 'bg-toolbar',
+  'bg-100', 'bg-200', 'bg-300', 'bg-400', 'bg-500', 'bg-raised',
+  'border-100', 'border-200', 'border-focus',
+  'text-000', 'text-100', 'text-200', 'text-300',
   'accent', 'accent-hover', 'accent-pressed', 'accent-soft', 'accent-text-on-soft',
   'text-on-accent', 'text-link', 'text-link-hover', 'switch-on',
   'btn-inverted-bg', 'btn-inverted-bg-hover', 'btn-inverted-text',
   'overlay-bg',
+  'success', 'success-soft', 'success-text-on-soft', 'success-badge-fill',
+  'info', 'info-soft', 'info-text-on-soft', 'info-badge-fill',
+  'warning', 'warning-soft', 'warning-text-on-soft', 'warning-badge-fill',
+  'danger', 'danger-soft', 'danger-text-on-soft', 'danger-badge-fill',
+  'critical', 'critical-soft', 'critical-text-on-soft',
   'terminal-bg', 'terminal-fg', 'framebuffer-bg', 'diagram-plate',
   'shadow-raised-near', 'shadow-raised-far', 'shadow-dialog-near', 'shadow-dialog-far',
   'shadow-inset-color', 'shadow-pill-color',
@@ -64,23 +69,6 @@ function themeBlock(name) {
   ].join('\n');
 }
 
-/* ocean and rose were fillers to reach the original "at least 8" and carry
-   no colour-research backing, so they are not promoted to full themes. They
-   stay as accent-only presets so an operator who already picked one keeps
-   the accent they chose rather than silently reverting to the default. */
-function legacyBlock(name) {
-  const light = buildLegacyAccent(name, 'light');
-  const dark = buildLegacyAccent(name, 'dark');
-  const keys = ['accent', 'accent-hover', 'accent-pressed', 'accent-soft',
-    'accent-text-on-soft', 'text-on-accent', 'text-link', 'text-link-hover', 'switch-on', 'border-focus'];
-  return [
-    `[data-hp-theme="${name}"],`,
-    `[data-hp-palette="${name}"] {`,
-    ...declarations(light, dark, keys),
-    '}',
-  ].join('\n');
-}
-
 function header() {
   return [
     BEGIN,
@@ -92,9 +80,9 @@ function header() {
     ' * A theme owns the whole surface: ground, sidebar, toolbar, the surface',
     ' * ramp, borders, the text ramp, elevation and the accent family. The',
     ' * semantic status ramp (success/info/warning/danger/critical) is shared',
-    ' * across themes and lives in the base block above — status colour is',
-    ' * meaning, not decoration, and must not shift with the operator\'s',
-    ' * choice of theme.',
+    ' * tuned per theme: each status keeps its meaning-bearing hue family',
+    ' * (green reads as success, red as danger) but is nudged toward the',
+    ' * theme\'s ground so it sits in the theme rather than on top of it.',
     ' *',
     ' * Mode is decided by color-scheme: :root declares `light dark`, so the',
     ' * system preference wins by default and [data-theme="light"|"dark"]',
@@ -110,8 +98,6 @@ function header() {
 function render() {
   const parts = [header(), ''];
   for (const name of Object.keys(THEMES)) parts.push(themeBlock(name), '');
-  parts.push('/* Legacy accent-only presets — deprecated, kept so stored preferences', '   do not silently lose their accent. Not full themes. */');
-  for (const name of Object.keys(LEGACY_ACCENTS)) parts.push(legacyBlock(name), '');
   parts.push(END);
   return parts.join('\n');
 }
@@ -157,7 +143,7 @@ function main() {
         .filter((r) => !r.pass && !isKnownException({ theme: n, mode: m, label: r.label }))
         .map((r) => `${n}/${m}: ${r.label}`)),
   );
-  console.log(`theme.css updated — ${Object.keys(THEMES).length} themes x 2 modes, ${Object.keys(LEGACY_ACCENTS).length} legacy accents`);
+  console.log(`theme.css updated — ${Object.keys(THEMES).length} themes x 2 modes`);
   if (failures.length) {
     console.error(`WARNING: ${failures.length} contrast check(s) below target:`);
     for (const f of failures) console.error(`  ${f}`);

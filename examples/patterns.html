@@ -12,7 +12,7 @@
     .demo-section { margin-bottom: 48px; }
     .demo-section h2 { margin-bottom: 18px; }
     .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-    .demo-label { color: var(--text-muted); font-size: var(--font-size-xs); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .demo-label { color: var(--text-200); font-size: var(--font-size-xs); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
     .icon-sun, .icon-moon, .icon-monitor { display: inline-block; width: 14px; height: 14px; }
     .icon-sun::before { content: "☀"; }
     .icon-moon::before { content: "☾"; }
@@ -25,12 +25,12 @@
 
 <div class="app-shell app-shell--wide">
   <nav class="app-sidebar">
-    <div style="padding: 8px 9px 14px; font-family: var(--font-display); font-size: 18px; color: var(--text-primary);">
+    <div style="padding: 8px 9px 14px; font-family: var(--font-display); font-size: 18px; color: var(--text-000);">
       Xore Theme
     </div>
     <div class="sidebar__search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;flex:none;opacity:0.5;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <span style="font-size:var(--font-size-caption);color:var(--text-muted);">Search</span>
+      <span style="font-size:var(--font-size-caption);color:var(--text-200);">Search</span>
     </div>
     <a href="index.html" class="sidebar__item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;opacity:0.72;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -56,8 +56,8 @@
     <div class="sidebar__profile">
       <div class="avatar">X</div>
       <div>
-        <div style="color:var(--text-primary);font-size:var(--font-size-caption);font-weight:500;">Xore</div>
-        <div style="color:var(--text-muted);font-size:var(--font-size-xs);">Pro plan</div>
+        <div style="color:var(--text-000);font-size:var(--font-size-caption);font-weight:500;">Xore</div>
+        <div style="color:var(--text-200);font-size:var(--font-size-xs);">Pro plan</div>
       </div>
     </div>
   </nav>
@@ -70,7 +70,7 @@
         <h1 class="heading-serif" style="font-size: clamp(2rem, 3vw, 2.8rem); margin-bottom: 8px;">
           <span class="sparkle"></span>Good afternoon, Xore
         </h1>
-        <p style="color: var(--text-muted); font-size: var(--font-size-lg);">How can I help you today?</p>
+        <p style="color: var(--text-200); font-size: var(--font-size-lg);">How can I help you today?</p>
       </div>
 
       <!-- Theme Toggle (Segmented with Icons) -->
@@ -174,7 +174,7 @@
       <!-- Catalog Cards -->
       <div class="demo-section">
         <div class="demo-label">Catalog Grid — .catalog-grid / .catalog-card</div>
-        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+        <p style="color:var(--text-100);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
           A browsable directory of things you <em>add</em> (skills,
           connectors, plugins) -- distinct from .project-card above, which
           is a plain list of things you already have.
@@ -304,7 +304,7 @@
       <!-- Evidence Modal -->
       <div class="demo-section">
         <div class="demo-label">Evidence Modal — .hp-evidence-modal</div>
-        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+        <p style="color:var(--text-100);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
           A different shape from the settings modal above: the header
           search filters the scrollable text dump below it directly (a
           single-pane investigative viewer), not a sidebar-form two-pane
@@ -317,7 +317,7 @@
       <!-- Command Palette -->
       <div class="demo-section">
         <div class="demo-label">Command Palette — .modal--palette</div>
-        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:52ch;">
+        <p style="color:var(--text-100);font-size:var(--font-size-caption);margin-bottom:12px;max-width:52ch;">
           A search-everything dialog, not the docked .command-bar above:
           anchored near the top of the viewport instead of centered, and
           sized to its content instead of a fixed box.
@@ -339,7 +339,7 @@
       <!-- Motion utilities -->
       <div class="demo-section">
         <div class="demo-label">Staggered list entrance — .stagger-in</div>
-        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+        <p style="color:var(--text-100);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
           Add to a row container (a &lt;tbody&gt;, a menu's item list) so
           freshly-rendered rows settle in one after another instead of all
           at once. Pure CSS -- nth-child carries the delay, nothing to set
@@ -356,7 +356,7 @@
 
       <div class="demo-section">
         <div class="demo-label">Attention flash — .flash</div>
-        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+        <p style="color:var(--text-100);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
           A one-shot accent-colored ring for a value that just changed --
           a live-refreshed row, a cell whose count just updated. Not a
           semantic success/warning/danger signal, just "this changed."
@@ -370,7 +370,7 @@
 
       <div class="demo-section">
         <div class="demo-label">Timeline entrance — .timeline-block</div>
-        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+        <p style="color:var(--text-100);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
           A blur+lift settle for timeline/session-replay entries -- a
           touch more pronounced than .stagger-in, since a timeline reads
           one block at a time rather than as a batch of equivalent rows.
@@ -385,7 +385,7 @@
 
       <div class="demo-section">
         <div class="demo-label">Toast entrance — .toast / .toast--slide-in-right</div>
-        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+        <p style="color:var(--text-100);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
           .toast now settles in on its own (fade + lift) -- direction-
           agnostic, since a toast stack can sit anywhere. Add
           .toast--slide-in-right when the consumer's own stack is pinned
@@ -405,7 +405,7 @@
 
       <div class="demo-section">
         <div class="demo-label">Toast stack — .hp-toast-stack / .hp-toast</div>
-        <p style="color:var(--text-secondary);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
+        <p style="color:var(--text-100);font-size:var(--font-size-caption);margin-bottom:12px;max-width:60ch;">
           The dashboard's live-update variant: a left-border accent stripe
           and a stacking container theme.css doesn't otherwise model,
           layered on top of the plain .toast above. Normally
@@ -413,7 +413,7 @@
           relatively-positioned demo area instead.
         </p>
         <button class="btn btn-ghost btn-sm" id="replay-toast-stack" style="margin-bottom:12px;">Replay — stacked</button>
-        <div style="position:relative;height:190px;border:1px solid var(--border-subtle);border-radius:var(--radius-panel);background:var(--surface-0);overflow:hidden;">
+        <div style="position:relative;height:190px;border:1px solid var(--border-100);border-radius:var(--radius-panel);background:var(--bg-100);overflow:hidden;">
           <div class="hp-toast-stack" id="hp-toast-stack-demo" style="position:absolute;top:12px;right:12px;">
             <a class="toast hp-toast" href="#" id="hp-toast-demo-1" style="max-width:260px;"><span class="status-dot text-secondary"></span><div><strong>New session</strong><br><span class="text-muted">203.0.113.42 &middot; cowrie</span></div></a>
             <a class="toast hp-toast" href="#" id="hp-toast-demo-2" style="max-width:260px;"><span class="status-dot text-secondary"></span><div><strong>Payload captured</strong><br><span class="text-muted">stage2.elf &middot; sandboxed</span></div></a>

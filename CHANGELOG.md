@@ -7,6 +7,50 @@ change, not as a follow-up.
 
 ## Unreleased
 
+- **Nine themes.** `ocean` and `rose` are promoted to full surface families
+  alongside `claude`, `slate`, `sage`, `lavender`, `lime`, `amber` and
+  `neon`, rather than remaining accent-only presets.
+
+- **The status ramp is theme-scoped.** `--success`/`--info`/`--warning`/
+  `--danger`/`--critical` and their `-soft`, `-text-on-soft` and
+  `-badge-fill` families are generated per theme instead of shared. Each
+  keeps its meaning-bearing hue family -- green reads as success, red as
+  danger -- but is nudged 14% of the way toward its theme's ground hue,
+  along the short way round the wheel, then AA-tuned against that theme's
+  own surfaces. The pull is deliberately small: severity colour has to stay
+  learnable across themes, so this harmonises it rather than reassigning it.
+
+- **Backgrounds, text and borders are numbered ramps.** `--app-bg` becomes
+  `--bg-000`, `--surface-0..3` become `--bg-100..400`, `--surface-hover`
+  becomes `--bg-500`, and `--surface-raised`/`--sidebar-bg`/`--toolbar-bg`
+  become `--bg-raised`/`--bg-sidebar`/`--bg-toolbar`. `--text-primary`,
+  `--text-secondary`, `--text-muted`, `--text-disabled` become
+  `--text-000..300`; `--border-subtle`/`--border-strong` become
+  `--border-100`/`--border-200`. The number is elevation, so a theme author
+  fills a ramp instead of recalling which of seven surface nouns goes where.
+
+  **Breaking, with no compatibility aliases**, by request. `docs/TOKENS.md`
+  carries the full mapping.
+
+- **The default theme's links are derived from its accent.** `claude`'s link
+  family was blue rather than accent-derived, and the light value measured
+  3.95:1 against the card surface -- failing AA on every link on every page
+  (#103). Links, hover, switch fill and the focus ring are generated and
+  AA-tuned like every other theme's now, so the exception list is empty
+  again. The rest of `claude` stays pinned and byte-identical.
+
+- **The `tw:*` utility classes are gone.** They were the residue of a
+  Tailwind build dropped in #191, kept on as 55 hand-written rules. They are
+  not a design system and do not belong in one. Consumers should use real
+  classes or their own layout CSS.
+
+- Fixed a bug the tinted grounds introduced: the ground's saturation
+  multiplier was also applied to the text ramp, driving every non-default
+  theme's body text to fully saturated pastel (`#c9e0ff` for slate,
+  `#cbfdd0` for sage). Those still clear AA against a dark ground, so no
+  contrast check caught it -- it simply looked wrong. Text is re-hued at the
+  reference saturation now.
+
 - **Themes are now full surface families, not accent swaps.** `data-hp-theme`
   selects one of seven themes -- `claude` (default), `slate`, `sage`,
   `lavender`, `lime`, `amber`, `neon` -- and each one owns the whole surface:
@@ -25,7 +69,7 @@ change, not as a follow-up.
   three times -- `:root` for dark, `[data-theme="light"]`, and a
   `prefers-color-scheme: light` copy of the second, with a comment asking
   the next editor to keep them in sync (they had already drifted:
-  `--border-subtle`/`--border-strong` differed between the two light
+  `--border-100`/`--border-200` differed between the two light
   blocks). Both modes now live in one `light-dark()` declaration, resolved
   by `color-scheme`. Seven themes in two modes would have been 42 blocks
   under the old shape.
@@ -44,7 +88,7 @@ change, not as a follow-up.
 
   One pre-existing failure is recorded in `KNOWN_EXCEPTIONS` rather than
   silently fixed or silently tolerated: the default theme's light link blue
-  (`#2a78d6`) measures 3.95:1 against `--surface-1`, below the AA floor.
+  (`#2a78d6`) measures 3.95:1 against `--bg-200`, below the AA floor.
   Moving a brand colour is a design decision, so it is tracked and printed
   on every run.
 
@@ -166,7 +210,7 @@ change, not as a follow-up.
   navigation; the `hp-nav-open` off-canvas drawer shipped a real
   `data-nav-toggle`/`data-nav-scrim` JS contract with a scrim, focus
   management, and `inert`/`aria-hidden` on the main region while open. (#61)
-- Raised `--border-focus`, `--text-muted`, `.badge--*`, and `.alert--*`
+- Raised `--border-focus`, `--text-200`, `.badge--*`, and `.alert--*`
   contrast to WCAG minimums in both themes; added `--*-text-on-soft`
   tokens. (#60)
 - `.card__value` gained `word-break` handling for long unbroken values

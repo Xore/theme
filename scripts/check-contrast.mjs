@@ -15,14 +15,14 @@
  * visible before it becomes a bug.
  *
  * Alpha is composited, not compared raw: a *-soft token is measured as it
- * actually renders — flattened over --surface-1 over the page ground —
+ * actually renders — flattened over --bg-200 over the page ground —
  * which is precisely what the original a11y pass found failing.
  *
  *   node scripts/check-contrast.mjs            # summary, non-zero on failure
  *   node scripts/check-contrast.mjs --verbose  # every measured pair
  *   node scripts/check-contrast.mjs --margins  # the ten thinnest passes
  */
-import { THEMES, LEGACY_ACCENTS, buildMode, buildLegacyAccent, auditMode, contrast, composite, REFERENCE, KNOWN_EXCEPTIONS, isKnownException, assertIdentity } from './theme-tokens.mjs';
+import { THEMES, buildMode, auditMode, KNOWN_EXCEPTIONS, isKnownException, assertIdentity } from './theme-tokens.mjs';
 
 const args = process.argv.slice(2);
 const verbose = args.includes('--verbose');
@@ -32,25 +32,6 @@ const rows = [];
 for (const theme of Object.keys(THEMES)) {
   for (const mode of ['light', 'dark']) {
     for (const row of auditMode(buildMode(theme, mode))) rows.push({ theme, mode, ...row });
-  }
-}
-
-/* The legacy accent-only presets inherit the default theme's surfaces, so
-   they are measured against those rather than against a surface family of
-   their own. */
-for (const name of Object.keys(LEGACY_ACCENTS)) {
-  for (const mode of ['light', 'dark']) {
-    const t = buildLegacyAccent(name, mode);
-    const s1 = REFERENCE[mode]['surface-1'];
-    const softAlpha = mode === 'dark' ? 0.16 : 0.13;
-    const check = (label, fg, bg, target) => {
-      const ratio = contrast(fg, bg);
-      rows.push({ theme: `${name} (legacy)`, mode, label, ratio, target, pass: ratio >= target });
-    };
-    check('accent-text-on-soft vs accent-soft over surface-1', t['accent-text-on-soft'], composite(t.accent, softAlpha, s1), 4.5);
-    check('text-link vs surface-1', t['text-link'], s1, 4.5);
-    check('text-on-accent vs accent', t['text-on-accent'], t.accent, 4.5);
-    check('border-focus vs surface-1', t['border-focus'], s1, 3);
   }
 }
 
@@ -108,9 +89,8 @@ if (excepted.length) {
 }
 
 const themeCount = Object.keys(THEMES).length;
-const legacyCount = Object.keys(LEGACY_ACCENTS).length;
 const thinnest = rows.filter((r) => r.pass).reduce((m, r) => Math.min(m, r.ratio - r.target), Infinity);
 console.log(
-  `✓ ${rows.length - excepted.length} of ${rows.length} contrast checks pass across ${themeCount} themes + ${legacyCount} legacy accents x 2 modes `
+  `✓ ${rows.length - excepted.length} of ${rows.length} contrast checks pass across ${themeCount} themes x 2 modes `
   + `(thinnest margin +${thinnest.toFixed(2)})`,
 );
