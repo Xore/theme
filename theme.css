@@ -64,11 +64,23 @@
   --warning-badge-fill: light-dark(#ab8348, #deb36a);
   --danger-badge-fill: light-dark(#c06d6a, #dc7774);
 
-  /* Fixed regardless of theme or mode: ink on a saturated status fill, the
-     knob of a control, and the artwork plate promo media sits on. */
+  /* Fixed regardless of theme or mode: ink on a saturated status fill and
+     the knob of a control. Both are drawn on top of a saturated or solid
+     colour, so neither follows the surface. */
   --control-knob: #ffffff;
   --text-on-status: #ffffff;
-  --artwork-bg: #e9e3d6;
+
+  /* Backdrop for artwork that fills its own container -- promo media and
+     the auth split aside. Both cover it with an <img>, so what this paints
+     is the moment before that image loads, and any letterboxing around it.
+     It used to be a single cream value in all three token blocks: a token
+     shaped like a theme token that never varied, which flashed a light
+     plate into a dark shell. Now it follows the mode, keeping the brand
+     cream in light. A theme may override it. */
+  --artwork-plate: light-dark(#e9e3d6, #2a2724);
+  /* Deprecated alias. Prefer --artwork-plate; kept so consumers reading the
+     old name keep working. */
+  --artwork-bg: var(--artwork-plate);
 
   /* ── Elevation geometry ──────────────────────────────────────────────
      The colours are per-theme (see the generated block below); the shape is
@@ -2142,7 +2154,7 @@ pre {
 }
 .modal--promo.open { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .modal--promo .modal__body { min-width: 0; padding: 30px 28px; overflow-y: auto; }
-.modal--promo .modal__media { background: var(--artwork-bg); }
+.modal--promo .modal__media { background: var(--artwork-plate); }
 .modal--promo .modal__media img { width: 100%; height: 100%; object-fit: cover; }
 
 /* Command palette — a search-everything dialog, anchored near the top of
@@ -2246,7 +2258,7 @@ pre {
   margin: 14px;
   overflow: hidden;
   border-radius: var(--radius-dialog);
-  background: var(--artwork-bg);
+  background: var(--artwork-plate);
 }
 .auth-split__aside img { width: 100%; height: 100%; object-fit: cover; }
 

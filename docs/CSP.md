@@ -27,10 +27,13 @@ must follow for its own dynamic, per-element styling.
   a component instance not yet converted to the `--v` pattern) is a gap in
   that example, not a property of the component itself -- if you spot one,
   it should be fixed the same way `.progress`'s own instances were.
-- `theme.css` imports Space Grotesk, Fira Sans, and Fira Code from Google Fonts.
-  Consumers must allow `https://fonts.googleapis.com` in `style-src` and
-  `https://fonts.gstatic.com` in `font-src`. The local fallback stacks remain
-  usable when either request is unavailable.
+- Space Grotesk, Fira Sans, and Fira Code are loaded from Google Fonts by a
+  `<link>` in the consuming page's `<head>`, not by an `@import` inside
+  `theme.css` (see [`ADOPTION.md`](./ADOPTION.md) for why). The policy
+  requirement is the same either way: allow `https://fonts.googleapis.com` in
+  `style-src` and `https://fonts.gstatic.com` in `font-src`. The local
+  fallback stacks remain usable when either request is unavailable, so a
+  policy that omits both hosts still yields a working interface.
 
 A minimal policy this contract is compatible with:
 

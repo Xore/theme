@@ -63,6 +63,12 @@ change, not as a follow-up.
   wrong brand mark on every page. They now read `--basemap-filter` and
   `--theme-art-*-display`, which the theme declares.
 
+- `--artwork-bg` no longer pretends to be a theme token while never varying.
+  It was a single cream value repeated in all three token blocks, so a promo
+  or auth illustration flashed a light plate into a dark shell before its
+  image loaded. Renamed to `--artwork-plate` (the old name is kept as a
+  deprecated alias) and made mode-aware, keeping the brand cream in light.
+
 - Adds `.diagram-plate` / `--diagram-plate`, a themed plate for
   black-on-transparent generated diagrams (graphviz call graphs) that carry
   no background of their own and are illegible on a dark ground.
