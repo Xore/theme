@@ -26,5 +26,11 @@ jobs:
       - name: Validate stylesheet structure
         run: node scripts/check-css.mjs theme.css
 
+      - name: Generated theme block is current
+        run: node scripts/gen-themes.mjs --check
+
+      - name: WCAG AA contrast across every theme and mode
+        run: node scripts/check-contrast.mjs
+
       - name: Validate example pages
         run: node scripts/check-examples.mjs

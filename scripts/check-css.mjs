@@ -4,7 +4,8 @@
  *
  * Zero dependencies so it runs anywhere Node runs. It checks:
  *   - balanced comments, strings, braces, parentheses, and brackets
- *   - no external url() references except the approved Google Fonts CSS API
+ *   - no @import and no external url() references at all: fonts are loaded
+ *     by the consuming page via <link>, not from inside this stylesheet
  *   - every var(--token) refers to a token defined somewhere in the file
  *
  * Usage: node scripts/check-css.mjs [file ...]
@@ -74,23 +75,17 @@ function checkStructure(file, css) {
 function checkPolicy(file, css) {
   const problems = [];
   const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
-  const isApprovedFontStylesheet = (target) =>
-    target.startsWith('https://fonts.googleapis.com/css2?');
-  const importPattern = /@import\s+url\(\s*(['"]?)([^'")]+)\1\s*\)\s*;/gi;
-  let importMatch;
-  while ((importMatch = importPattern.exec(withoutComments)) !== null) {
-    if (!isApprovedFontStylesheet(importMatch[2].trim())) {
-      problems.push(`unapproved @import target "${importMatch[2].trim()}" at ${lineCol(css, importMatch.index)}`);
-    }
-  }
-  if (/@import\b/i.test(withoutComments.replace(importPattern, ''))) {
-    problems.push('@import must use url() and the approved Google Fonts CSS API');
+  /* No @import at all. Font CSS is a <link> in the consuming page's <head>
+     so it resolves in parallel; an @import here would put a third-party
+     host back on the critical path for first paint. */
+  if (/@import\b/i.test(withoutComments)) {
+    problems.push('@import is not allowed — load fonts with <link> in the page <head> (see docs/ADOPTION.md)');
   }
   const urlPattern = /url\(\s*(['"]?)([^'")]+)\1\s*\)/gi;
   let match;
   while ((match = urlPattern.exec(withoutComments)) !== null) {
     const target = match[2].trim();
-    if (!target.startsWith('data:') && !target.startsWith('#') && !isApprovedFontStylesheet(target)) {
+    if (!target.startsWith('data:') && !target.startsWith('#')) {
       problems.push(`external url() reference "${target}" at ${lineCol(css, match.index)}`);
     }
   }

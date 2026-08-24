@@ -4,25 +4,127 @@ All shared components must use custom properties from `theme.css`. Downstream
 applications may override tokens at `:root` or on an application container,
 but should not redefine component internals.
 
+## Themes and modes are separate axes
+
+Two independent attributes on `<html>`:
+
+| attribute | values | meaning |
+|---|---|---|
+| `data-hp-theme` | `claude` (default), `slate`, `sage`, `lavender`, `lime`, `amber`, `ocean`, `rose`, `neon` | the whole surface family — ground, chrome, surfaces, borders, text ramp, accent |
+| `data-theme` | `light`, `dark`, or absent | pins the mode; absent follows the operating system |
+
+They compose: `data-hp-theme="slate" data-theme="light"` is slate in light
+mode. Setting neither gives the default theme following the system.
+
+`data-hp-palette` is accepted as an alias for `data-hp-theme` so consumers
+that already write it keep working. Prefer `data-hp-theme` in new code.
+
+### What a theme owns
+
+Three tiers. A theme **must** define the first, **may** retune the second,
+and must **not** touch the third.
+
+**Theme-scoped — the surface family.** Grounds (`--bg-000`, `--bg-sidebar`,
+`--bg-toolbar`), the surface ramp (`--bg-100..3`, `--bg-500`,
+`--bg-raised`), borders (`--border-100`, `--border-200`,
+`--border-focus`), the text ramp (`--text-000`, `--text-100`,
+`--text-200`, `--text-300`), the accent family, `--overlay-bg`, the
+inverted-button pair, elevation colours, and the terminal/framebuffer
+surfaces.
+
+**Shared and semantic — not a theme's to repurpose.**
+`--success`/`--info`/`--warning`/`--danger`/`--critical` and their `-soft`,
+`-text-on-soft` and `-badge-fill` families. Status colour is meaning, not
+decoration: danger must read as danger whichever theme is active. A theme may
+retune a status colour for its own ground, but may not reassign what it
+means.
+
+**Not theme-scoped — proportions, not palette.** The spacing scale
+(`--space-*`), radii (`--radius-*`), type scale (`--font-size-*`,
+`--font-*`), motion (`--ease-out`, `--transition*`) and layout dimensions
+(`--toolbar-height`, `--sidebar-width*`, `--content-width`). These are the
+product's proportions and are identical across every theme.
+
+### How a theme is authored
+
+Theme values are **generated, not hand-written**. Edit
+`scripts/theme-tokens.mjs` — which holds the ground hue, saturation profile
+and accent seeds per theme — then run:
+
+```sh
+node scripts/gen-themes.mjs      # rewrite the generated block in theme.css
+node scripts/check-contrast.mjs  # WCAG AA across every theme and mode
+```
+
+Each theme is emitted as **one block covering both modes** using
+`light-dark()`, rather than the three near-identical blocks (`:root`,
+`[data-theme="light"]`, and a `prefers-color-scheme` copy) the stylesheet
+previously needed per token set. Mode is decided by `color-scheme`: `:root`
+declares `light dark` so the system preference wins by default, and
+`[data-theme]` pins it.
+
+`claude` is the default and is **pinned, not derived** — its values are
+hand-tuned (links are blue rather than accent-derived, `--accent-soft` sits
+at 0.14/0.12 where generated themes use 0.16/0.13) and the generator asserts
+byte identity on every run.
+
+Values that are not colours cannot use `light-dark()`, so the few that vary
+by mode are exposed as intent tokens instead: `--basemap-filter` and
+`--theme-art-dark-display` / `--theme-art-light-display`. Rules read the
+token rather than matching `[data-theme="dark"]` themselves, so a theme
+beyond light/dark cannot silently miss them.
+
+### Contrast
+
+`scripts/check-contrast.mjs` runs in CI and enforces WCAG AA (4.5:1 text,
+3:1 non-text) across every theme and mode, compositing alpha so a `-soft`
+token is measured as it actually renders. Deliberate exceptions are listed
+in `KNOWN_EXCEPTIONS` with a reason and printed on every run — the checker
+never silently tolerates a failure.
+
 ## Surface hierarchy
 
-| Token | Purpose |
-|---|---|
-| `--app-bg` | Main canvas |
-| `--sidebar-bg` | Navigation and recessed regions |
-| `--toolbar-bg` | Compact global toolbar |
-| `--surface-0` | Dialogs and primary floating surfaces |
-| `--surface-1` | Cards and form controls |
-| `--surface-2` | Hover, search, and selected navigation |
-| `--surface-3` | Pressed controls and stronger selection |
-| `--surface-raised` | Menus, command bars, and toasts |
+Backgrounds are a numbered ramp. The number is elevation: `000` is the page
+ground, and each step sits one level above it. Two chrome regions sit outside
+the ladder because they are places, not elevations.
+
+| Token | Purpose | Previously |
+|---|---|---|
+| `--bg-000` | Main canvas | `--app-bg` |
+| `--bg-100` | Dialogs and primary floating surfaces | `--surface-0` |
+| `--bg-200` | Cards and form controls | `--surface-1` |
+| `--bg-300` | Hover, search, and selected navigation | `--surface-2` |
+| `--bg-400` | Pressed controls and stronger selection | `--surface-3` |
+| `--bg-500` | Hover fill | `--surface-hover` |
+| `--bg-raised` | Menus, command bars, and toasts | `--surface-raised` |
+| `--bg-sidebar` | Navigation and recessed regions | `--sidebar-bg` |
+| `--bg-toolbar` | Compact global toolbar | `--toolbar-bg` |
+
+Text and borders follow the same shape — `000` is the most prominent:
+
+| Token | Purpose | Previously |
+|---|---|---|
+| `--text-000` | Headings, values, active controls | `--text-primary` |
+| `--text-100` | Body copy, labels, inactive navigation | `--text-secondary` |
+| `--text-200` | Metadata, placeholders, section labels | `--text-muted` |
+| `--text-300` | Unavailable controls only | `--text-disabled` |
+| `--border-100` | Hairlines | `--border-subtle` |
+| `--border-200` | Emphasised separation | `--border-strong` |
+
+**This rename is breaking, with no compatibility aliases.** Consumers reading
+the old names must migrate; the mapping above is the whole of it.
+
+The one-off `tw:*` utility classes are also gone. They were the residue of a
+Tailwind build dropped in an earlier issue, kept as hand-written CSS; they are
+not part of a design system and consumers should use real classes or their own
+layout CSS.
 
 ## Text hierarchy
 
-- `--text-primary` for headings, values, and active controls.
-- `--text-secondary` for body copy, labels, and inactive navigation.
-- `--text-muted` for metadata, placeholders, and section labels.
-- `--text-disabled` only for unavailable controls.
+See the table above. In short: `--text-000` for anything that must be read
+first, `--text-100` for body copy, `--text-200` for metadata, and `--text-300`
+only for controls that are unavailable — it is deliberately below the AA
+contrast floor, which WCAG permits for disabled controls and nothing else.
 
 ## Semantic color
 

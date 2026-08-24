@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Authentication example — Xore Theme</title>
@@ -9,9 +11,9 @@
   <script src="../theme.js" defer></script>
   <style>
     .auth-links{display:flex;justify-content:center;gap:14px;margin-top:18px;font-size:11px}
-    .auth-security{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:18px;color:var(--text-muted);font-size:11px}
-    .auth-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--text-muted);font-size:11px}
-    .auth-divider::before,.auth-divider::after{content:"";height:1px;flex:1;background:var(--border-subtle)}
+    .auth-security{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:18px;color:var(--text-200);font-size:11px}
+    .auth-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--text-200);font-size:11px}
+    .auth-divider::before,.auth-divider::after{content:"";height:1px;flex:1;background:var(--border-100)}
   </style>
 </head>
 <body>
@@ -39,7 +41,7 @@
         </section>
 
         <h2 style="margin:28px 0 4px;font-size:15px">Sign in — error states</h2>
-        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:14px">
+        <p style="font-size:12px;color:var(--text-100);margin-bottom:14px">
           A per-field wrong-credential message and a form-level rate-limit lockout are visually
           distinct here; a real login screen should not collapse both into one plain paragraph.
         </p>
@@ -55,7 +57,7 @@
         </section>
 
         <h2 style="margin:28px 0 4px;font-size:15px">Sign in — identity, then credential</h2>
-        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:14px">
+        <p style="font-size:12px;color:var(--text-100);margin-bottom:14px">
           theme.js's plain <code>[role="tab"][data-tab-target]</code> click delegate needs no
           tab-strip markup to drive a two-step form -- these buttons keep their normal
           <code>.btn</code> styling; only the wiring is reused.
@@ -83,7 +85,7 @@
         </section>
 
         <h2 style="margin:28px 0 4px;font-size:15px">Password recovery</h2>
-        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:14px">
+        <p style="font-size:12px;color:var(--text-100);margin-bottom:14px">
           The generic success notice does not confirm or deny that the account exists -- a
           deliberate anti-enumeration property, shown here as the three states a consumer
           actually renders in sequence.

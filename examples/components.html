@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Component catalog — Xore Theme</title>
@@ -17,6 +19,17 @@
       <a href="workspace.html">Workspace</a>
       <a href="settings.html">Settings</a>
       <a href="auth.html">Authentication</a>
+    </div>
+    <div class="theme-picker" aria-label="Theme">
+      <button data-hp-theme-value="claude" type="button">Claude</button>
+      <button data-hp-theme-value="slate" type="button">Slate</button>
+      <button data-hp-theme-value="sage" type="button">Sage</button>
+      <button data-hp-theme-value="lavender" type="button">Lavender</button>
+      <button data-hp-theme-value="lime" type="button">Lime</button>
+      <button data-hp-theme-value="amber" type="button">Amber</button>
+      <button data-hp-theme-value="ocean" type="button">Ocean</button>
+      <button data-hp-theme-value="rose" type="button">Rose</button>
+      <button data-hp-theme-value="neon" type="button">Neon</button>
     </div>
     <div class="theme-picker" aria-label="Color theme">
       <button data-theme-value="system" type="button">System</button>
@@ -36,10 +49,10 @@
       <div class="example-section__head"><div><h2>Color</h2><p>Surface and semantic hierarchy.</p></div></div>
       <div class="showcase">
         <div class="swatch-grid">
-          <div class="swatch" style="--swatch:var(--app-bg)">Canvas<code>--app-bg</code></div>
-          <div class="swatch" style="--swatch:var(--sidebar-bg)">Sidebar<code>--sidebar-bg</code></div>
-          <div class="swatch" style="--swatch:var(--surface-1)">Surface 1<code>--surface-1</code></div>
-          <div class="swatch" style="--swatch:var(--surface-2)">Surface 2<code>--surface-2</code></div>
+          <div class="swatch" style="--swatch:var(--bg-000)">Canvas<code>--bg-000</code></div>
+          <div class="swatch" style="--swatch:var(--bg-sidebar)">Sidebar<code>--bg-sidebar</code></div>
+          <div class="swatch" style="--swatch:var(--bg-200)">Surface 1<code>--bg-200</code></div>
+          <div class="swatch" style="--swatch:var(--bg-300)">Surface 2<code>--bg-300</code></div>
           <div class="swatch" style="--swatch:var(--accent)">Accent<code>--accent</code></div>
           <div class="swatch" style="--swatch:var(--success-soft)">Success<code>--success-soft</code></div>
           <div class="swatch" style="--swatch:var(--warning-soft)">Warning<code>--warning-soft</code></div>

@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Settings example — Xore Theme</title>
@@ -41,7 +43,18 @@
       <div class="settings-column">
         <header class="settings-head">
           <div><h1 id="settings-heading">Account</h1><p>Manage your identity, preferences, and active credentials.</p></div>
-          <div class="theme-picker" aria-label="Color theme">
+          <div class="theme-picker" aria-label="Theme">
+            <button data-hp-theme-value="claude" type="button">Claude</button>
+            <button data-hp-theme-value="slate" type="button">Slate</button>
+            <button data-hp-theme-value="sage" type="button">Sage</button>
+            <button data-hp-theme-value="lavender" type="button">Lavender</button>
+            <button data-hp-theme-value="lime" type="button">Lime</button>
+            <button data-hp-theme-value="amber" type="button">Amber</button>
+            <button data-hp-theme-value="ocean" type="button">Ocean</button>
+            <button data-hp-theme-value="rose" type="button">Rose</button>
+            <button data-hp-theme-value="neon" type="button">Neon</button>
+          </div>
+    <div class="theme-picker" aria-label="Color theme">
             <button data-theme-value="system" type="button">System</button>
             <button data-theme-value="dark" type="button">Dark</button>
             <button data-theme-value="light" type="button">Light</button>

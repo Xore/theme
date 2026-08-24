@@ -27,10 +27,13 @@ must follow for its own dynamic, per-element styling.
   a component instance not yet converted to the `--v` pattern) is a gap in
   that example, not a property of the component itself -- if you spot one,
   it should be fixed the same way `.progress`'s own instances were.
-- `theme.css` imports Space Grotesk, Fira Sans, and Fira Code from Google Fonts.
-  Consumers must allow `https://fonts.googleapis.com` in `style-src` and
-  `https://fonts.gstatic.com` in `font-src`. The local fallback stacks remain
-  usable when either request is unavailable.
+- Space Grotesk, Fira Sans, and Fira Code are loaded from Google Fonts by a
+  `<link>` in the consuming page's `<head>`, not by an `@import` inside
+  `theme.css` (see [`ADOPTION.md`](./ADOPTION.md) for why). The policy
+  requirement is the same either way: allow `https://fonts.googleapis.com` in
+  `style-src` and `https://fonts.gstatic.com` in `font-src`. The local
+  fallback stacks remain usable when either request is unavailable, so a
+  policy that omits both hosts still yields a working interface.
 
 A minimal policy this contract is compatible with:
 
@@ -133,7 +136,7 @@ the same way as `.mini-chart` above, addressed by row then column:
 .heatmap { display: flex; flex-direction: column; gap: 3px; }
 .heatmap__row { display: flex; align-items: center; gap: 8px; }
 .heatmap__cells { display: flex; flex: 1; gap: 3px; }
-.heatmap__cell { --v: 0; flex: 1; aspect-ratio: 1; background: color-mix(in srgb, var(--accent) calc(var(--v) * 1%), var(--surface-2)); }
+.heatmap__cell { --v: 0; flex: 1; aspect-ratio: 1; background: color-mix(in srgb, var(--accent) calc(var(--v) * 1%), var(--bg-300)); }
 ```
 
 ```html
@@ -164,7 +167,7 @@ A single-value fill bar (see `examples/components.html`). Width comes from
 `--v` (0–100) on the fill `<span>`, set the same way as `.mini-chart` above:
 
 ```css
-.progress { height: 6px; overflow: hidden; border-radius: var(--radius-pill); background: var(--surface-3); }
+.progress { height: 6px; overflow: hidden; border-radius: var(--radius-pill); background: var(--bg-400); }
 .progress > span { --v: 0; display: block; width: calc(var(--v) * 1%); height: 100%; background: var(--accent); }
 ```
 
