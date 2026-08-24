@@ -1003,8 +1003,19 @@ p { color: var(--text-100); }
   /* 6E: secondary == the quiet surface pill the base .btn already is. */
   background: var(--bg-300);
   color: var(--text-000);
+  /* The hairline is what makes it a control rather than a tinted patch.
+     .btn sets `border: 1px solid transparent`, and a secondary button's
+     fill is --bg-300 -- which is exactly what .data-table's row hover
+     paints the cell behind it. On a hovered row the two matched and the
+     button vanished outright: same fill, no edge, nothing left to see.
+
+     Bordering it rather than changing either fill keeps the quiet pill
+     quiet, and keeps it visible on any surface it is ever placed on --
+     including ones that do not exist yet, which is the point of solving it
+     here rather than at the one call site where it was noticed. */
+  border-color: var(--border-100);
 }
-.btn-secondary:hover { background: var(--bg-400); }
+.btn-secondary:hover { background: var(--bg-400); border-color: var(--border-200); }
 .btn-ghost { color: var(--text-100); }
 .btn-ghost:hover { background: var(--bg-300); color: var(--text-000); }
 .btn-danger { background: var(--danger-soft); color: var(--danger-text-on-soft); }
