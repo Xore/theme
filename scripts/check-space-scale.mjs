@@ -26,7 +26,9 @@
  */
 import { readFileSync } from 'node:fs'
 
-const FILE = process.argv[2] ?? new URL('../theme.css', import.meta.url).pathname
+// Relative to the working directory, like the sibling checks: CI runs
+// them all from the repository root.
+const FILE = process.argv[2] ?? 'theme.css'
 const MIN_COVERAGE = 78 // current is 81%; this catches drift, not rounding
 
 const PROPS =
