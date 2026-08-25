@@ -2262,18 +2262,6 @@ pre {
   opacity: 0;
 }
 .modal.open { display: flex; opacity: 1; animation: dialog-in var(--transition); }
-/* A modal sized to a short form rather than to a document. The base .modal
-   caps at 1280x840, which is right for a PDF viewer or a log and far too
-   much for six fields; height goes to auto so the panel is as tall as its
-   content and no taller, with the same viewport margin the base uses.
-
-   Added for APIARY#1893: two dialogs had each written this shape inline. */
-.modal--compact {
-  width: min(560px, calc(100vw - 40px));
-  height: auto;
-  max-height: min(680px, calc(100dvh - 40px));
-  overflow-y: auto;
-}
 .modal--permanent {
   inset: 0;
   display: flex;
@@ -4540,7 +4528,29 @@ tr.selected .hp-row-actions__more,
 /* #1567: the Report-a-problem dialog -- flat header+form children need a
    column stack and content-driven height; the generic .modal box is a
    fixed-height row flexbox meant for sidebar+content compositions. */
-.hp-pr-modal { flex-direction: column; width: min(560px, calc(100vw - 40px)); height: auto; max-height: calc(100dvh - 40px); overflow: auto; }
+/* A modal sized to a short form rather than to a document. The base .modal
+   caps at 1280x840, which is right for a PDF viewer or a log and far too
+   much for six fields; height goes to auto so the panel is as tall as its
+   content and no taller, with the same viewport margin the base uses.
+
+   flex-direction is the load-bearing one: .modal.open is display:flex, so
+   without it a header and a form become side-by-side columns rather than a
+   header above a form. .modal--palette sets it for the same reason.
+
+   Two names, one rule. .hp-pr-modal is the problem-report dialog, and had
+   carried this shape alone since the Go dashboard; .modal--compact is the
+   same shape for anything else that is a short form -- added for
+   APIARY#1893, where a second dialog had written it out inline rather than
+   find this one. The 680px cap comes from that dialog and is the tighter of
+   the two, which suits a form either way. */
+.modal--compact,
+.hp-pr-modal {
+  flex-direction: column;
+  width: min(560px, calc(100vw - 40px));
+  height: auto;
+  max-height: min(680px, calc(100dvh - 40px));
+  overflow: auto;
+}
 .hp-pr-modal form { display: flex; flex-direction: column; gap: var(--space-md); padding: var(--space-lg) var(--space-xl) var(--space-xl); }
 
 /* #1565: the attack map's zoom-2 side gutters read as broken light-gray
