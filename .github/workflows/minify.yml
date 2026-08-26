@@ -41,5 +41,9 @@ jobs:
             echo "Minified assets already up to date."
           else
             git commit -m "chore: regenerate minified assets"
+            # The bot commits on main while pushes to main are happening:
+            # without a rebase first, the final push races whoever merged in
+            # front of it and the job dies after doing all its work (#139).
+            git pull --rebase origin main
             git push
           fi
