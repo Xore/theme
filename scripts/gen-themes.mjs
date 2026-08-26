@@ -26,6 +26,7 @@ const EMIT_ORDER = [
   'text-000', 'text-100', 'text-200', 'text-300',
   'accent', 'accent-hover', 'accent-pressed', 'accent-soft', 'accent-text-on-soft',
   'text-on-accent', 'text-link', 'text-link-hover', 'switch-on',
+  'text-on-status', 'control-knob',
   'btn-inverted-bg', 'btn-inverted-bg-hover', 'btn-inverted-text',
   'overlay-bg',
   'success', 'success-soft', 'success-text-on-soft', 'success-badge-fill',

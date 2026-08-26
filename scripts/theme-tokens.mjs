@@ -491,6 +491,25 @@ export function buildMode(themeName, mode) {
   tokens['border-focus'] = tune(accent, worstFor(accent), { target: AIM_NONTEXT, direction: away });
   tokens['switch-on'] = tokens['text-link'];
 
+  /* Ink over the solid --switch-on fill (#135): .badge--solid sets text on
+     this fill (--text-on-status) and the checked toggle lays its knob on top
+     of it (--control-knob), and the base block authors both as fixed white.
+     But switch-on *is* the link colour, which means dark themes resolve it
+     to a light pastel tuned to be read ON a dark ground -- fixed white over
+     those pastels measures 1.57-2.76:1 across the nine families, nowhere
+     near either floor. Choose each the way text-on-accent above is chosen,
+     against the backdrop actually painted. Measured per theme/mode at least
+     one candidate clears by a wide margin -- white >= 5.87 against every
+     light-half fill, near-black >= 6.47 against every dark-half -- so no
+     tune walk and no exceptions entry is warranted today, and the
+     check-contrast rows added with this hold the pairing to both floors
+     from here on. */
+  const statusFill = tokens['switch-on'];
+  const statusInk =
+    contrast('#ffffff', statusFill) >= contrast('#1c1613', statusFill) ? '#ffffff' : '#1c1613';
+  tokens['text-on-status'] = statusInk;
+  tokens['control-knob'] = statusInk;
+
   const borderBase = retint(ref['border-rgb'], subtle);
   tokens['border-100'] = rgbaString(borderBase, ref['border-subtle-a']);
   tokens['border-200'] = rgbaString(borderBase, ref['border-strong-a']);
@@ -611,6 +630,12 @@ export function auditMode(built) {
   push('text-on-accent vs accent-pressed', t['text-on-accent'], t['accent-pressed'], 4.5);
   push('btn-inverted-text vs btn-inverted-bg', t['btn-inverted-text'], t['btn-inverted-bg'], 4.5);
   push('btn-inverted-text vs btn-inverted-bg-hover', t['btn-inverted-text'], t['btn-inverted-bg-hover'], 4.5);
+  /* The solid --switch-on fill is painted two ways (#135): .badge--solid
+     sets ink over it and the checked toggle lays its knob on it. Floors
+     follow each pair's category -- text for the badge ink, non-text for
+     the state-indicator knob. */
+  push('text-on-status vs switch-on', t['text-on-status'], t['switch-on'], 4.5);
+  push('control-knob vs switch-on', t['control-knob'], t['switch-on'], 3);
   /* WCAG 1.4.11: non-text contrast floor is 3:1, not 4.5. */
   push('border-focus vs surface-1', t['border-focus'], t['bg-200'], 3);
   push('border-focus vs app-bg', t['border-focus'], t['bg-000'], 3);

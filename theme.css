@@ -38,9 +38,14 @@
      its theme's ground so it sits in the theme rather than on top of it,
      then AA-tuned against that theme's own surfaces. */
 
-  /* Fixed regardless of theme or mode: ink on a saturated status fill and
-     the knob of a control. Both are drawn on top of a saturated or solid
-     colour, so neither follows the surface. */
+  /* Fallback inks drawn on top of saturated or solid fills, where following
+     the surface makes no sense. Not fixed values any more (#135): the
+     generated blocks below recast both against each theme's actual
+     --switch-on paint, because that fill *is* the link colour -- light
+     pastels under dark modes -- and fixed white cannot serve as ink there.
+     These literals remain what renders if the generated surface is ever
+     stripped out, which only helps where light themes' darker fills are
+     painted. */
   --control-knob: #ffffff;
   --text-on-status: #ffffff;
 
@@ -212,6 +217,8 @@
   --text-link: light-dark(#9b4f3a, #de866b);
   --text-link-hover: light-dark(#854432, #e49a84);
   --switch-on: light-dark(#9b4f3a, #de866b);
+  --text-on-status: light-dark(#ffffff, #1c1613);
+  --control-knob: light-dark(#ffffff, #1c1613);
   --btn-inverted-bg: light-dark(#262421, #f5f4ef);
   --btn-inverted-bg-hover: light-dark(#151412, #ffffff);
   --btn-inverted-text: light-dark(#f5f4ef, #161513);
@@ -275,6 +282,8 @@
   --text-link: light-dark(#44618a, #8aa2c0);
   --text-link-hover: light-dark(#3a5376, #9eb2cb);
   --switch-on: light-dark(#44618a, #8aa2c0);
+  --text-on-status: light-dark(#ffffff, #1c1613);
+  --control-knob: light-dark(#ffffff, #1c1613);
   --btn-inverted-bg: light-dark(#212326, #eff2f5);
   --btn-inverted-bg-hover: light-dark(#121315, #ffffff);
   --btn-inverted-text: light-dark(#eff2f5, #131416);
@@ -338,6 +347,8 @@
   --text-link: light-dark(#456e3a, #8fb27b);
   --text-link-hover: light-dark(#385a2f, #9fbd8e);
   --switch-on: light-dark(#456e3a, #8fb27b);
+  --text-on-status: light-dark(#ffffff, #1c1613);
+  --control-knob: light-dark(#ffffff, #1c1613);
   --btn-inverted-bg: light-dark(#212621, #eff5f0);
   --btn-inverted-bg-hover: light-dark(#121512, #ffffff);
   --btn-inverted-text: light-dark(#eff5ef, #131613);
@@ -401,6 +412,8 @@
   --text-link: light-dark(#6d4fc4, #ab93e3);
   --text-link-hover: light-dark(#5d3db7, #beabe9);
   --switch-on: light-dark(#6d4fc4, #ab93e3);
+  --text-on-status: light-dark(#ffffff, #1c1613);
+  --control-knob: light-dark(#ffffff, #1c1613);
   --btn-inverted-bg: light-dark(#232126, #f1eff5);
   --btn-inverted-bg-hover: light-dark(#131215, #ffffff);
   --btn-inverted-text: light-dark(#f1eff5, #141316);
@@ -464,6 +477,8 @@
   --text-link: light-dark(#536d1b, #b3cf5a);
   --text-link-hover: light-dark(#405415, #bed672);
   --switch-on: light-dark(#536d1b, #b3cf5a);
+  --text-on-status: light-dark(#ffffff, #1c1613);
+  --control-knob: light-dark(#ffffff, #1c1613);
   --btn-inverted-bg: light-dark(#252621, #f3f5ef);
   --btn-inverted-bg-hover: light-dark(#141512, #ffffff);
   --btn-inverted-text: light-dark(#f4f5ef, #151613);
@@ -527,6 +542,8 @@
   --text-link: light-dark(#825d0e, #d9a842);
   --text-link-hover: light-dark(#66490b, #deb45b);
   --switch-on: light-dark(#825d0e, #d9a842);
+  --text-on-status: light-dark(#ffffff, #1c1613);
+  --control-knob: light-dark(#ffffff, #1c1613);
   --btn-inverted-bg: light-dark(#262421, #f5f2ef);
   --btn-inverted-bg-hover: light-dark(#151412, #ffffff);
   --btn-inverted-text: light-dark(#f5f3ef, #161513);
@@ -590,6 +607,8 @@
   --text-link: light-dark(#1d69a0, #55a7d8);
   --text-link-hover: light-dark(#185886, #6eb4de);
   --switch-on: light-dark(#1d69a0, #55a7d8);
+  --text-on-status: light-dark(#ffffff, #1c1613);
+  --control-knob: light-dark(#ffffff, #1c1613);
   --btn-inverted-bg: light-dark(#212426, #eff3f5);
   --btn-inverted-bg-hover: light-dark(#121415, #ffffff);
   --btn-inverted-text: light-dark(#eff3f5, #131516);
@@ -653,6 +672,8 @@
   --text-link: light-dark(#a0435e, #d98298);
   --text-link-hover: light-dark(#8a3a51, #e099ab);
   --switch-on: light-dark(#a0435e, #d98298);
+  --text-on-status: light-dark(#ffffff, #1c1613);
+  --control-knob: light-dark(#ffffff, #1c1613);
   --btn-inverted-bg: light-dark(#262122, #f5eff1);
   --btn-inverted-bg-hover: light-dark(#151213, #ffffff);
   --btn-inverted-text: light-dark(#f5eff1, #161314);
@@ -716,6 +737,8 @@
   --text-link: light-dark(#0c7162, #3ee6c8);
   --text-link-hover: light-dark(#09554a, #59ead0);
   --switch-on: light-dark(#0c7162, #3ee6c8);
+  --text-on-status: light-dark(#ffffff, #1c1613);
+  --control-knob: light-dark(#ffffff, #1c1613);
   --btn-inverted-bg: light-dark(#212625, #e1eceb);
   --btn-inverted-bg-hover: light-dark(#121515, #f4f4f4);
   --btn-inverted-text: light-dark(#eff5f4, #080a0a);
