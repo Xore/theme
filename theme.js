@@ -61,6 +61,25 @@
     return document.querySelector('[data-dialog-backdrop="' + id + '"]');
   }
 
+  /* Open order of every dialog this controller opened. The native cancel
+     event already targets the top layer correctly, but the document-level
+     Escape handler below answers Escape first (and the no-showModal
+     fallback has no cancel event at all), so it resolves through this stack.
+     Document order only matches stacking order when the authoring happens
+     to nest top-down — #125. */
+  var dialogStack = [];
+
+  function pushDialog(id) {
+    var at = dialogStack.indexOf(id);
+    if (at !== -1) dialogStack.splice(at, 1);
+    dialogStack.push(id);
+  }
+
+  function dropDialog(id) {
+    var at = dialogStack.indexOf(id);
+    if (at !== -1) dialogStack.splice(at, 1);
+  }
+
   function setBackdropState(backdrop, open) {
     if (!backdrop) return;
     backdrop.classList.toggle('open', open);
@@ -79,6 +98,7 @@
     var dialog = document.getElementById(id);
     if (!dialog) return;
     dialog._themeOpener = opener || document.activeElement;
+    pushDialog(id);
     setBackdropState(dialogBackdrop(id), true);
     if (dialog.showModal && !dialog.open) dialog.showModal();
     dialog.classList.add('open');
@@ -89,6 +109,7 @@
   function closeDialog(id) {
     var dialog = document.getElementById(id);
     if (!dialog || dialog.hasAttribute('data-permanent-dialog')) return;
+    dropDialog(id);
     var opener = dialog._themeOpener;
     dialog.classList.remove('open');
     if (dialog.close && dialog.open) dialog.close();
@@ -268,11 +289,29 @@
         closeNav(openShell);
         return;
       }
-      var dialogs = document.querySelectorAll('dialog.open:not([data-permanent-dialog])');
-      var deepestDialog = dialogs[dialogs.length - 1];
-      if (deepestDialog) {
-        event.preventDefault();
-        closeDialog(deepestDialog.id);
+      /* Topmost temporary dialog first: walk the open stack from the end.
+         A dialog natively closed behind our back (consumer called .close()
+         directly) leaves a stale id that fails the .open check and is
+         skipped, so the stack self-heals. Only if nothing tracked matches —
+         dialogs a consumer opened via raw showModal() never entered the
+         stack — fall back to scanning the document, as before; on browsers
+         with showModal those also get the correctly-targeted cancel event,
+         which this branch no longer suppresses unless it closes something. */
+      for (var d = dialogStack.length - 1; d >= 0; d -= 1) {
+        var candidate = document.getElementById(dialogStack[d]);
+        if (candidate && candidate.open && !candidate.hasAttribute('data-permanent-dialog')) {
+          event.preventDefault();
+          closeDialog(candidate.id);
+          break;
+        }
+      }
+      if (d < 0) {
+        var dialogs = document.querySelectorAll('dialog.open:not([data-permanent-dialog])');
+        var deepestDialog = dialogs[dialogs.length - 1];
+        if (deepestDialog) {
+          event.preventDefault();
+          closeDialog(deepestDialog.id);
+        }
       }
       return;
     }
