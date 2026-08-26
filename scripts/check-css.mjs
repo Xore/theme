@@ -7,6 +7,9 @@
  *   - no @import and no external url() references at all: fonts are loaded
  *     by the consuming page via <link>, not from inside this stylesheet
  *   - every var(--token) refers to a token defined somewhere in the file
+ *   - no token is declared twice in one block: at equal specificity the
+ *     later declaration silently wins, which once let literal rgba()
+ *     shadows clobber var()-based ones fourteen lines below them
  *
  * Usage: node scripts/check-css.mjs [file ...]
  */
@@ -104,6 +107,36 @@ function checkTokens(file, css) {
   return problems;
 }
 
+function checkDuplicateDeclarations(css) {
+  const problems = [];
+  // Comments first: a commented-out declaration must not read as live.
+  const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  // Top-level and nested blocks alike; the stylesheet only declares custom
+  // properties in flat selector blocks today, but the check is cheap to
+  // keep general. A regex over [^{}] bodies is enough for that shape.
+  const blocks = [...withoutComments.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
+  for (const block of blocks) {
+    const selector = block[1].trim().split('\n').pop().trim();
+    const seen = new Map();
+    for (const match of block[2].matchAll(/(--[A-Za-z0-9_-]+)\s*:\s*([^;]+);/g)) {
+      const token = match[1];
+      const value = match[2].trim();
+      if (seen.has(token)) {
+        problems.push(
+          `${selector} declares ${token} twice ("${seen.get(token)}" then "${value}") — ` +
+            'the later one silently wins at equal specificity' +
+            (seen.get(token).includes('var(') && !value.includes('var(')
+              ? ', so a literal here clobbers the var()-based value and its per-theme tokens'
+              : ''),
+        );
+      } else {
+        seen.set(token, value);
+      }
+    }
+  }
+  return problems;
+}
+
 for (const file of files) {
   const css = readFileSync(file, 'utf8');
   if (!css.trim()) {
@@ -115,6 +148,7 @@ for (const file of files) {
     ...checkStructure(file, css),
     ...checkPolicy(file, css),
     ...checkTokens(file, css),
+    ...checkDuplicateDeclarations(css),
   ];
   if (problems.length) {
     failures += problems.length;
