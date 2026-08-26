@@ -456,10 +456,35 @@ export function buildMode(themeName, mode) {
   tokens['text-link'] = tune(accent, s1, { direction: away });
   tokens['text-link-hover'] = shiftLightness(tokens['text-link'], dark ? 0.06 : -0.06);
 
-  /* Ink on a solid accent fill: near-black or near-white, whichever wins. */
+  /* Ink on a solid accent fill: near-black or near-white, whichever wins.
+     The fill is painted in more than one state -- .btn-primary:hover
+     repaints it with --accent-hover (#127) -- so the ink has to work on the
+     worst backdrop it actually lands on, the same doctrine text-primary
+     follows above, not merely on the resting fill. Where the standard
+     hover shift still leaves the better ink short of AA on the hovered
+     fill, the shift itself gives way, walking toward rest in 0.01
+     lightness steps until both painted states clear: legibility outranks
+     hover drama. --accent-pressed is generated into every theme but
+     nothing in theme.css paints it; where it cannot clear AA it ships as a
+     documented exception instead of shaping these values. */
   const darkInk = tune('#1c1613', accent, { direction: -1 });
   const lightInk = tune('#ffffff', accent, { direction: 1 });
-  tokens['text-on-accent'] = contrast(darkInk, accent) >= contrast(lightInk, accent) ? darkInk : lightInk;
+  const preferredInk = (worst) =>
+    contrast(darkInk, worst) >= contrast(lightInk, worst) ? darkInk : lightInk;
+  const baseShift = dark ? 0.05 : -0.04;
+  const shiftSign = Math.sign(baseShift);
+  let magnitude = Math.abs(baseShift);
+  let hoverFill;
+  let ink;
+  for (;;) {
+    hoverFill = shiftLightness(accent, shiftSign * magnitude);
+    ink = preferredInk(accent);
+    ink = preferredInk(contrast(ink, accent) <= contrast(ink, hoverFill) ? accent : hoverFill);
+    if ((contrast(ink, accent) >= 4.5 && contrast(ink, hoverFill) >= 4.5) || magnitude === 0) break;
+    magnitude = Math.max(0, +(magnitude - 0.01).toFixed(2));
+  }
+  tokens['accent-hover'] = hoverFill;
+  tokens['text-on-accent'] = ink;
 
   /* Focus ring must clear the 3:1 non-text floor (WCAG 1.4.11) against the
      surfaces it is drawn over — the subject of the original #45. */
@@ -576,6 +601,16 @@ export function auditMode(built) {
   push('accent-text-on-soft vs accent-soft over surface-1', t['accent-text-on-soft'], softBg, 4.5);
   push('text-link vs surface-1', t['text-link'], t['bg-200'], 4.5);
   push('text-on-accent vs accent', t['text-on-accent'], t.accent, 4.5);
+  /* The fill is painted in more than one state (#127): .btn-primary:hover
+     swaps in --accent-hover, so that pair is enforced like the rest.
+     --accent-pressed is generated but nothing in this stylesheet paints it;
+     it is measured anyway, and where it fails it may ship only as a
+     documented exception. The inverted-button pair is enforced for the same
+     reason: it passed by luck until now, which is not a guarantee. */
+  push('text-on-accent vs accent-hover', t['text-on-accent'], t['accent-hover'], 4.5);
+  push('text-on-accent vs accent-pressed', t['text-on-accent'], t['accent-pressed'], 4.5);
+  push('btn-inverted-text vs btn-inverted-bg', t['btn-inverted-text'], t['btn-inverted-bg'], 4.5);
+  push('btn-inverted-text vs btn-inverted-bg-hover', t['btn-inverted-text'], t['btn-inverted-bg-hover'], 4.5);
   /* WCAG 1.4.11: non-text contrast floor is 3:1, not 4.5. */
   push('border-focus vs surface-1', t['border-focus'], t['bg-200'], 3);
   push('border-focus vs app-bg', t['border-focus'], t['bg-000'], 3);
@@ -626,10 +661,23 @@ export function assertIdentity() {
  * checker prints them on every run so they stay visible.
  */
 export const KNOWN_EXCEPTIONS = [
-  /* Empty, and worth keeping that way. The one entry this list used to hold
-     -- claude's light link blue at 3.95:1 -- is fixed rather than excused:
-     links now derive from the accent and are AA-tuned like every other
-     theme's (#103). */
+  /* #127. --accent-pressed is generated into every theme block, but nothing
+     in theme.css paints it; the press state exists for consumers that
+     style their own active controls. Under near-black ink no conventional
+     shift of neon's light accent clears AA on the darkened fill -- the
+     darker the fill, the further it runs from its own ink -- so the pair
+     ships measured and reported on every run rather than distorting the
+     painted states to satisfy an unpainted one. If a consumer starts
+     painting --accent-pressed, that surface comes back to this table.
+     The one entry this list used to hold -- claude's light link blue at
+     3.95:1 -- was fixed rather than excused: links now derive from the
+     accent and are AA-tuned like every other theme's (#103). */
+  {
+    theme: 'neon',
+    mode: 'light',
+    label: 'text-on-accent vs accent-pressed',
+    reason: 'generated-but-unpainted token; no rule in theme.css paints the press state',
+  },
 ];
 
 export function isKnownException(row) {
