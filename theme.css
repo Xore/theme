@@ -708,7 +708,7 @@
   --text-200: light-dark(#57605f, #9fa2a2);
   --text-300: light-dark(#9daaa8, #535c5b);
   --accent: light-dark(#0f8f7a, #3ee6c8);
-  --accent-hover: light-dark(#0d7d6a, #55e9ce);
+  --accent-hover: light-dark(#0e8672, #55e9ce);
   --accent-pressed: light-dark(#0b6a5a, #27e3c2);
   --accent-soft: light-dark(rgba(15, 143, 122, 0.13), rgba(62, 230, 200, 0.16));
   --accent-text-on-soft: light-dark(#0b675a, #3ee6c8);
