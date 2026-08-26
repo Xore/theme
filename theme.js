@@ -161,6 +161,34 @@
   applyTheme(savedTheme());
   applyHpTheme(savedHpTheme());
 
+  /* The load-time resolution above is a snapshot. Two listeners keep it
+     honest afterwards (#129):
+
+     - OS flips: a system follower re-resolves when prefers-color-scheme
+       changes mid-session. An explicit dark/light choice must keep
+       winning, so this fires only while savedTheme() says "follow the
+       OS". Re-applying is not cosmetic -- applyTheme() also refreshes the
+       picker buttons' aria-pressed, which would otherwise still describe
+       the pre-flip state.
+     - Other tabs: localStorage already carries the state across tabs;
+       storage events are the missing notification, and they never fire in
+       the tab that made the change, so no echo guard is needed. A removed
+       key arrives as null, which maps back to "system"/"default" exactly
+       the way savedTheme()/savedHpTheme() treat it. */
+  if (window.matchMedia) {
+    var osScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    var onOsFlip = function () {
+      if (savedTheme() === 'system') applyTheme('system');
+    };
+    if (osScheme.addEventListener) osScheme.addEventListener('change', onOsFlip);
+    else if (osScheme.addListener) osScheme.addListener(onOsFlip);
+  }
+
+  window.addEventListener('storage', function (event) {
+    if (event.key === storageKey) applyTheme(event.newValue || 'system');
+    else if (event.key === themeStorageKey) applyHpTheme(event.newValue || defaultHpTheme);
+  });
+
   document.addEventListener('click', function (event) {
     if (!event.target.closest('.action-menu, .popover')) {
       document.querySelectorAll('.action-menu[open], .popover[open]').forEach(closeActionMenu);
