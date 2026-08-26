@@ -33,7 +33,53 @@ Theme controls use:
 <button data-theme-value="light">Light</button>
 ```
 
-The preference is stored under `xore-theme`.
+The preference is stored under `xore-theme`. A second, independent axis
+selects the named theme family (Claude, Slate, Sage, …). Its controls set
+`data-hp-theme-value`, the chosen family lands as `data-hp-theme` on
+`<html>`, and the selection is stored under `xore-hp-theme`; the default
+family stores nothing. Mode and family compose: the family owns the token
+surface, the mode picks which half of it renders.
+
+## Before first paint
+
+`theme.js` resolves the saved preference when it runs — normally after the
+stylesheet has already painted default tokens — so a returning visitor
+whose saved state differs from the default sees a flash of the wrong theme
+on every navigation. Closing that flash takes an inline script in the
+`<head>`, placed *above* the `theme.css` link, that re-applies just enough
+state for the cascade:
+
+```html
+<script>
+  (function () {
+    try {
+      var mode = localStorage.getItem('xore-theme');
+      if (mode === 'dark' || mode === 'light') {
+        document.documentElement.setAttribute('data-theme', mode);
+      }
+      var family = localStorage.getItem('xore-hp-theme');
+      if (family && family !== 'claude') {
+        document.documentElement.setAttribute('data-hp-theme', family);
+      }
+    } catch (_) { /* storage blocked: defaults render */ }
+  })();
+</script>
+```
+
+Four rules keep it safe:
+
+- **Validate before applying.** Only exact expected values reach
+  `setAttribute`. Anything else — empty, unknown, tampered — falls through
+  to the defaults, which is precisely how `theme.js` treats it on load.
+  Never blit storage into an attribute verbatim.
+- **Absence is the default.** The snippet writes nothing for system or for
+  the default family, so the attribute and localStorage cannot disagree.
+- **Document order decides.** An inline script below the `theme.css` link
+  runs after the browser has it; above the link is the only placement that
+  works.
+- **CSP:** a strict `script-src` without `'unsafe-inline'` needs a nonce or
+  hash for this script — see [`CSP.md`](./CSP.md) for how that policy
+  interacts with per-element values.
 
 Permanent settings surfaces use:
 
@@ -89,6 +135,8 @@ and the theme still renders in the fallback faces.
 
 - Review all example pages at 1440×900, 1024×768, and 390×844.
 - Review dark, light, and system modes.
+- Reload with a non-default preference saved and confirm no wrong-theme
+  flash (pre-paint boot script in place and above the stylesheet link).
 - Navigate every control with a keyboard.
 - Check visible focus and modal Escape behavior.
 - Verify Save and Enter open the same visible configuration warning.
