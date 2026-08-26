@@ -491,7 +491,7 @@ export function buildMode(themeName, mode) {
   tokens['border-focus'] = tune(accent, worstFor(accent), { target: AIM_NONTEXT, direction: away });
   tokens['switch-on'] = tokens['text-link'];
 
-  /* Ink over the solid --switch-on fill (#135): .badge--solid sets text on
+  /* Ink over the solid --switch-on fill (#134): .badge--solid sets text on
      this fill (--text-on-status) and the checked toggle lays its knob on top
      of it (--control-knob), and the base block authors both as fixed white.
      But switch-on *is* the link colour, which means dark themes resolve it
@@ -630,7 +630,7 @@ export function auditMode(built) {
   push('text-on-accent vs accent-pressed', t['text-on-accent'], t['accent-pressed'], 4.5);
   push('btn-inverted-text vs btn-inverted-bg', t['btn-inverted-text'], t['btn-inverted-bg'], 4.5);
   push('btn-inverted-text vs btn-inverted-bg-hover', t['btn-inverted-text'], t['btn-inverted-bg-hover'], 4.5);
-  /* The solid --switch-on fill is painted two ways (#135): .badge--solid
+  /* The solid --switch-on fill is painted two ways (#134): .badge--solid
      sets ink over it and the checked toggle lays its knob on it. Floors
      follow each pair's category -- text for the badge ink, non-text for
      the state-indicator knob. */

@@ -39,7 +39,7 @@
      then AA-tuned against that theme's own surfaces. */
 
   /* Fallback inks drawn on top of saturated or solid fills, where following
-     the surface makes no sense. Not fixed values any more (#135): the
+     the surface makes no sense. Not fixed values any more (#134): the
      generated blocks below recast both against each theme's actual
      --switch-on paint, because that fill *is* the link colour -- light
      pastels under dark modes -- and fixed white cannot serve as ink there.
