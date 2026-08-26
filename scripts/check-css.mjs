@@ -137,6 +137,26 @@ function checkDuplicateDeclarations(css) {
   return problems;
 }
 
+function checkMalformedNegation(css) {
+  const problems = [];
+  // "-var(" cannot occur in a valid value: the leading minus binds to the
+  // var() function token, producing an unknown function no property grammar
+  // accepts, so every declaration carrying one is dropped whole (#135 --
+  // three shipped that way). Negating a token is calc(-1 * var(--token)).
+  // Comments are blanked without changing offsets, so reported lines are
+  // real lines of the source.
+  const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' '));
+  const bad = /(?<![-\w])-var\s*\(/g;
+  let match;
+  while ((match = bad.exec(withoutComments)) !== null) {
+    problems.push(
+      `-var( at ${lineCol(css, match.index)}: the leading minus binds to var(), making an unknown ` +
+        'function -- negate with calc(-1 * var(--token)), or the whole declaration is dropped',
+    );
+  }
+  return problems;
+}
+
 for (const file of files) {
   const css = readFileSync(file, 'utf8');
   if (!css.trim()) {
@@ -149,6 +169,7 @@ for (const file of files) {
     ...checkPolicy(file, css),
     ...checkTokens(file, css),
     ...checkDuplicateDeclarations(css),
+    ...checkMalformedNegation(css),
   ];
   if (problems.length) {
     failures += problems.length;
