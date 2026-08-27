@@ -34,3 +34,6 @@ jobs:
 
       - name: Validate example pages
         run: node scripts/check-examples.mjs
+
+      - name: Spacing scale holds outside declared exemptions
+        run: node scripts/check-space-scale.mjs theme.css

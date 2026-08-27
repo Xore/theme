@@ -22,6 +22,14 @@
  * and optical nudges rather than rhythm, and anything past the top step,
  * which has nothing to snap to.
  *
+ * Also not counted, but by explicit declaration: spans bracketed by paired
+ * `space-scale: exempt-start` / `exempt-end` comments hold spacing migrated
+ * verbatim from a consuming repository -- Xore/APIARY vendors this
+ * stylesheet byte-for-byte, so snapping it here would fork the vendor copy
+ * (#138). Their declarations leave both totals, so coverage keeps measuring
+ * what this file authors, and every run prints how many rules ride outside
+ * the gate inside them.
+ *
  * Usage: node scripts/check-space-scale.mjs [file]
  */
 import { readFileSync } from 'node:fs'
@@ -29,7 +37,7 @@ import { readFileSync } from 'node:fs'
 // Relative to the working directory, like the sibling checks: CI runs
 // them all from the repository root.
 const FILE = process.argv[2] ?? 'theme.css'
-const MIN_COVERAGE = 78 // current is 81%; this catches drift, not rounding
+const MIN_COVERAGE = 78 // catches downward drift only; rises with real adoption
 
 const PROPS =
   '(?:padding|margin)(?:-(?:top|right|bottom|left))?' +
@@ -39,11 +47,55 @@ const PROPS =
 const css = readFileSync(FILE, 'utf8')
 const declaration = new RegExp(`(?<![\\w-])(${PROPS})\\s*:\\s*([^;{}]+);`, 'g')
 
+// Exempt spans must come in pairs: an unpaired start would otherwise blank
+// the rest of the file and look like a clean pass, so refuse to run rather
+// than guess (#138). A marker is any comment whose body opens with
+// `space-scale: exempt-start` or `space-scale: exempt-end` -- whatever
+// follows within the comment is annotation.
+const events = []
+for (const comment of css.matchAll(/\/\*[\s\S]*?\*\//g)) {
+  const body = comment[0].slice(2)
+  if (/^\s*space-scale:\s*exempt-start/.test(body)) events.push(['open', comment])
+  if (/^\s*space-scale:\s*exempt-end/.test(body)) events.push(['close', comment])
+}
+
+let expectingOpen = true
+for (const [kind] of events) {
+  if ((kind === 'open') !== expectingOpen) {
+    console.error('space scale: unbalanced space-scale: exempt-start / exempt-end markers')
+    process.exit(1)
+  }
+  expectingOpen = !expectingOpen
+}
+
+/* The spans are blanked line-for-line, never cut, so byte offsets -- and
+   therefore reported line numbers -- stay real for everything around them.
+   Their declarations drop from BOTH counts: coverage keeps meaning "share
+   of what this file authors", and what rides outside the gate is printed,
+   never hidden. */
+let exempted = 0
+let scanCss = ''
+let cursor = 0
+let spanFrom = 0
+for (const [kind, comment] of events) {
+  if (kind === 'open') {
+    spanFrom = comment.index
+    scanCss += css.slice(cursor, comment.index)
+    cursor = comment.index
+  } else {
+    const through = comment.index + comment[0].length
+    exempted += [...css.slice(spanFrom, through).matchAll(declaration)].length
+    scanCss += css.slice(cursor, through).replace(/[^\n]/g, ' ')
+    cursor = through
+  }
+}
+scanCss += css.slice(cursor)
+
 let total = 0
 let tokenised = 0
 const offenders = []
 
-for (const match of css.matchAll(declaration)) {
+for (const match of scanCss.matchAll(declaration)) {
   const [, property, value] = match
   total += 1
   if (value.includes('var(--space')) {
@@ -64,7 +116,8 @@ const coverage = Math.floor((tokenised * 100) / total)
 if (coverage < MIN_COVERAGE || offenders.length > 0) {
   console.error(
     `space scale: ${tokenised}/${total} spacing declarations use var(--space-*) (${coverage}%), ` +
-      `want at least ${MIN_COVERAGE}% and no rhythm-sized literals.`,
+      `want at least ${MIN_COVERAGE}% and no rhythm-sized literals` +
+      (exempted > 0 ? `; another ${exempted} sit inside declared exempt spans.` : '.'),
   )
   if (offenders.length > 0) {
     console.error('\nliteral spacing that should use the scale:')
@@ -80,5 +133,6 @@ if (coverage < MIN_COVERAGE || offenders.length > 0) {
 }
 
 console.log(
-  `✓ space scale: ${tokenised}/${total} spacing declarations use var(--space-*) (${coverage}%)`,
+  `✓ space scale: ${tokenised}/${total} spacing declarations use var(--space-*) (${coverage}%)` +
+    (exempted > 0 ? `, plus ${exempted} inside declared exempt spans` : ''),
 )

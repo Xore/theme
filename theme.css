@@ -4590,6 +4590,13 @@ tr.selected .hp-row-actions__more,
    inside it. A small margin off both edges and a matching corner radius. */
 .leaflet-bottom.leaflet-right .leaflet-control-attribution { margin: 0 var(--space-sm) var(--space-sm) 0; border-radius: 6px; }
 
+/* space-scale: exempt-start -- down to the matching exempt-end, the layout
+   came over verbatim from the honeypot stack (settings modal inline <style>
+   plus hp-* geometry, #58), and Xore/APIARY vendors this stylesheet
+   byte-for-byte, so snapping these values locally would fork the vendor
+   copy. They convert upstream and flow back with the next sync (#138):
+   until then they ride outside the scale gate rather than hiding from it. */
+
 /* ── Settings modal layout ─────────────────────────────────────────────
    Was ui/partials/settings_modal.html's own inline <style> (#58): that
    partial is only ever rendered as an injected fragment (/api/settings/
@@ -4950,6 +4957,7 @@ tr.selected .hp-row-actions__more,
 @media(prefers-reduced-motion:reduce){
   .hp-dash-settings *{animation:none!important;transition:none!important}
 }
+/* space-scale: exempt-end (#138) */
 
 /* ═══════════════════════════════════════════════════════════════════════
    Xore/auth-backend — application-specific
