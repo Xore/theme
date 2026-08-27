@@ -1449,7 +1449,7 @@ select.form-input { cursor: pointer; }
 .alert--info { border-color: color-mix(in srgb, var(--info) 28%, transparent); background: var(--info-soft); color: var(--info-text-on-soft); }
 .alert--success { border-color: color-mix(in srgb, var(--success) 28%, transparent); background: var(--success-soft); color: var(--success-text-on-soft); }
 .alert--warning { border-color: color-mix(in srgb, var(--warning) 28%, transparent); background: var(--warning-soft); color: var(--warning-text-on-soft); }
-.alert--danger { border-color: color-mix(in srgb, var(--danger) 28%, transparent); background: var(--danger-soft); }
+.alert--danger { border-color: color-mix(in srgb, var(--danger) 28%, transparent); background: var(--danger-soft); color: var(--danger-text-on-soft); }
 .alert--critical { border-color: color-mix(in srgb, var(--critical) 40%, transparent); background: var(--critical-soft); color: var(--critical-text-on-soft); }
 
 .tabs {
@@ -3391,8 +3391,8 @@ pre.code {
    no CSP nonce pattern is needed. Reuses the same --success/--danger
    state-color tokens .badge--success/--danger already establish. */
 .diff-line { display: block; padding: 0 var(--space-sm); border-radius: 2px; }
-.diff-line--add { background: var(--success-soft); color: var(--success); }
-.diff-line--del { background: var(--danger-soft); color: var(--danger); }
+.diff-line--add { background: var(--success-soft); color: var(--success-text-on-soft); }
+.diff-line--del { background: var(--danger-soft); color: var(--danger-text-on-soft); }
 
 /* ── AI-generated report body + citations panel ───────────────────────────
    The typographic layer for a markdown-parsed AI report: a left accent
