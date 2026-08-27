@@ -7,6 +7,32 @@ change, not as a follow-up.
 
 ## Unreleased
 
+- **`theme.js` now suppresses the transition flash on theme and mode
+  swaps.** `.hp-theme-switching` (`transition: none !important`) has been in
+  the stylesheet since APIARY#1830, but nothing ever wrote the class, so a
+  full-surface swap animated through every intermediate colour on its way to
+  the new theme. `applyTheme()`/`applyHpTheme()` wrap their attribute writes
+  in the class now and release it on the second painted frame -- the first
+  shows the new theme, the second confirms it stuck -- falling back to a
+  synchronous release where `requestAnimationFrame` is unavailable, because
+  a class that is never released would suppress transitions forever.
+
+- Examples: brought every page current with the generated-theme refactor and
+  #1753's follow-ups. `components.html` gains the static theme-gallery
+  reference, the full surface-ramp swatch row, and a render-first skeleton
+  doctrine -- placeholders drawn as the anatomy they will be swapped for at
+  the size the data will occupy, with a live rig showing reserve, hydrate,
+  and shrink-to-fit -- plus the shape-matched placeholder primitives.
+  `settings.html` gains an interactive Appearance card built from the same
+  gallery tiles (radiogroup semantics; the page mirrors the stored theme
+  onto `aria-checked`, which theme.js does not manage). `workspace.html`
+  adopts `.sidebar__investigate`, `.sidebar__recent`, `.metric__delta` and
+  `.metric__spark`. Captions naming retired tokens (`--surface-raised`,
+  `--border-strong`) and radio pairs demoing a density axis the theme does
+  not have are fixed, and `docs/TOKENS.md` / `docs/COMPONENTS.md` /
+  `README.md` drift (blue links, `--artwork-bg`, the 9px/14px/18px radius
+  ladder, "seven themes") is corrected.
+
 - **Nine themes.** `ocean` and `rose` are promoted to full surface families
   alongside `claude`, `slate`, `sage`, `lavender`, `lime`, `amber` and
   `neon`, rather than remaining accent-only presets.

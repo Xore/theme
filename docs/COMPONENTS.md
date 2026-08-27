@@ -19,6 +19,7 @@ a component, update this file in the same PR (`docs/TOKENS.md`'s own
 | `.app-shell`, `.app-toolbar`, `.app-sidebar`, `.app-main`, `.app-content` | Desktop application frame: fixed toolbar, independently-scrolling sidebar and main canvas | `.app-shell` > `.app-toolbar` + `.app-sidebar` + `.app-main` > `.app-content` | CSS-only (grid) | `workspace.html` |
 | `.app-shell.hp-nav-open`, `.app-shell__nav-scrim`, `[data-nav-toggle]`, `[data-nav-scrim]` | Off-canvas mobile nav drawer (<=520px) with scrim, focus trap, and `inert` on `.app-main` | trigger button + `.app-sidebar` + `.app-shell__nav-scrim`, all inside `.app-shell` | Wired (open/close/focus/`aria-expanded`/Escape) | `workspace.html` |
 | `.sidebar__item`, `.sidebar__section-label`, `.sidebar__search`, `.sidebar__profile` | Sidebar navigation list, section headers, search field, profile footer | flat list of `<button>`/`<div>` inside `.app-sidebar__body` | CSS-only | `workspace.html` |
+| `.sidebar__investigate`, `.sidebar__recent` | Sidebar primary action (accent-outlined pill) and the recents rail, which renders evidence-shaped identifiers (IPs, campaign slugs) in the mono face | `.sidebar__investigate` button at the top of `.app-sidebar__body`; `.sidebar__recent` > flat `<a>` list | CSS-only | `workspace.html` |
 | `.hp-brand`, `.hp-brand-mark`, `.hp-brand-text`, `.hp-brand-accent`, `.app-toolbar__brand`, `.theme-art--dark`/`--light` | Product mark + wordmark in the sidebar, plus a compact theme-aware mobile-toolbar mark | brand link wrapping an icon chip and text; paired dark/light raster children use the theme-art modifiers | CSS-only | `workspace.html` |
 | `.settings-layout`, `.settings-layout__sidebar`, `.settings-layout__content`, `.settings-grid`, `.settings-field` | Two-pane settings surface (nav list + form fields) | `.settings-layout` > `.settings-layout__sidebar` + `.settings-layout__content` | CSS-only | `settings.html` |
 | `.auth-split`, `.auth-split__main`, `.auth-split__aside`, `.auth-card`, `.auth-brand` | Split-screen sign-in layout (form column + artwork column) | `.auth-split` > `.auth-split__main` (containing `.auth-card`) + `.auth-split__aside` | CSS-only | `auth.html` |
@@ -32,13 +33,18 @@ a component, update this file in the same PR (`docs/TOKENS.md`'s own
 | `.card__scroll` | Bounded, internally-scrolling region for unbounded card content (nest inside `.card__content`) | `.card__content.card__scroll` | CSS-only | `components.html` |
 | `.card--raised` | Elevated card variant (raised surface, stronger border, shadow) | `.card.card--raised` | CSS-only | `components.html` |
 | `.metric`, `.metric-grid`, `.metric__label`, `.metric__value`, `.metric__trend`, `.metric__trend--up`/`--down` | KPI tile with an optional directional trend | `.metric-grid` > repeated `.metric` | CSS-only | `components.html`, `workspace.html` |
+| `.metric__delta`, `.metric__delta--down` | Period-over-period change chip against the value (`--down` is the danger fill for changes that are bad news, e.g. alerts up) | `<span class="metric__delta">` inside `.metric__value` | CSS-only | `workspace.html` |
+| `.metric__spark` | Miniature series under a KPI value; bar heights from `--v` (see `docs/CSP.md`), last bar accented | `.metric__spark` > repeated `<i>` | CSS-only (values set via nonced `<style>`) | `workspace.html` |
 | `.data-table`, `.data-table--responsive`, `.table-scroll` | Table styling; the `--responsive` modifier stacks to label:value rows below 720px via each cell's `data-label` | `<table class="data-table">` inside `.table-scroll` | CSS-only | `components.html` |
 | `.progress` | Single-value fill bar, width from `--v` (see `docs/CSP.md`) | `.progress` > `<span>` | CSS-only | `components.html` |
 | `.empty-state`, `.empty-state__icon` | Centered "nothing here yet" card body with an icon, heading, copy, and CTA slot | `.card.empty-state` > icon + `<h3>` + `<p>` + button | CSS-only | `components.html`, `settings.html` |
 | `.onboarding-card`, `.onboarding-card__step`, `.onboarding-card__progress` | Checklist-style onboarding card with step states and a progress count | `.onboarding-card` > `.onboarding-card__step` list | CSS-only | `components.html` |
 | `.project-card`, `.project-grid`, `.catalog-card`, `.catalog-grid` | Browsable/addable item cards (icon, title, badges, description) | `.project-grid`/`.catalog-grid` > repeated card | CSS-only | `components.html` |
 | `.timeline-block` | A single settling-in timeline/session-replay entry | `.card.timeline-block` | CSS-only (entrance animation) | `patterns.html` |
-| `.skeleton`, `.skeleton-line` | Shimmering loading placeholders. `.skeleton` is a single rectangular block; `.skeleton-line` is a standalone bar for stacking as text-line placeholders | either class on its own, no wrapper required | CSS-only | `components.html` |
+| `.skeleton`, `.skeleton-line` | Shimmering loading placeholders. `.skeleton` is a single rectangular block; `.skeleton-line` is a standalone bar for stacking as text-line placeholders, and works inline (e.g. a loading `.metric__value`) | either class on its own, no wrapper required | CSS-only | `components.html` |
+| `.skeleton-tile`, `.skeleton-row` | Shaped ghosts for thumbnail grids and list rows -- part of the render-first doctrine (see `components.html`): the placeholder is drawn as the anatomy it will be swapped for, at the size the data will occupy, and the card shrinks to the data if the result is smaller than the reservation | repeat inside the container that will hold the real content | CSS-only | `components.html` |
+| `.hp-skel-batch` | Precomposed batch placeholder with position-varied line widths, as `tr` (table rows) or `div` (card body) | `tr.hp-skel-batch` > `td` > `.skeleton-line`, or `div.hp-skel-batch` > three `.skeleton-line`s | CSS-only | `components.html` |
+| `.hp-data-card`, `.hp-data-card__header`, `.hp-data-card__title`, `.hp-data-card__meta`, `.hp-data-card-list` | Render-first data card: title/meta chrome paints immediately, the body loads in; skeleton and hydrated result share one footprint | `.hp-data-card` > `__header` (`__title` + `__meta`) + body; stack via `.hp-data-card-list` | CSS-only | `components.html` |
 | `.diff-line`, `.diff-line--add`, `.diff-line--del` | Colored add/remove lines inside a `pre.code` diff view | `<span class="diff-line diff-line--add">` per line | CSS-only | `components.html` |
 | `.mini-chart`, `.heatmap` | Data-viz primitives -- see the "Data visualization" section below | | | |
 
@@ -75,6 +81,19 @@ a component, update this file in the same PR (`docs/TOKENS.md`'s own
 | `.chip` | Suggestion/filter pill button | `<button class="chip">` | CSS-only | `components.html` |
 | `.segmented`, `.segmented--icon` | Grouped toggle-button control (e.g. mode/appearance switch) | `<span class="segmented" role="group"><button>...` | CSS-only -- no `theme.js` wiring, unlike `.tabs` | `components.html` |
 | `.command-bar` | Docked bottom search/command input | fixed-position `<div>` | CSS-only | `patterns.html` |
+
+## Theming
+
+Theme state lives on `<html>` — `data-hp-theme` picks the surface family,
+`data-theme` pins or follows the mode (see `docs/TOKENS.md`). These are the
+controls that read and write it.
+
+| Class(es) | Purpose | Markup shape | JS? | Example |
+|---|---|---|---|---|
+| `.hp-theme-gallery`, `.hp-theme-tile` (+ `__art`, `__sidebar`, `__body`, `__line`, `__line--wide`, `__accent`, `__label`, `__desc`) | Theme picker as a miniature of the shell. Each tile carries its own `data-hp-theme`/`data-theme`, so it resolves from that theme's real tokens and previews the whole surface family rather than a dot of accent | `<div class="hp-theme-gallery">` > one `<button class="hp-theme-tile">` per theme; the selected ring keys on `aria-checked="true"` | Consumer-owned: give tiles `data-hp-theme-value` and theme.js's click delegate applies them; the page mirrors the stored theme onto `aria-checked` | `components.html` (static reference), `settings.html` (interactive) |
+| `.theme-picker` | Compact text-button picker group for a settings header | `<div class="theme-picker" aria-label="Theme">` > `<button data-hp-theme-value="…">` / `<button data-theme-value="…">` | Wired (theme.js click delegate applies and sets `aria-pressed`) | `settings.html` |
+| `.hp-palette-pick` | Legacy compact picker (segmented buttons with an accent dot); kept for consumers still rendering it. The dot takes `var(--accent)` — the nine hardcoded dot colours it used to carry previewed dark accents that appeared nowhere in a light-mode interface | `<div class="hp-palette-pick">` > buttons each holding a `.dot` span | -- | -- (see honeypot-stack) |
+| `.hp-theme-switching` | Transition suppressor for theme/mode swaps: present on `<html>` while the attributes are written, the full-surface repaint lands in one frame (`transition: none !important`) instead of animating through intermediate colours. Released on the second painted frame | class toggled on `<html>` around a `data-hp-theme`/`data-theme` write | Written by theme.js on every apply; consumers driving the attributes directly should wrap their writes the same way | -- (behavioral) |
 
 ## Overlays & dialogs
 

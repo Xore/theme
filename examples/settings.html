@@ -72,6 +72,66 @@
         </section>
 
         <section class="card">
+          <div class="card__title">Appearance</div>
+          <div class="card__desc">A theme is the whole surface family -- ground, sidebar, surface ramp, borders, text -- not an accent dot. Picking a tile applies it immediately and persists; the compact pickers in the header above stay in sync.</div>
+          <!-- The tiles preview each theme through real tokens: data-hp-theme
+               selects the family, and because no data-theme is pinned they
+               resolve in the page's current mode -- flip System/Dark/Light
+               above and every tile re-renders, showing that mode and theme
+               are independent axes. data-hp-theme-value is what theme.js
+               wires: clicking applies the theme the same way the header
+               buttons do. -->
+          <div class="hp-theme-gallery" id="hp-appearance-tiles" role="radiogroup" aria-label="Theme">
+            <button class="hp-theme-tile" type="button" role="radio" aria-checked="false" tabindex="-1" data-hp-theme-value="claude" data-hp-theme="claude">
+              <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+              <span class="hp-theme-tile__label">Claude</span>
+              <span class="hp-theme-tile__desc">Warm charcoal and ivory, copper accent. The default.</span>
+            </button>
+            <button class="hp-theme-tile" type="button" role="radio" aria-checked="false" tabindex="-1" data-hp-theme-value="slate" data-hp-theme="slate">
+              <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+              <span class="hp-theme-tile__label">Slate</span>
+              <span class="hp-theme-tile__desc">Cool zinc neutrals, quiet steel-blue accent.</span>
+            </button>
+            <button class="hp-theme-tile" type="button" role="radio" aria-checked="false" tabindex="-1" data-hp-theme-value="sage" data-hp-theme="sage">
+              <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+              <span class="hp-theme-tile__label">Sage</span>
+              <span class="hp-theme-tile__desc">Warm green-grey grounds, moss accent.</span>
+            </button>
+            <button class="hp-theme-tile" type="button" role="radio" aria-checked="false" tabindex="-1" data-hp-theme-value="lavender" data-hp-theme="lavender">
+              <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+              <span class="hp-theme-tile__label">Lavender</span>
+              <span class="hp-theme-tile__desc">Cool violet-grey shell, digital-lavender accent.</span>
+            </button>
+            <button class="hp-theme-tile" type="button" role="radio" aria-checked="false" tabindex="-1" data-hp-theme-value="lime" data-hp-theme="lime">
+              <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+              <span class="hp-theme-tile__label">Lime</span>
+              <span class="hp-theme-tile__desc">Fintech lime on cool whites and deep olive-charcoal.</span>
+            </button>
+            <button class="hp-theme-tile" type="button" role="radio" aria-checked="false" tabindex="-1" data-hp-theme-value="amber" data-hp-theme="amber">
+              <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+              <span class="hp-theme-tile__label">Amber</span>
+              <span class="hp-theme-tile__desc">Warm sand grounds, golden accent.</span>
+            </button>
+            <button class="hp-theme-tile" type="button" role="radio" aria-checked="false" tabindex="-1" data-hp-theme-value="ocean" data-hp-theme="ocean">
+              <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+              <span class="hp-theme-tile__label">Ocean</span>
+              <span class="hp-theme-tile__desc">Deep sea-blue neutrals, harbor-blue accent.</span>
+            </button>
+            <button class="hp-theme-tile" type="button" role="radio" aria-checked="false" tabindex="-1" data-hp-theme-value="rose" data-hp-theme="rose">
+              <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+              <span class="hp-theme-tile__label">Rose</span>
+              <span class="hp-theme-tile__desc">Dusty rose neutrals, muted rose accent.</span>
+            </button>
+            <button class="hp-theme-tile" type="button" role="radio" aria-checked="false" tabindex="-1" data-hp-theme-value="neon" data-hp-theme="neon">
+              <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+              <span class="hp-theme-tile__label">Neon</span>
+              <span class="hp-theme-tile__desc">Near-black ground, restrained teal neon accent.</span>
+            </button>
+          </div>
+          <div class="settings-field__desc" style="margin-top:12px">Tiles preview in your current mode, so switching System/Dark/Light above re-renders every one of them. Theme and mode are independent axes.</div>
+        </section>
+
+        <section class="card">
           <div class="card__title">Passkeys</div>
           <div class="card__desc">Reusable credential rows keep metadata readable and actions contained.</div>
           <div class="passkey-row">
@@ -200,5 +260,55 @@
     <div class="edit-dialog__actions"><button class="btn btn-ghost" data-close-dialog="delete-dialog">Cancel</button><button class="btn btn-danger" data-dialog-initial-focus data-close-dialog="delete-dialog">Delete account</button></div>
     </dialog>
   </dialog>
+<script>
+  // Gallery selection state. theme.js owns *applying* the choice (the tiles
+  // carry data-hp-theme-value, so its click handler applies and persists
+  // exactly as it does for the header's compact buttons, stamping those
+  // aria-pressed); the tile CSS keys its selected ring on aria-checked,
+  // which it does not manage. This mirrors the stored theme onto the tiles
+  // -- radiogroup semantics, roving tabindex, arrow keys -- without owning
+  // any of the apply/persist logic.
+  (function () {
+    var gallery = document.getElementById('hp-appearance-tiles');
+    if (!gallery) return;
+    var tiles = Array.prototype.slice.call(gallery.querySelectorAll('.hp-theme-tile'));
+
+    function syncTiles() {
+      var active;
+      try { active = localStorage.getItem('xore-hp-theme') || 'claude'; }
+      catch (_) { active = 'claude'; }
+      tiles.forEach(function (tile) {
+        var on = tile.getAttribute('data-hp-theme-value') === active;
+        tile.setAttribute('aria-checked', String(on));
+        tile.setAttribute('tabindex', on ? '0' : '-1');
+      });
+    }
+
+    // theme.js also listens on document for these clicks and writes
+    // localStorage from its own handler; the deferred call below only runs
+    // after that, so the mirror reads the already-updated value regardless
+    // of listener registration order.
+    document.addEventListener('click', function (event) {
+      if (event.target.closest('[data-hp-theme-value]')) window.setTimeout(syncTiles, 0);
+    });
+    // Another tab changed the theme; key === null means storage was cleared.
+    window.addEventListener('storage', function (event) {
+      if (event.key === null || event.key === 'xore-hp-theme') syncTiles();
+    });
+    // theme.js loads with `defer`, i.e. after this inline script has run and
+    // after DOMContentLoaded fires -- so sync here, not at parse time.
+    document.addEventListener('DOMContentLoaded', syncTiles);
+
+    gallery.addEventListener('keydown', function (event) {
+      var step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
+      if (!step) return;
+      event.preventDefault();
+      var at = tiles.indexOf(document.activeElement);
+      var next = tiles[(Math.max(at, 0) + step + tiles.length) % tiles.length];
+      next.focus();
+      next.click();
+    });
+  })();
+</script>
 </body>
 </html>

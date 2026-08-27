@@ -13,6 +13,7 @@ const browserGlobals = {
   navigator: 'readonly',
   setTimeout: 'readonly',
   clearTimeout: 'readonly',
+  requestAnimationFrame: 'readonly',
 };
 
 const nodeGlobals = {
