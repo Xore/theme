@@ -42,6 +42,7 @@
         <kbd>⌘K</kbd>
       </div>
       <div class="app-sidebar__body">
+        <button class="sidebar__investigate" type="button"><span aria-hidden="true">⊕</span> New investigation</button>
         <div class="sidebar__section-label">Monitor</div>
         <button class="sidebar__item active"><span>Overview</span></button>
         <button class="sidebar__item"><span>Source health</span></button>
@@ -52,8 +53,16 @@
         <button class="sidebar__item"><span>Campaigns</span></button>
         <button class="sidebar__item"><span>Payloads</span></button>
         <div class="sidebar__section-label">Recent</div>
-        <button class="sidebar__item"><span>203.0.113.42</span></button>
-        <button class="sidebar__item"><span>SSH credential spray</span></button>
+        <!-- .sidebar__recent: the recents rail renders evidence-shaped
+             identifiers (IPs, campaign slugs) in the mono face, ellipsized
+             when too long -- not .sidebar__item buttons, which are for
+             navigation destinations. -->
+        <nav class="sidebar__recent" aria-label="Recent investigations">
+          <a href="#">203.0.113.42</a>
+          <a href="#">198.51.100.7</a>
+          <a href="#">ssh-credential-spray</a>
+          <a href="#">c2-beacon-1907</a>
+        </nav>
       </div>
       <div class="sidebar__profile">
         <span class="avatar">AD</span>
@@ -77,11 +86,34 @@
           </div>
         </div>
 
+        <!-- KPI tiles carry the two delta primitives: .metric__delta chips
+             the period-over-period change against the value, and
+             .metric__spark sketches the same series under it. Both sparks
+             get their bar heights from --v via the nonced <style> below
+             (docs/CSP.md), never an inline height. -->
         <div class="metric-grid">
-          <div class="metric"><div class="metric__label">Events · 24h</div><div class="metric__value">18,492</div><div class="metric__trend">8% above previous period</div></div>
-          <div class="metric"><div class="metric__label">Unique sources</div><div class="metric__value">641</div><div class="metric__trend">Across 38 countries</div></div>
-          <div class="metric"><div class="metric__label">Open alerts</div><div class="metric__value">3</div><div class="metric__trend metric__trend--down">1 needs attention</div></div>
-          <div class="metric"><div class="metric__label">Pipeline</div><div class="metric__value">12/12</div><div class="metric__trend">All sources current</div></div>
+          <div class="metric">
+            <div class="metric__label">Events · 24h</div>
+            <div class="metric__value">18,492<span class="metric__delta">+8%</span></div>
+            <div class="metric__trend">vs previous 24h</div>
+            <div class="metric__spark" id="spark-events" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="metric">
+            <div class="metric__label">Unique sources</div>
+            <div class="metric__value">641<span class="metric__delta">+12%</span></div>
+            <div class="metric__trend">Across 38 countries</div>
+            <div class="metric__spark" id="spark-sources" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="metric">
+            <div class="metric__label">Open alerts</div>
+            <div class="metric__value">3<span class="metric__delta metric__delta--down">+2</span></div>
+            <div class="metric__trend metric__trend--down">1 needs attention</div>
+          </div>
+          <div class="metric">
+            <div class="metric__label">Pipeline</div>
+            <div class="metric__value">12/12</div>
+            <div class="metric__trend">All sources current</div>
+          </div>
         </div>
 
         <div class="workspace-columns" style="margin-top:14px">
@@ -105,6 +137,19 @@
               .mini-chart span:nth-child(3) { --v: 31 } .mini-chart span:nth-child(4) { --v: 47 }
               .mini-chart span:nth-child(5) { --v: 56 } .mini-chart span:nth-child(6) { --v: 42 }
               .mini-chart span:nth-child(7) { --v: 67 } .mini-chart span:nth-child(8) { --v: 58 }
+              /* KPI sparklines: same --v contract as the chart above. */
+              #spark-events i:nth-child(1) { --v: 22 } #spark-events i:nth-child(2) { --v: 30 }
+              #spark-events i:nth-child(3) { --v: 26 } #spark-events i:nth-child(4) { --v: 38 }
+              #spark-events i:nth-child(5) { --v: 34 } #spark-events i:nth-child(6) { --v: 45 }
+              #spark-events i:nth-child(7) { --v: 40 } #spark-events i:nth-child(8) { --v: 52 }
+              #spark-events i:nth-child(9) { --v: 58 } #spark-events i:nth-child(10) { --v: 49 }
+              #spark-events i:nth-child(11) { --v: 66 } #spark-events i:nth-child(12) { --v: 72 }
+              #spark-sources i:nth-child(1) { --v: 40 } #spark-sources i:nth-child(2) { --v: 35 }
+              #spark-sources i:nth-child(3) { --v: 44 } #spark-sources i:nth-child(4) { --v: 38 }
+              #spark-sources i:nth-child(5) { --v: 30 } #spark-sources i:nth-child(6) { --v: 36 }
+              #spark-sources i:nth-child(7) { --v: 28 } #spark-sources i:nth-child(8) { --v: 34 }
+              #spark-sources i:nth-child(9) { --v: 26 } #spark-sources i:nth-child(10) { --v: 30 }
+              #spark-sources i:nth-child(11) { --v: 24 } #spark-sources i:nth-child(12) { --v: 28 }
               .mini-chart span:nth-child(9) { --v: 78 } .mini-chart span:nth-child(10) { --v: 64 }
               .mini-chart span:nth-child(11) { --v: 88 } .mini-chart span:nth-child(12) { --v: 72 }
             </style>

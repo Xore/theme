@@ -25,7 +25,7 @@ Three tiers. A theme **must** define the first, **may** retune the second,
 and must **not** touch the third.
 
 **Theme-scoped — the surface family.** Grounds (`--bg-000`, `--bg-sidebar`,
-`--bg-toolbar`), the surface ramp (`--bg-100..3`, `--bg-500`,
+`--bg-toolbar`), the surface ramp (`--bg-100`…`--bg-400`, `--bg-500`,
 `--bg-raised`), borders (`--border-100`, `--border-200`,
 `--border-focus`), the text ramp (`--text-000`, `--text-100`,
 `--text-200`, `--text-300`), the accent family, `--overlay-bg`, the
@@ -63,10 +63,18 @@ previously needed per token set. Mode is decided by `color-scheme`: `:root`
 declares `light dark` so the system preference wins by default, and
 `[data-theme]` pins it.
 
-`claude` is the default and is **pinned, not derived** — its values are
-hand-tuned (links are blue rather than accent-derived, `--accent-soft` sits
-at 0.14/0.12 where generated themes use 0.16/0.13) and the generator asserts
-byte identity on every run.
+That mechanism is also the stylesheet's browser floor: `light-dark()` needs
+Chrome/Edge 123+, Firefox 120+, or Safari 17.5+. Older browsers fall back to
+the platform-native font stacks and unstyled custom properties — the theme
+does not polyfill it.
+
+`claude` is the default and is **pinned, not derived** — its ground, ramp and
+accent values are hand-tuned (`--accent-soft` sits at 0.14/0.12 where
+generated themes use 0.16/0.13) and the generator asserts byte identity on
+every run. Its link/focus/switch family is the one part that *is* generated:
+it is derived from the accent and AA-tuned like every other theme's, which
+fixed a 3.95:1 light-mode link failure the hand-written blue had shipped
+with.
 
 Values that are not colours cannot use `light-dark()`, so the few that vary
 by mode are exposed as intent tokens instead: `--basemap-filter` and
@@ -131,7 +139,8 @@ contrast floor, which WCAG permits for disabled controls and nothing else.
 `--accent` (terracotta) is the brand emphasis: progress, checked controls,
 selected states, and decorative highlights. The primary action button is the
 inverted `--btn-inverted-bg` / `--btn-inverted-text` pair, not the accent.
-Links use `--text-link` / `--text-link-hover` (blue) and focus outlines use
+Links use `--text-link` / `--text-link-hover`, generated per theme from its
+accent and AA-tuned; focus outlines use
 `--border-focus`. Toggle switches use `--switch-on` when active. Use success,
 info, warning, danger, and critical only when the content carries that
 meaning. `--critical` is reserved for a severity strictly above danger --
@@ -143,15 +152,17 @@ Supporting component tokens:
 
 - `--control-knob`: toggle thumb color.
 - `--text-on-status`: text on solid semantic badges.
-- `--artwork-bg`: fallback surface behind optional artwork.
+- `--artwork-plate`: fallback surface behind optional artwork (the old
+  `--artwork-bg` name still works as a deprecated alias).
 - `--overlay-bg`: modal and nested-confirmation scrim.
 
 ## Geometry
 
-- `--radius-control`: inputs, buttons, navigation items (9px).
-- `--radius-panel`: cards, metrics, menus, command bar (14px).
-- `--radius-dialog`: floating application surfaces (18px).
-- `--radius-pill`: chips and fully rounded controls.
+- `--radius-xs`: tight chips, sparkline bars, small inline controls (6px).
+- `--radius-control`: inputs, buttons, navigation items (12px).
+- `--radius-panel`: cards, metrics, menus, command bar (16px).
+- `--radius-dialog`: floating application surfaces (24px).
+- `--radius-pill`: chips and fully rounded controls (999px).
 - `--toolbar-height`: global desktop toolbar.
 - `--sidebar-width`: full desktop navigation.
 - `--content-width`: normal reading/workspace column.
@@ -191,7 +202,10 @@ components should use the canonical token names above.
 ## Adding a token
 
 1. Confirm that at least two components need it.
-2. Add dark, explicit light, and system-light values.
+2. Add one value per token using `light-dark()` for the two modes; if the
+   value cannot be a color, expose it as an intent token the theme declares
+   (the way `--basemap-filter` works) rather than enumerating modes in the
+   rule.
 3. Add it to this document.
 4. Demonstrate it on an example page.
 5. Verify contrast, keyboard focus, and reduced motion.

@@ -13,7 +13,7 @@ page with two `<link>` tags rather than an `@import` inside the stylesheet --
 see [`docs/ADOPTION.md`](docs/ADOPTION.md). Platform-native fallbacks preserve
 usability when that request is unavailable.
 
-**Themes and modes are separate axes.** `data-hp-theme` selects one of seven
+**Themes and modes are separate axes.** `data-hp-theme` selects one of nine
 full surface families -- `claude` (default), `slate`, `sage`, `lavender`,
 `lime`, `amber`, `ocean`, `rose`, `neon` -- each owning the ground, chrome, surface ramp,
 borders, text ramp and accent. `data-theme` (`light`/`dark`/absent) picks the
@@ -106,7 +106,7 @@ dialog controller should include only the stylesheet.
 ## Design principles
 
 - Warm neutral surfaces and off-white text.
-- Compact, softly rounded 9–18px geometry rather than oversized pill-shaped
+- Compact, softly rounded 6–24px geometry rather than oversized pill-shaped
   application surfaces.
 - Thin, low-contrast borders; shadows only for floating layers.
 - Terracotta for focus and primary actions, not decoration.

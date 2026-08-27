@@ -8,12 +8,37 @@
   var defaultHpTheme = 'claude';
   var root = document.documentElement;
 
-  function applyTheme(value) {
-    if (value === 'dark' || value === 'light') {
-      root.setAttribute('data-theme', value);
-    } else {
-      root.removeAttribute('data-theme');
+  /* Theme.css styles .hp-theme-switching with `transition: none !important`,
+     so a full-surface swap (nine themes x two modes now resolve from
+     attributes on <html>) lands in one frame instead of animating through
+     unreadable intermediate colours. The class wraps every attribute write,
+     is released on the second painted frame -- the first shows the new
+     theme, the second confirms it stuck -- and falls back to removing the
+     class synchronously where requestAnimationFrame is unavailable, because
+     a class that is never released would suppress transitions forever. */
+  function suppressSwitchFlash(write) {
+    root.classList.add('hp-theme-switching');
+    write();
+    if (!window.requestAnimationFrame) {
+      root.classList.remove('hp-theme-switching');
+      return;
     }
+    void root.offsetWidth; // paint the new state with transitions off first
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        root.classList.remove('hp-theme-switching');
+      });
+    });
+  }
+
+  function applyTheme(value) {
+    suppressSwitchFlash(function () {
+      if (value === 'dark' || value === 'light') {
+        root.setAttribute('data-theme', value);
+      } else {
+        root.removeAttribute('data-theme');
+      }
+    });
     document.querySelectorAll('[data-theme-value]').forEach(function (button) {
       button.setAttribute('aria-pressed', String(button.getAttribute('data-theme-value') === value));
     });
@@ -35,8 +60,10 @@
   }
 
   function applyHpTheme(value) {
-    if (value && value !== defaultHpTheme) root.setAttribute('data-hp-theme', value);
-    else root.removeAttribute('data-hp-theme');
+    suppressSwitchFlash(function () {
+      if (value && value !== defaultHpTheme) root.setAttribute('data-hp-theme', value);
+      else root.removeAttribute('data-hp-theme');
+    });
     document.querySelectorAll('[data-hp-theme-value]').forEach(function (button) {
       button.setAttribute('aria-pressed', String(button.getAttribute('data-hp-theme-value') === value));
     });

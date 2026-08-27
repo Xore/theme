@@ -9,6 +9,34 @@
   <link rel="stylesheet" href="../theme.css">
   <link rel="stylesheet" href="examples.css">
   <script src="../theme.js" defer></script>
+  <style>
+    /* Loading-placeholder doctrine rig. The reservation is structural, not
+       a magic height: the loading phase renders the same header/row
+       anatomy the hydrated phases render, with ghost bars in place of
+       data, so the card's size and position are settled by markup. A
+       smaller-than-reserved result then simply collapses the card to its
+       content -- nothing to unwind. */
+    .sk-slot-label {
+      margin-bottom: 6px;
+      color: var(--text-200);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .sk-data-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      height: 37px; /* one row's box, pinned (border-box): the tallest thing a row carries is a ~20px badge, so ghost and hydrated rows are pixel-identical and hydration moves not one pixel */
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--border-100);
+      font-size: var(--font-size-xs);
+    }
+    .sk-data-row:last-child { border-bottom: 0; }
+    .sk-data-row .skeleton-line { margin-bottom: 0; }
+    .sk-ghost-badge { width: 64px; height: 20px; border-radius: var(--radius-pill); } /* the ghost draws the pill too, not just the text bar */
+  </style>
 </head>
 <body class="example-site">
   <nav class="example-nav" aria-label="Example navigation">
@@ -48,15 +76,106 @@
     <section class="example-section" id="color">
       <div class="example-section__head"><div><h2>Color</h2><p>Surface and semantic hierarchy.</p></div></div>
       <div class="showcase">
+        <!-- Swatches resolve from var(), not hardcoded hex, so this row
+             re-renders itself under every theme and mode below. The ramp
+             numbers are elevation (#97): 000 is the canvas, higher numbers
+             sit further forward. -->
         <div class="swatch-grid">
           <div class="swatch" style="--swatch:var(--bg-000)">Canvas<code>--bg-000</code></div>
-          <div class="swatch" style="--swatch:var(--bg-sidebar)">Sidebar<code>--bg-sidebar</code></div>
+          <div class="swatch" style="--swatch:var(--bg-100)">Elevation 1<code>--bg-100</code></div>
           <div class="swatch" style="--swatch:var(--bg-200)">Surface 1<code>--bg-200</code></div>
           <div class="swatch" style="--swatch:var(--bg-300)">Surface 2<code>--bg-300</code></div>
+          <div class="swatch" style="--swatch:var(--bg-400)">Surface 3<code>--bg-400</code></div>
+          <div class="swatch" style="--swatch:var(--bg-500)">Hover<code>--bg-500</code></div>
+          <div class="swatch" style="--swatch:var(--bg-sidebar)">Sidebar<code>--bg-sidebar</code></div>
+          <div class="swatch" style="--swatch:var(--bg-toolbar)">Toolbar<code>--bg-toolbar</code></div>
+          <div class="swatch" style="--swatch:var(--bg-raised)">Raised<code>--bg-raised</code></div>
           <div class="swatch" style="--swatch:var(--accent)">Accent<code>--accent</code></div>
+          <div class="swatch" style="--swatch:var(--accent-soft)">Accent soft<code>--accent-soft</code></div>
           <div class="swatch" style="--swatch:var(--success-soft)">Success<code>--success-soft</code></div>
           <div class="swatch" style="--swatch:var(--warning-soft)">Warning<code>--warning-soft</code></div>
           <div class="swatch" style="--swatch:var(--danger-soft)">Danger<code>--danger-soft</code></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="example-section" id="themes">
+      <div class="example-section__head"><div><h2>Theme gallery</h2><p>Each tile is a miniature of the shell, resolving from that theme's own tokens.</p></div></div>
+      <p class="text-secondary" style="margin-bottom:14px;max-width:70ch;">
+        A theme owns the ground, the sidebar, the surface ramp, the borders
+        and the text ramp, so a tile previews the whole shell rather than a
+        dot of accent. Every tile carries its own
+        <code>data-hp-theme</code>/<code>data-theme</code>, so it renders
+        from real tokens and cannot go stale. The interactive copy of this
+        gallery -- clicking a tile applies the theme -- lives on the
+        Settings page.
+      </p>
+      <div class="showcase" style="margin-bottom:14px">
+        <div class="hp-theme-gallery">
+          <button class="hp-theme-tile" type="button" data-hp-theme="claude" data-theme="dark">
+            <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+            <span class="hp-theme-tile__label">Claude</span>
+            <span class="hp-theme-tile__desc">Warm charcoal and ivory, copper accent. The default.</span>
+          </button>
+          <button class="hp-theme-tile" type="button" data-hp-theme="slate" data-theme="dark">
+            <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+            <span class="hp-theme-tile__label">Slate</span>
+            <span class="hp-theme-tile__desc">Cool zinc neutrals, quiet steel-blue accent.</span>
+          </button>
+          <button class="hp-theme-tile" type="button" data-hp-theme="sage" data-theme="dark">
+            <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+            <span class="hp-theme-tile__label">Sage</span>
+            <span class="hp-theme-tile__desc">Warm green-grey grounds, moss accent.</span>
+          </button>
+          <button class="hp-theme-tile" type="button" data-hp-theme="lavender" data-theme="dark">
+            <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+            <span class="hp-theme-tile__label">Lavender</span>
+            <span class="hp-theme-tile__desc">Cool violet-grey shell, digital-lavender accent.</span>
+          </button>
+          <button class="hp-theme-tile" type="button" data-hp-theme="lime" data-theme="dark">
+            <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+            <span class="hp-theme-tile__label">Lime</span>
+            <span class="hp-theme-tile__desc">Fintech lime on cool whites and deep olive-charcoal.</span>
+          </button>
+          <button class="hp-theme-tile" type="button" data-hp-theme="amber" data-theme="dark">
+            <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+            <span class="hp-theme-tile__label">Amber</span>
+            <span class="hp-theme-tile__desc">Warm sand grounds, golden accent.</span>
+          </button>
+          <button class="hp-theme-tile" type="button" data-hp-theme="ocean" data-theme="dark">
+            <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+            <span class="hp-theme-tile__label">Ocean</span>
+            <span class="hp-theme-tile__desc">Deep sea-blue neutrals, harbor-blue accent.</span>
+          </button>
+          <button class="hp-theme-tile" type="button" data-hp-theme="rose" data-theme="dark">
+            <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+            <span class="hp-theme-tile__label">Rose</span>
+            <span class="hp-theme-tile__desc">Dusty rose neutrals, muted rose accent.</span>
+          </button>
+          <button class="hp-theme-tile" type="button" data-hp-theme="neon" data-theme="dark">
+            <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+            <span class="hp-theme-tile__label">Neon</span>
+            <span class="hp-theme-tile__desc">Near-black ground, restrained teal neon accent.</span>
+          </button>
+        </div>
+      </div>
+      <div class="showcase">
+        <p class="text-secondary" style="margin-bottom:10px;">
+          Mode is a separate axis: the tile's own <code>data-theme</code>
+          flips its preview independently of the page's mode. Same theme,
+          both modes:
+        </p>
+        <div class="hp-theme-gallery">
+          <button class="hp-theme-tile" type="button" data-hp-theme="claude" data-theme="light">
+            <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+            <span class="hp-theme-tile__label">Claude · light</span>
+            <span class="hp-theme-tile__desc">Warm ivory ground, deep copper accent.</span>
+          </button>
+          <button class="hp-theme-tile" type="button" data-hp-theme="claude" data-theme="dark">
+            <span class="hp-theme-tile__art"><span class="hp-theme-tile__sidebar"></span><span class="hp-theme-tile__body"><span class="hp-theme-tile__line hp-theme-tile__line--wide"></span><span class="hp-theme-tile__line"></span><span class="hp-theme-tile__accent"></span></span></span>
+            <span class="hp-theme-tile__label">Claude · dark</span>
+            <span class="hp-theme-tile__desc">Warm charcoal ground, copper accent.</span>
+          </button>
         </div>
       </div>
     </section>
@@ -132,8 +251,8 @@
           </div>
           <div style="display:grid;gap:12px;margin-top:18px">
             <label class="check"><input type="checkbox" checked> Email security alerts</label>
-            <label class="check"><input type="radio" name="density" checked> Comfortable density</label>
-            <label class="check"><input type="radio" name="density"> Compact density</label>
+            <label class="check"><input type="radio" name="digest" checked> Weekly digest</label>
+            <label class="check"><input type="radio" name="digest"> Daily digest</label>
             <label class="check" style="justify-content:space-between">Automatic refresh
               <span class="switch"><input type="checkbox" checked><span></span></span>
             </label>
@@ -236,18 +355,132 @@
       </div>
 
       <h3 style="margin:24px 0 4px;">Loading placeholders</h3>
-      <p class="text-secondary" style="margin-bottom:14px;">Shaped skeletons for content still loading -- a card, table row, or map rectangle rendered as its own layout shape instead of a plain "Loading…" line.</p>
-      <div class="showcase-grid" style="margin-bottom:14px">
+      <p class="text-secondary" style="margin-bottom:14px;">
+        Render-first: a placeholder is drawn as the shape it will be swapped
+        for -- a data card as a data card, a table batch as table rows -- and
+        the card is laid out at the size and position its data will occupy,
+        so the grid around it is settled before the answer arrives. When the
+        data turns out smaller than the space reserved for it, the card
+        shrinks back to the data instead of keeping an empty box.
+      </p>
+
+      <h3 style="margin:18px 0 4px;font-size:13px;">One slot, three states</h3>
+      <p class="text-secondary" style="margin-bottom:10px;">
+        Same column, same width, same origin. Loading holds the reserved
+        footprint; a small result shrinks the card to its data; a large one
+        fills the reservation exactly.
+      </p>
+      <div class="showcase-grid" style="grid-template-columns:repeat(3, minmax(0, 1fr));margin-bottom:14px">
+        <div>
+          <div class="sk-slot-label">Loading &mdash; footprint reserved</div>
+          <div class="hp-data-card sk-slot" data-loading>
+            <div class="hp-data-card__header">
+              <span class="skeleton-line" style="width:55%"></span>
+              <span class="skeleton-line" style="width:38%;height:9px"></span>
+            </div>
+            <div class="sk-data-row"><span class="skeleton-line" style="width:62%"></span><span class="skeleton-line sk-ghost-badge" style="width:18%"></span></div>
+            <div class="sk-data-row"><span class="skeleton-line" style="width:48%"></span><span class="skeleton-line sk-ghost-badge" style="width:14%"></span></div>
+            <div class="sk-data-row"><span class="skeleton-line" style="width:70%"></span><span class="skeleton-line sk-ghost-badge" style="width:20%"></span></div>
+            <div class="sk-data-row"><span class="skeleton-line" style="width:40%"></span><span class="skeleton-line sk-ghost-badge" style="width:12%"></span></div>
+            <div class="sk-data-row"><span class="skeleton-line" style="width:56%"></span><span class="skeleton-line sk-ghost-badge" style="width:16%"></span></div>
+          </div>
+        </div>
+        <div>
+          <div class="sk-slot-label">Hydrated &mdash; small result, card shrank to the data</div>
+          <div class="hp-data-card sk-slot">
+            <div class="hp-data-card__header">
+              <span class="hp-data-card__title">cowrie · session 8f21c</span>
+              <span class="hp-data-card__meta">12 hits</span>
+            </div>
+            <div class="sk-data-row"><span class="mono">admin / password</span><span class="badge badge--warning">staged</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="sk-slot-label">Hydrated &mdash; large result, fills the reservation</div>
+          <div class="hp-data-card sk-slot">
+            <div class="hp-data-card__header">
+              <span class="hp-data-card__title">cowrie · session 8f21c</span>
+              <span class="hp-data-card__meta">12 hits</span>
+            </div>
+            <div class="sk-data-row"><span class="mono">admin / password</span><span class="badge badge--warning">staged</span></div>
+            <div class="sk-data-row"><span class="mono">root / toor</span><span class="badge badge--danger">accepted</span></div>
+            <div class="sk-data-row"><span class="mono">oracle / oracle</span><span class="badge badge--muted">probed</span></div>
+            <div class="sk-data-row"><span class="mono">pi / raspberry</span><span class="badge badge--muted">probed</span></div>
+            <div class="sk-data-row"><span class="mono">admin / 123456</span><span class="badge badge--muted">probed</span></div>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin:18px 0 4px;font-size:13px;">Live: reserve, then fit</h3>
+      <p class="text-secondary" style="margin-bottom:10px;">
+        The same slot driven by buttons: loading reserves, hydration releases
+        the reservation, and the card settles to whatever the data needs.
+      </p>
+      <div style="max-width:520px;margin-bottom:6px">
+        <div class="hp-data-card sk-slot" id="skel-live" data-loading>
+          <div data-sk-phase="loading">
+            <div class="hp-data-card__header">
+              <span class="skeleton-line" style="width:55%"></span>
+              <span class="skeleton-line" style="width:38%;height:9px"></span>
+            </div>
+            <div class="sk-data-row"><span class="skeleton-line" style="width:62%"></span><span class="skeleton-line sk-ghost-badge" style="width:18%"></span></div>
+            <div class="sk-data-row"><span class="skeleton-line" style="width:48%"></span><span class="skeleton-line sk-ghost-badge" style="width:14%"></span></div>
+            <div class="sk-data-row"><span class="skeleton-line" style="width:70%"></span><span class="skeleton-line sk-ghost-badge" style="width:20%"></span></div>
+            <div class="sk-data-row"><span class="skeleton-line" style="width:40%"></span><span class="skeleton-line sk-ghost-badge" style="width:12%"></span></div>
+            <div class="sk-data-row"><span class="skeleton-line" style="width:56%"></span><span class="skeleton-line sk-ghost-badge" style="width:16%"></span></div>
+          </div>
+          <div data-sk-phase="small" hidden>
+            <div class="hp-data-card__header">
+              <span class="hp-data-card__title">cowrie · session 8f21c</span>
+              <span class="hp-data-card__meta">12 hits</span>
+            </div>
+            <div class="sk-data-row"><span class="mono">admin / password</span><span class="badge badge--warning">staged</span></div>
+          </div>
+          <div data-sk-phase="large" hidden>
+            <div class="hp-data-card__header">
+              <span class="hp-data-card__title">cowrie · session 8f21c</span>
+              <span class="hp-data-card__meta">12 hits</span>
+            </div>
+            <div class="sk-data-row"><span class="mono">admin / password</span><span class="badge badge--warning">staged</span></div>
+            <div class="sk-data-row"><span class="mono">root / toor</span><span class="badge badge--danger">accepted</span></div>
+            <div class="sk-data-row"><span class="mono">oracle / oracle</span><span class="badge badge--muted">probed</span></div>
+            <div class="sk-data-row"><span class="mono">pi / raspberry</span><span class="badge badge--muted">probed</span></div>
+            <div class="sk-data-row"><span class="mono">admin / 123456</span><span class="badge badge--muted">probed</span></div>
+          </div>
+        </div>
+        <div class="showcase-row" style="margin-top:10px" role="group" aria-label="Skeleton hydration states">
+          <button class="btn btn-secondary btn-sm" type="button" data-sk-state="loading" aria-pressed="true">Loading</button>
+          <button class="btn btn-secondary btn-sm" type="button" data-sk-state="small" aria-pressed="false">Small result</button>
+          <button class="btn btn-secondary btn-sm" type="button" data-sk-state="large" aria-pressed="false">Large result</button>
+        </div>
+      </div>
+
+      <h3 style="margin:18px 0 4px;font-size:13px;">Shape-matched placeholder primitives</h3>
+      <p class="text-secondary" style="margin-bottom:10px;">
+        Each surface ships the ghost of its own anatomy: a KPI value, a table
+        batch (<code>.hp-skel-batch</code> rows vary their width by position
+        so a batch does not read as one solid block), and project-grid tiles.
+      </p>
+      <div class="showcase-grid" style="grid-template-columns:repeat(3, minmax(0, 1fr));margin-bottom:14px">
         <div class="metric">
-          <div class="skeleton-line" style="width:40%;height:9px"></div>
-          <div class="skeleton-line" style="width:70%;height:22px;margin-top:6px"></div>
+          <div class="metric__label">Events · warming</div>
+          <div class="metric__value"><span class="skeleton-line"></span></div>
+          <div class="metric__trend">value arrives when the store does</div>
         </div>
         <div class="card">
-          <div class="skeleton-line" style="width:30%"></div>
-          <div class="skeleton-line" style="width:95%"></div>
-          <div class="skeleton-line" style="width:80%"></div>
+          <div class="card__title">Incoming batch</div>
+          <div class="hp-skel-batch">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+          </div>
         </div>
-        <div class="skeleton" style="height:90px"></div>
+        <div class="card">
+          <div class="card__title">Project grid warming</div>
+          <div class="skeleton-tile"></div>
+          <div class="skeleton-tile" style="margin-top:8px"></div>
+          <div class="skeleton-tile" style="margin-top:8px"></div>
+        </div>
       </div>
 
       <div class="card">
@@ -310,7 +543,7 @@
         </div>
         <div class="card card--raised">
           <div class="card__title">Floating above the page</div>
-          <div class="card__desc">.card--raised: surface-raised background, border-strong border, shadow-raised elevation -- the same trio .dropdown uses.</div>
+          <div class="card__desc">.card--raised: --bg-raised background, --border-200 border, --shadow-raised elevation -- the same trio .dropdown uses.</div>
         </div>
       </div>
       <div class="card empty-state">
@@ -436,5 +669,25 @@
     <div class="modal__media" aria-hidden="true"><img src="assets/promo-artwork.svg" alt=""></div>
   </dialog>
   <footer class="example-footer">Add shared components here before downstream adoption.</footer>
+  <script>
+    // Live skeleton rig: swap phases inside the one reserved slot. Only the
+    // phase wrapper's hidden attribute and the slot's data-loading flag
+    // move -- the card's width and origin never change, and the small
+    // result shrinks it to its data because the reservation was structural.
+    var liveSlot = document.getElementById('skel-live');
+    var skButtons = document.querySelectorAll('[data-sk-state]');
+    skButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        var state = button.getAttribute('data-sk-state');
+        liveSlot.toggleAttribute('data-loading', state === 'loading');
+        liveSlot.querySelectorAll('[data-sk-phase]').forEach(function (phase) {
+          phase.hidden = phase.getAttribute('data-sk-phase') !== state;
+        });
+        skButtons.forEach(function (other) {
+          other.setAttribute('aria-pressed', String(other === button));
+        });
+      });
+    });
+  </script>
 </body>
 </html>
