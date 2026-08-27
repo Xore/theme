@@ -132,7 +132,7 @@
   --red: var(--danger);
   --red-subtle: var(--danger-soft);
   --accent-subtle: var(--accent-soft);
-  --radius-sm: var(--radius-control);
+  --radius-sm: var(--radius-xs);
   --radius-md: 8px;
   --radius-lg: var(--radius-panel);
   --radius-xl: var(--radius-dialog);
@@ -3608,11 +3608,6 @@ a.project-card { display: block; color: inherit; text-decoration: none; }
   min-width: 32px; width: auto; height: 32px; padding: 0 var(--space-sm); text-align: center;
   font: 700 11px/30px var(--hp-mono); cursor: pointer;
 }
-.leaflet-control-attribution {
-  background: color-mix(in srgb, var(--bg-100) 86%, transparent) !important;
-  color: var(--text-200) !important;
-}
-.leaflet-control-attribution a { color: var(--text-link) !important; }
 .leaflet-tooltip.attack-tooltip {
   padding: var(--space-sm) var(--space-md);
   border: 1px solid var(--border-200); border-radius: var(--radius-control);
@@ -4536,7 +4531,10 @@ tr.selected .hp-row-actions__more,
 @media (max-width: 700px) { .hp-topbar-search kbd, .hp-topbar-search span { display: none; } .hp-topbar-search { width: auto; } }
 
 /* A11y pass: Leaflet's stock white attribution strip carried near-white
-   link text over light tiles (1.8:1). Theme it like every other chrome. */
+   link text over light tiles (1.8:1). Theme it like every other chrome.
+   The one styling pass for this strip -- an earlier block near the map-shell
+   rules set bg-100/text-200 against the same selectors with the same
+   !important and never rendered after this landed behind it (#147). */
 .leaflet-control-attribution {
   background: color-mix(in srgb, var(--bg-200) 90%, transparent) !important;
   color: var(--text-100) !important;
