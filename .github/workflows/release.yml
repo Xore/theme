@@ -20,7 +20,11 @@ jobs:
           mkdir -p dist/xore-theme
           cp theme.css theme.js dist/xore-theme/
           cp theme.min.css theme.min.js dist/xore-theme/ 2>/dev/null || true
-          cp docs/ADOPTION.md docs/TOKENS.md dist/xore-theme/
+          # Every doc ships, not a hand-picked pair: ADOPTION.md and TOKENS.md
+          # cross-reference COMPONENTS.md and CSP.md (#139), so bundling only
+          # the first two published dangling links. New docs join the bundle
+          # by existing in docs/, no workflow edit required.
+          cp docs/*.md dist/xore-theme/
           (cd dist && zip -r "xore-theme-${GITHUB_REF_NAME}.zip" xore-theme)
 
       - name: Create GitHub release
