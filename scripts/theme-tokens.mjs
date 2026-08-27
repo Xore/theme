@@ -133,6 +133,41 @@ export function shiftLightness(hex, delta) {
 /* How far a status colour is pulled toward the theme's ground hue. Small on
    purpose -- see the STATUS block in buildMode(). */
 export const HUE_PULL = 0.14;
+/* Harmonisation must not turn into reassignment (#145). A status may not
+   drift further than MAX_STATUS_DRIFT degrees from its reference hue in
+   either direction -- chosen just above the largest legitimate pull that
+   ships today (slate/warning lands ~25deg out), so every existing value
+   stays exactly where it was and no future ground can yank a status
+   further than the family can survive. */
+export const MAX_STATUS_DRIFT = 25;
+/* The one direction the general cap cannot police on its own: for red
+   severities approaching from above (through orange/yellow), family loss
+   happens well before 25deg -- neon's cyan ground dragged danger/critical
+   +24deg and landed them inside warning's corridor with no red left at
+   all. Cap that specific approach at RED_MAX_PULL_TOWARD_YELLOW; amber's
+   +5deg and lime's +10deg sit well under it, so this only ever bites the
+   pathological case. Enforced after generation by assertStatusFamilies(). */
+export const RED_MAX_PULL_TOWARD_YELLOW = 13;
+/* Hue band where warnings live. A danger/critical that started in the red
+   segment may not be carried into it (#145). Red itself runs ~345..15deg;
+   the corridor opens just past red's own upper edge. */
+export const WARNING_CORRIDOR_LO = 15;
+export const WARNING_CORRIDOR_HI = 75;
+/* rgbToHex writes whole channels; a hue measured back from the written hex
+   can sit up to ~0.4deg away from the hue the maths produced. Severity
+   pulls stop this far short of the corridor floor so the gate never fights
+   its own rounding. */
+export const STATUS_HUE_ROUNDING_HEADROOM = 0.75;
+/* The status ramp's reference values, per mode. Every theme/mode derives
+   its tokens from these; assertStatusFamilies() measures generated output
+   back against them. */
+const STATUS = {
+  success: { light: '#3f8764', dark: '#79c99e' },
+  info: { light: '#487eaa', dark: '#78a9d4' },
+  warning: { light: '#9b6b25', dark: '#deb36a' },
+  danger: { light: '#b34f4c', dark: '#dc7774' },
+  critical: { light: '#c53030', dark: '#ff5c5c' },
+};
 /* The near-black ink solid status badges are drawn with. */
 export const BADGE_INK = '#0d2417';
 
@@ -539,25 +574,57 @@ export function buildMode(themeName, mode) {
      ground hue so it sits in the theme rather than on top of it, then tuned
      against that theme's surfaces. The hue pull is deliberately small: a
      security console's severity colours have to stay learnable across
-     themes, so this harmonises them, it does not reassign them. */
-  const STATUS = {
-    success: { light: '#3f8764', dark: '#79c99e' },
-    info: { light: '#487eaa', dark: '#78a9d4' },
-    warning: { light: '#9b6b25', dark: '#deb36a' },
-    danger: { light: '#b34f4c', dark: '#dc7774' },
-    critical: { light: '#c53030', dark: '#ff5c5c' },
-  };
+     themes, so this harmonises them, it does not reassign them.
+
+     The reference hues live at module scope (STATUS below) because the same
+     table defines what assertStatusFamilies() holds every generated value
+     accountable to. */
   const STATUS_SOFT_ALPHA = { success: dark ? 0.20 : 0.18, info: dark ? 0.20 : 0.18, warning: dark ? 0.21 : 0.19, danger: dark ? 0.21 : 0.20, critical: dark ? 0.16 : 0.13 };
   const groundHue = tint.hue;
   for (const [name, pair] of Object.entries(STATUS)) {
     const base = pair[mode];
     const [bh, bs, bl] = rgbToHsl(...hexToRgb(base));
     /* Pull HUE_PULL of the way toward the theme's ground, along the short
-       way round the wheel so red never travels through green to get there. */
+       way round the wheel so red never travels through green to get there.
+
+       The short way round has a second blind spot (#145): when a theme's
+       ground sits opposite red across the wheel -- a cyan ground like
+       neon's 172deg vs danger's ~1deg -- "short" runs straight through the
+       orange/yellow corridor where warnings live. A full HUE_PULL along it
+       does not harmonise red, it reassigns it: neon shipped its danger and
+       critical as #dca074/#ff9d5c, an orange family with no red left, while
+       blue grounds like slate/ocean travel the magenta side and stay inside
+       red's family at similar distances.
+
+       So the pull is bounded twice:
+         - severity hues that start in the red segment may not be carried up
+           into the warning corridor; their positive (through-orange)
+           displacement stops at RED_MAX_PULL_TOWARD_YELLOW;
+         - every status's total displacement is capped by MAX_STATUS_DRIFT
+           in either direction.
+       assertStatusFamilies() holds the generated output to both after the
+       fact. */
     let hue = bh;
     if (groundHue !== null && groundHue !== undefined) {
       let delta = ((groundHue - bh + 540) % 360) - 180;
-      hue = (bh + delta * HUE_PULL + 360) % 360;
+      let disp = delta * HUE_PULL;
+      if (
+        (name === 'danger' || name === 'critical')
+        && (bh >= 345 || bh <= WARNING_CORRIDOR_LO)
+        && disp > RED_MAX_PULL_TOWARD_YELLOW
+      ) {
+        /* The stop itself is derived per base, not just the bare ceiling:
+           rgbToHex rounds to whole channels, and re-parsing the written hex
+           can shift the measured hue by a fraction of a degree -- enough
+           for a base sitting near the corridor's mouth to regrow past 15deg
+           and trip the gate it was clamped against. LAND with headroom. */
+        disp = Math.min(
+          RED_MAX_PULL_TOWARD_YELLOW,
+          Math.max(0, WARNING_CORRIDOR_LO - STATUS_HUE_ROUNDING_HEADROOM - bh),
+        );
+      }
+      disp = Math.max(-MAX_STATUS_DRIFT, Math.min(MAX_STATUS_DRIFT, disp));
+      hue = (bh + disp + 360) % 360;
     }
     const tinted = rgbToHex(...hslToRgb(hue, bs, bl));
     tokens[name] = tinted;
@@ -676,6 +743,49 @@ export function assertIdentity() {
     }
   }
   return drift;
+}
+
+/* Holds every generated status to its meaning-bearing family (#145).
+
+   The contrast rows above prove ink is legible on its fill; this proves the
+   fill still means what it says -- "danger" must be red wherever it lands,
+   not merely passable contrast on some orange that a cyan ground walked it
+   to. Two violations are reported:
+     - a danger/critical that started in the red segment but is generated
+       inside the warning corridor [15..75deg];
+     - any status displaced from its reference hue further than
+       MAX_STATUS_DRIFT degrees in either direction.
+   Empty list means clean; callers fail the build non-zero. */
+export function assertStatusFamilies() {
+  const violations = [];
+  const angularDistance = (a, b) => {
+    let d = Math.abs(a - b) % 360;
+    return d > 180 ? 360 - d : d;
+  };
+  for (const theme of Object.keys(THEMES)) {
+    for (const mode of ['light', 'dark']) {
+      const t = buildMode(theme, mode).tokens;
+      for (const [name, pair] of Object.entries(STATUS)) {
+        const refHue = rgbToHsl(...hexToRgb(pair[mode]))[0];
+        const genHue = rgbToHsl(...hexToRgb(t[name]))[0];
+        const label = `${theme}/${mode}: --${name}`;
+        if (
+          (name === 'danger' || name === 'critical')
+          && (refHue >= 345 || refHue <= WARNING_CORRIDOR_LO)
+          && genHue > WARNING_CORRIDOR_LO && genHue < WARNING_CORRIDOR_HI
+        ) {
+          violations.push(`${label} landed in the warning corridor (${genHue.toFixed(1)}deg), red must stay red`);
+        }
+        const driftDeg = angularDistance(genHue, refHue);
+        if (driftDeg > MAX_STATUS_DRIFT) {
+          violations.push(
+            `${label} drifted ${driftDeg.toFixed(1)}deg from its reference hue (${refHue.toFixed(1)}deg), cap is ${MAX_STATUS_DRIFT}deg`,
+          );
+        }
+      }
+    }
+  }
+  return violations;
 }
 
 /*
