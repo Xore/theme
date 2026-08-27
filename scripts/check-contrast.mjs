@@ -22,7 +22,7 @@
  *   node scripts/check-contrast.mjs --verbose  # every measured pair
  *   node scripts/check-contrast.mjs --margins  # the ten thinnest passes
  */
-import { THEMES, buildMode, auditMode, KNOWN_EXCEPTIONS, isKnownException, assertIdentity } from './theme-tokens.mjs';
+import { THEMES, buildMode, auditMode, KNOWN_EXCEPTIONS, isKnownException, assertIdentity, assertStatusFamilies } from './theme-tokens.mjs';
 
 const args = process.argv.slice(2);
 const verbose = args.includes('--verbose');
@@ -39,6 +39,17 @@ const identityDrift = assertIdentity();
 if (identityDrift.length) {
   console.error('✗ the default theme drifted from its pinned values:\n');
   for (const d of identityDrift) console.error(`  ${d}`);
+  process.exit(1);
+}
+
+/* Contrast says nothing about which hue a status ended up at -- a cyan
+   ground can walk "danger" into warning's orange corridor while every
+   measured ratio passes. The family gate runs beside the identity gate
+   for that reason (#145). */
+const statusFamilyViolations = assertStatusFamilies();
+if (statusFamilyViolations.length) {
+  console.error('✗ generated statuses left their meaning-bearing families:\n');
+  for (const v of statusFamilyViolations) console.error(`  ${v}`);
   process.exit(1);
 }
 
