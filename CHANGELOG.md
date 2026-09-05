@@ -7,6 +7,17 @@ change, not as a follow-up.
 
 ## Unreleased
 
+- **`.data-table--responsive` cards no longer let a long single-line value
+  escape the card at phone widths.** The `@media (max-width: 720px)` block
+  already sets `white-space: normal` on the cell, but the desktop rule
+  `td.v a, td.n { white-space: nowrap; }` targets the anchor/cell inside it
+  and had no phone-width exception, so a long value (a user-agent string, an
+  AS name) stayed on one line and ran off the card with no way to scroll to
+  the rest of it. `.data-table--responsive td.v a, .data-table--responsive
+  td.n` now get `white-space: normal; overflow-wrap: anywhere` inside that
+  same media block (`anywhere` rather than `break-word` because these are
+  single unbroken tokens with no natural wrap point).
+
 - **`theme.js` now suppresses the transition flash on theme and mode
   swaps.** `.hp-theme-switching` (`transition: none !important`) has been in
   the stylesheet since APIARY#1830, but nothing ever wrote the class, so a
