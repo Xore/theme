@@ -849,6 +849,20 @@ p { color: var(--text-100); }
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
 
+/* .skip-link ships combined with .sr-only (clipped offscreen by default);
+   this undoes the clip so keyboard focus reveals it as a real control. */
+.skip-link:focus-visible {
+  position: fixed; top: var(--space-sm); left: var(--space-sm);
+  width: auto; height: auto; overflow: visible; clip: auto; white-space: normal;
+  z-index: 2000;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-200);
+  border-radius: 8px;
+  background: var(--bg-raised);
+  color: var(--text-000);
+  box-shadow: var(--shadow-raised);
+}
+
 :focus-visible {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;
@@ -1066,7 +1080,6 @@ p { color: var(--text-100); }
   padding: var(--space-sm) var(--space-md);
   border: 1px solid var(--border-100);
   border-radius: var(--radius-control);
-  outline: none;
   background: var(--bg-200);
   color: var(--text-000);
   font-size: var(--font-size-footnote);
@@ -1806,6 +1819,14 @@ select.form-input { cursor: pointer; }
   animation: toast-in 200ms var(--ease-out) backwards;
 }
 .toast--slide-in-right { animation: toast-slide-in-right 200ms var(--ease-out) backwards; }
+.toast__dismiss {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
 
 /* Severity, as a left rule.
 
@@ -2483,7 +2504,6 @@ pre {
   min-width: 0;
   border: 0;
   background: transparent;
-  outline: 0;
   color: var(--text-000);
   font-size: var(--font-size-lg);
 }
@@ -3160,7 +3180,6 @@ td.v .eventdetail, td.v article, td.v .eventmeta { white-space: normal; }
   border-radius: var(--radius-control);
   padding: var(--space-sm) var(--space-md);
   font-size: 13px; color: var(--text-000); font-family: inherit;
-  outline: none;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 /* A control holding a small number -- an hour, a minute, a day of the month,
@@ -3692,7 +3711,7 @@ a.project-card { display: block; color: inherit; text-decoration: none; }
    fragment) is a real, existing feature, not a redesign choice. */
 .command-palette__field textarea {
   display: block; width: 100%; resize: none;
-  border: none; background: transparent; outline: none;
+  border: none; background: transparent;
   color: var(--text-000); font: inherit;
   max-height: 120px; padding: 0;
 }
