@@ -580,52 +580,15 @@ export function buildMode(themeName, mode) {
      table defines what assertStatusFamilies() holds every generated value
      accountable to. */
   const STATUS_SOFT_ALPHA = { success: dark ? 0.20 : 0.18, info: dark ? 0.20 : 0.18, warning: dark ? 0.21 : 0.19, danger: dark ? 0.21 : 0.20, critical: dark ? 0.16 : 0.13 };
-  const groundHue = tint.hue;
   for (const [name, pair] of Object.entries(STATUS)) {
     const base = pair[mode];
     const [bh, bs, bl] = rgbToHsl(...hexToRgb(base));
-    /* Pull HUE_PULL of the way toward the theme's ground, along the short
-       way round the wheel so red never travels through green to get there.
-
-       The short way round has a second blind spot (#145): when a theme's
-       ground sits opposite red across the wheel -- a cyan ground like
-       neon's 172deg vs danger's ~1deg -- "short" runs straight through the
-       orange/yellow corridor where warnings live. A full HUE_PULL along it
-       does not harmonise red, it reassigns it: neon shipped its danger and
-       critical as #dca074/#ff9d5c, an orange family with no red left, while
-       blue grounds like slate/ocean travel the magenta side and stay inside
-       red's family at similar distances.
-
-       So the pull is bounded twice:
-         - severity hues that start in the red segment may not be carried up
-           into the warning corridor; their positive (through-orange)
-           displacement stops at RED_MAX_PULL_TOWARD_YELLOW;
-         - every status's total displacement is capped by MAX_STATUS_DRIFT
-           in either direction.
-       assertStatusFamilies() holds the generated output to both after the
-       fact. */
-    let hue = bh;
-    if (groundHue !== null && groundHue !== undefined) {
-      let delta = ((groundHue - bh + 540) % 360) - 180;
-      let disp = delta * HUE_PULL;
-      if (
-        (name === 'danger' || name === 'critical')
-        && (bh >= 345 || bh <= WARNING_CORRIDOR_LO)
-        && disp > RED_MAX_PULL_TOWARD_YELLOW
-      ) {
-        /* The stop itself is derived per base, not just the bare ceiling:
-           rgbToHex rounds to whole channels, and re-parsing the written hex
-           can shift the measured hue by a fraction of a degree -- enough
-           for a base sitting near the corridor's mouth to regrow past 15deg
-           and trip the gate it was clamped against. LAND with headroom. */
-        disp = Math.min(
-          RED_MAX_PULL_TOWARD_YELLOW,
-          Math.max(0, WARNING_CORRIDOR_LO - STATUS_HUE_ROUNDING_HEADROOM - bh),
-        );
-      }
-      disp = Math.max(-MAX_STATUS_DRIFT, Math.min(MAX_STATUS_DRIFT, disp));
-      hue = (bh + disp + 360) % 360;
-    }
+    /* Severity hue is pinned to the reference ramp in every theme -- no
+       ground-hue pull. A honeypot dashboard's warning/danger colours must
+       mean the same thing regardless of active theme; only accent/surface
+       tokens carry the per-theme identity. assertStatusFamilies() still
+       guards this (drift is now always 0). */
+    const hue = bh;
     const tinted = rgbToHex(...hslToRgb(hue, bs, bl));
     tokens[name] = tinted;
     const alpha = STATUS_SOFT_ALPHA[name];
